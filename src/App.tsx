@@ -18,6 +18,7 @@ import { AdminLogin } from './pages/AdminLogin'
 import { AdminDashboard } from './pages/AdminDashboard'
 import { ChatWidget } from './components/ChatWidget'
 import { SpeedInsights } from '@vercel/speed-insights/react'
+import { Analytics } from '@vercel/analytics/react'
 
 import { BlogPost as BlogPostType } from './data/blogs'
 import { BlogPost } from './components/BlogPost'
@@ -59,6 +60,8 @@ function App() {
 
   return (
     <main className="min-h-screen bg-background text-white selection:bg-primary/30 scroll-smooth noise-bg">
+      <SpeedInsights />
+      <Analytics />
       {!isAdminPage && (
         <Navbar
           onHome={() => navigateTo('home')}
