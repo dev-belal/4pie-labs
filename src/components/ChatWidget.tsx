@@ -19,8 +19,7 @@ const GREETING_MESSAGE: Message = {
 const SUGGESTIONS = [
     "How does AI automation work?",
     "Book a discovery call",
-    "View our services",
-    "Pricing enquiry"
+    "View our services"
 ];
 
 export const ChatWidget: React.FC = () => {
@@ -72,9 +71,6 @@ export const ChatWidget: React.FC = () => {
         if (text.includes('service') || text.includes('do you do')) {
             return "We specialize in AI Operating Systems, Autonomous Agents, and Digital Marketing Automation. Would you like to see our full list of services?";
         }
-        if (text.includes('pricing') || text.includes('cost')) {
-            return "Our pricing is custom tailored to your business needs and automation complexity. I recommend booking a discovery call for a precise quote!";
-        }
         return "That's a great question! One of our human experts can assist you better with that. Would you like me to ping them or provide our booking link?";
     };
 
@@ -86,7 +82,7 @@ export const ChatWidget: React.FC = () => {
                         initial={{ opacity: 0, y: 20, scale: 0.95, filter: 'blur(10px)' }}
                         animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
                         exit={{ opacity: 0, y: 20, scale: 0.95, filter: 'blur(10px)' }}
-                        className="absolute bottom-20 right-0 w-[90vw] md:w-[400px] h-[600px] max-h-[80vh] flex flex-col glass-morphism rounded-[32px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
+                        className="absolute bottom-20 right-0 w-[90vw] md:w-[400px] h-[600px] max-h-[80vh] flex flex-col bg-[#0a0a0a] rounded-[32px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
                     >
                         {/* Header */}
                         <div className="p-6 bg-gradient-to-r from-primary/20 to-transparent border-b border-white/5 flex items-center justify-between">
@@ -127,7 +123,7 @@ export const ChatWidget: React.FC = () => {
                                         </div>
                                         <div className={`p-4 rounded-2xl text-sm leading-relaxed ${msg.sender === 'user'
                                             ? 'bg-primary text-white rounded-tr-none shadow-[0_10px_20px_rgba(168,85,247,0.2)]'
-                                            : 'bg-white/5 text-white/80 rounded-tl-none border border-white/5'
+                                            : 'bg-white/10 text-white/80 rounded-tl-none border border-white/5'
                                             }`}>
                                             {msg.text}
                                         </div>
@@ -194,22 +190,38 @@ export const ChatWidget: React.FC = () => {
                 )}
             </AnimatePresence>
 
-            {/* Toggle Button */}
-            <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsOpen(!isOpen)}
-                className={`group relative w-16 h-16 rounded-full flex items-center justify-center transition-all ${isOpen ? 'bg-white/10 text-white' : 'bg-primary text-white shadow-[0_10px_30px_rgba(168,85,247,0.4)]'
-                    }`}
-            >
-                <div className="absolute inset-0 rounded-full bg-primary/20 group-hover:blur-xl transition-all pointer-events-none" />
-                {isOpen ? <X className="w-7 h-7" /> : <MessageSquare className="w-7 h-7" />}
+            <div className="flex flex-col items-end gap-4">
+                {/* Persistent Help Bubble */}
+                <AnimatePresence>
+                    {!isOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, x: 20, scale: 0.8 }}
+                            animate={{ opacity: 1, x: 0, scale: 1 }}
+                            exit={{ opacity: 0, x: 20, scale: 0.8 }}
+                            className="bg-white/10 backdrop-blur-md border border-white/10 px-4 py-2 rounded-2xl rounded-br-none text-white text-xs font-medium shadow-2xl mb-2"
+                        >
+                            Feels like need help?
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
-                {/* Notification Badge */}
-                {!isOpen && messages.length === 1 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 border-4 border-[#050505] rounded-full animate-bounce" />
-                )}
-            </motion.button>
+                {/* Toggle Button */}
+                <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsOpen(!isOpen)}
+                    className={`group relative w-16 h-16 rounded-full flex items-center justify-center transition-all ${isOpen ? 'bg-white/10 text-white' : 'bg-primary text-white shadow-[0_10px_30px_rgba(168,85,247,0.4)]'
+                        }`}
+                >
+                    <div className="absolute inset-0 rounded-full bg-primary/20 group-hover:blur-xl transition-all pointer-events-none" />
+                    {isOpen ? <X className="w-7 h-7" /> : <MessageSquare className="w-7 h-7" />}
+
+                    {/* Notification Badge */}
+                    {!isOpen && messages.length === 1 && (
+                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 border-4 border-[#050505] rounded-full" />
+                    )}
+                </motion.button>
+            </div>
         </div>
     );
 };
