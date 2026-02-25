@@ -1,0 +1,33 @@
+# 4Pie Labs
+
+> AI Automation & Digital Marketing Agency
+
+4Pie Labs is a premier AI Automation and Digital Marketing Agency headquartered in London, UK. We design and build custom AI Operating Systems, autonomous AI agents, and high-conversion digital marketing strategies for agencies and modern brands.
+
+## What We Do
+
+- **AI Operating Systems**: End-to-end autonomous systems that run your business operations — from CRM automation to intelligent document processing.
+- **AI Agents & Chatbots**: Custom conversational AI for lead qualification, customer support, and internal workflows.
+- **SEO & Content Automation**: Automated content pipelines that generate, optimize, and publish SEO-driven blog posts at scale.
+- **Workflow Automation**: n8n and Make.com integrations that connect your tools, eliminate manual tasks, and save thousands of hours.
+- **Digital Marketing**: Performance marketing, social media management, and brand strategy with measurable ROI.
+- **Web Development**: Premium, high-performance websites built with React, Next.js, and modern web technologies.
+
+## Key Results
+
+- 50+ successful client deployments
+- 83% average reduction in processing time
+- 115,000+ hours automated for clients
+- $2.4M+ in cost savings delivered
+
+## Pages
+
+- [Home](https://www.fourpielabs.com/)
+- [About Us](https://www.fourpielabs.com/about)
+- [Services](https://www.fourpielabs.com/services)
+- [Blog / Insights](https://www.fourpielabs.com/blog)
+
+## Contact
+
+- Website: https://www.fourpielabs.com
+- Booking: Available via the website's "Book a Call" feature
