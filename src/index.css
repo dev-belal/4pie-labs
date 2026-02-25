@@ -124,6 +124,44 @@ h6 {
   @apply bg-background;
 }
 
-::-webkit-scrollbar-thumb {
-  @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+
+/* Chatbot Snake Border Animation */
+.snake-border-container {
+  position: relative;
+  padding: 1px;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.snake-border-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(transparent,
+      rgba(168, 85, 247, 0.4),
+      rgba(168, 85, 247, 0.8),
+      rgba(168, 85, 247, 0.4),
+      transparent 30%);
+  animation: snake-rotate 4s linear infinite;
+}
+
+.snake-border-content {
+  position: relative;
+  background: rgba(10, 10, 10, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: calc(1rem - 1px);
+  z-index: 1;
+}
+
+@keyframes snake-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
