@@ -5,37 +5,37 @@ import { supabase } from '../lib/supabase';
 
 const staticTestimonials = [
     {
-        title: "Hiring used to take us weeks. Now it takes hours.",
+        headline: "Hiring used to take us weeks. Now it takes hours.",
         quote: "We process hundreds of CVs every week and it was all manual. They built us a system that generates standardized CVs and scores candidates. What used to take our recruiters two full days now happens in the background.",
-        author: "Israel Sanc Rueda",
+        name: "Israel Sanc Rueda",
         role: "CEO & Founder, NexAi Automations, Espana",
         avatar: "/testimonials/israel.jpeg"
     },
     {
-        title: "Our content workflow went from chaos to clockwork.",
+        headline: "Our content workflow went from chaos to clockwork.",
         quote: "We were publishing maybe 2 blogs a month with zero SEO consistency. Now we're pushing out 8 to 10 optimized posts a month and organic traffic has nearly tripled. Feels like we added a whole content team.",
-        author: "Iman Motamed",
+        name: "Iman Motamed",
         role: "CEO & Founder, Bloomhouse Marketing, USA",
         avatar: "/testimonials/iman.png"
     },
     {
-        title: "Really Helpful in automating the hectic work we had",
+        headline: "Really Helpful in automating the hectic work we had",
         quote: "Really goes above and beyond to support me and my business. Not only puts together great solutions, but also helps explain them and why they will benefit our team. Would highly recommended!",
-        author: "Louis Modeste",
+        name: "Louis Modeste",
         role: "Wealth Manager, Edward Bond Associates, UK",
         avatar: "/testimonials/louis.jpeg"
     },
     {
-        title: "Leads stopped falling through the cracks.",
+        headline: "Leads stopped falling through the cracks.",
         quote: "Now we have an AI chatbot handling first-touch support, booking calls, and following up automatically. Every inquiry gets an instant response, and we've seen a real jump in conversions.",
-        author: "Saad Ali Khan",
+        name: "Saad Ali Khan",
         role: "CEO & Founder, Botyama AI, UK",
         avatar: "/testimonials/saad.jpeg"
     },
     {
-        title: "Finally, reporting that doesn't eat up our week.",
+        headline: "Finally, reporting that doesn't eat up our week.",
         quote: "They built us a fully automated system with a live dashboard where clients can see occupancy and revenue in real time. That one system alone freed up enough time to take on 20 more units.",
-        author: "Abdul Kareem",
+        name: "Abdul Kareem",
         role: "Lead Engineer, ZJ Rentals, USA",
         avatar: "/testimonials/abdul.jpeg"
     }
@@ -148,7 +148,7 @@ export const Testimonials = () => {
                             <AnimatePresence initial={false} custom={direction} mode="popLayout">
                                 {getVisibleTestimonials().map((t, i) => (
                                     <motion.div
-                                        key={`${t.author}-${currentIndex}-${i}`}
+                                        key={`${t.name}-${currentIndex}-${i}`}
                                         custom={direction}
                                         variants={slideVariants}
                                         initial="enter"
@@ -164,7 +164,7 @@ export const Testimonials = () => {
                                                 ))}
                                             </div>
                                             <h3 className="text-xl font-bold mb-4 text-white leading-tight min-h-[3.5rem]">
-                                                {t.title}
+                                                {t.headline || t.title}
                                             </h3>
                                             <p className="text-sm text-white/50 leading-relaxed mb-8 italic">
                                                 "{t.quote}"
@@ -176,15 +176,15 @@ export const Testimonials = () => {
                                                 <div className="absolute inset-0 bg-primary/20 blur-md rounded-full pointer-events-none opacity-0 group-hover/avatar:opacity-100 transition-opacity" />
                                                 <img
                                                     src={t.avatar}
-                                                    alt={t.author}
+                                                    alt={t.name}
                                                     className="w-12 h-12 rounded-full object-cover relative border border-white/10 grayscale hover:grayscale-0 transition-all duration-500"
                                                     onError={(e) => {
-                                                        (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(t.author)}&background=random&color=fff`;
+                                                        (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(t.name)}&background=random&color=fff`;
                                                     }}
                                                 />
                                             </div>
                                             <div>
-                                                <div className="font-bold text-sm text-white">{t.author}</div>
+                                                <div className="font-bold text-sm text-white">{t.name}</div>
                                                 <div className="text-[10px] text-white/30 uppercase tracking-wider font-semibold">{t.role}</div>
                                             </div>
                                         </div>
@@ -194,6 +194,7 @@ export const Testimonials = () => {
                         </div>
                     </div>
                 </div>
+
 
                 {/* Mobile Navigation controls */}
                 <div className="flex md:hidden justify-center gap-4 mt-8">
