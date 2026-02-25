@@ -16,6 +16,7 @@ import { ContactModal } from './components/ContactModal'
 import { CustomRequestModal } from './components/CustomRequestModal'
 import { AdminLogin } from './pages/AdminLogin'
 import { AdminDashboard } from './pages/AdminDashboard'
+import { ChatWidget } from './components/ChatWidget'
 
 import { BlogPost as BlogPostType } from './data/blogs'
 import { BlogPost } from './components/BlogPost'
@@ -66,6 +67,8 @@ function App() {
           onResults={() => navigateTo('home', 'results')}
         />
       )}
+
+      <ChatWidget />
 
       <ContactModal
         isOpen={isContactModalOpen}
