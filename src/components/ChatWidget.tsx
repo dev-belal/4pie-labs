@@ -55,7 +55,7 @@ export const ChatWidget: React.FC = () => {
         };
     }, [isOpen]);
 
-    const handleSendMessage = (text: string) => {
+    const handleSendMessage = async (text: string) => {
         if (!text.trim()) return;
 
         const userMsg: Message = {
@@ -69,28 +69,49 @@ export const ChatWidget: React.FC = () => {
         setInputValue('');
         setIsTyping(true);
 
-        // Simulate bot response
-        setTimeout(() => {
+        try {
+            const response = await fetch('https://myna-marketing.app.n8n.cloud/webhook/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: text }),
+            });
+
+            if (!response.ok) throw new Error('Webhook failed');
+
+            const data = await response.json();
+
+            // Handle various n8n response formats
+            let botText = "";
+            if (typeof data === 'string') {
+                botText = data;
+            } else if (Array.isArray(data) && data[0]) {
+                const item = data[0];
+                botText = item.output || item.text || item.message || item.response || JSON.stringify(item);
+            } else {
+                botText = data.output || data.text || data.message || data.response || JSON.stringify(data);
+            }
+
             const botMsg: Message = {
                 id: (Date.now() + 1).toString(),
-                text: getBotResponse(text),
+                text: botText || "I'm sorry, I couldn't process that. Would you like to book a call instead?",
                 sender: 'bot',
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, botMsg]);
+        } catch (error) {
+            console.error('Chatbot Error:', error);
+            const errorMsg: Message = {
+                id: (Date.now() + 1).toString(),
+                text: "I'm having a bit of trouble connecting right now. Please feel free to book a discovery call or try again in a moment!",
+                sender: 'bot',
+                timestamp: new Date()
+            };
+            setMessages(prev => [...prev, errorMsg]);
+        } finally {
             setIsTyping(false);
-        }, 1500);
-    };
-
-    const getBotResponse = (input: string): string => {
-        const text = input.toLowerCase();
-        if (text.includes('booking') || text.includes('call') || text.includes('book')) {
-            return "You can book a call directly with our team here: [Book a Discovery Call](https://calendly.com/4pielabs).";
         }
-        if (text.includes('service') || text.includes('do you do')) {
-            return "We specialize in AI Operating Systems, Autonomous Agents, and Digital Marketing Automation. Would you like to see our full list of services?";
-        }
-        return "That's a great question! One of our human experts can assist you better with that. Would you like me to ping them or provide our booking link?";
     };
 
     return (
