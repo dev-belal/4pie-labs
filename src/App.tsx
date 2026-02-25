@@ -17,6 +17,7 @@ import { CustomRequestModal } from './components/CustomRequestModal'
 import { AdminLogin } from './pages/AdminLogin'
 import { AdminDashboard } from './pages/AdminDashboard'
 import { ChatWidget } from './components/ChatWidget'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 import { BlogPost as BlogPostType } from './data/blogs'
 import { BlogPost } from './components/BlogPost'
@@ -203,6 +204,7 @@ function App() {
           </div>
         </footer>
       )}
+      <SpeedInsights />
     </main>
   )
 }
