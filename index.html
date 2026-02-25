@@ -6,6 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>4Pie Labs | AI Automation & Digital Marketing Agency</title>
 
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+  </script>
+
   <!-- Primary Meta Tags -->
   <meta name="description"
     content="4Pie Labs is a premier AI Automation and Digital Marketing Agency. We build custom AI Operating Systems, autonomous agents, and high-conversion digital marketing strategies for agencies and modern brands." />
