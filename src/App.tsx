@@ -140,15 +140,6 @@ function App() {
         />
       )}
 
-      <AnimatePresence>
-        {selectedPost && (
-          <BlogPost
-            post={selectedPost}
-            onBack={() => setSelectedPost(null)}
-          />
-        )}
-      </AnimatePresence>
-
       {!isAdminPage && (
         <footer className="pt-24 pb-12 px-4 border-t border-white/5 bg-[#050505] glass-morphism">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12 items-center md:items-start">
