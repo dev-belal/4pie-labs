@@ -10,11 +10,13 @@ async function getLatestPosts(): Promise<BlogPost[]> {
     const supabase = await createClient();
     const { data } = await supabase
       .from("blogs")
-      .select("*")
+      .select(
+        "id, slug, title, category, author, date, readTime:read_time, image, excerpt, content, views, created_at",
+      )
       .order("created_at", { ascending: false })
       .limit(3);
 
-    if (data && data.length > 0) return data as BlogPost[];
+    if (data && data.length > 0) return data as unknown as BlogPost[];
   } catch {
     // fall through to static
   }

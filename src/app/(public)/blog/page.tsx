@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { blogs as staticBlogs, type BlogPost } from "@/data/blogs";
-import { createClient } from "@/lib/supabase/server";
+import { getAllPosts } from "@/lib/blog";
 import { BlogBrowser } from "@/components/BlogBrowser";
 
 export const metadata: Metadata = {
@@ -19,23 +18,8 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
-async function getPosts(): Promise<BlogPost[]> {
-  try {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from("blogs")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (data && data.length > 0) return data as BlogPost[];
-  } catch {
-    // fall through
-  }
-  return staticBlogs;
-}
-
 export default async function BlogPage() {
-  const posts = await getPosts();
+  const posts = await getAllPosts();
 
   return (
     <div className="min-h-screen bg-background pt-32 pb-24 px-4 overflow-x-hidden">

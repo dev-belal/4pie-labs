@@ -6,15 +6,22 @@ import {
 } from "@/data/blogs";
 import { createClient } from "@/lib/supabase/server";
 
+/**
+ * Column alias: map the snake_case Postgres column `read_time` to the
+ * camelCase field `readTime` expected by the BlogPost type.
+ */
+const BLOG_SELECT =
+  "id, slug, title, category, author, date, readTime:read_time, image, excerpt, content, views, created_at";
+
 export const getAllPosts = cache(async (): Promise<BlogPost[]> => {
   try {
     const supabase = await createClient();
     const { data } = await supabase
       .from("blogs")
-      .select("*")
+      .select(BLOG_SELECT)
       .order("created_at", { ascending: false });
 
-    if (data && data.length > 0) return data as BlogPost[];
+    if (data && data.length > 0) return data as unknown as BlogPost[];
   } catch {
     // fall through
   }
@@ -27,11 +34,11 @@ export const getPostBySlug = cache(
       const supabase = await createClient();
       const { data } = await supabase
         .from("blogs")
-        .select("*")
+        .select(BLOG_SELECT)
         .eq("slug", slug)
         .maybeSingle();
 
-      if (data) return data as BlogPost;
+      if (data) return data as unknown as BlogPost;
     } catch {
       // fall through
     }
