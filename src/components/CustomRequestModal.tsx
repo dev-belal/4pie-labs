@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { initialFormState, submitCustomRequest } from "@/lib/actions";
+import { useDialogA11y } from "@/lib/use-dialog-a11y";
 import { CustomDropdown } from "./CustomDropdown";
 
 interface CustomRequestModalProps {
@@ -28,6 +29,7 @@ export function CustomRequestModal({ isOpen, onClose }: CustomRequestModalProps)
   );
   const [isHovered, setIsHovered] = useState(false);
   const [requestType, setRequestType] = useState("Custom AI Operating System");
+  useDialogA11y(isOpen, onClose);
 
   useEffect(() => {
     if (state.status === "success") {
@@ -58,6 +60,9 @@ export function CustomRequestModal({ isOpen, onClose }: CustomRequestModalProps)
           />
 
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="custom-request-title"
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -79,7 +84,10 @@ export function CustomRequestModal({ isOpen, onClose }: CustomRequestModalProps)
                 <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center mb-4">
                   <Sparkles className="w-6 h-6 text-primary" />
                 </div>
-                <h2 className="text-2xl font-display font-bold mb-1">
+                <h2
+                  id="custom-request-title"
+                  className="text-2xl font-display font-bold mb-1"
+                >
                   Custom Request
                 </h2>
                 <p className="text-white/40 text-sm">

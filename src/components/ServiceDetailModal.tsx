@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, X, Zap } from "lucide-react";
 import type { Service } from "@/data/services";
+import { useDialogA11y } from "@/lib/use-dialog-a11y";
 
 interface ServiceDetailModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export function ServiceDetailModal({
   service,
   onContactClick,
 }: ServiceDetailModalProps) {
+  useDialogA11y(isOpen && !!service, onClose);
   if (!service) return null;
 
   const Icon = service.icon;
@@ -34,6 +36,9 @@ export function ServiceDetailModal({
           />
 
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="service-detail-title"
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -66,7 +71,10 @@ export function ServiceDetailModal({
                     <span className="text-primary text-[10px] font-bold uppercase tracking-widest mb-0.5 block">
                       {service.category}
                     </span>
-                    <h2 className="text-2xl font-display font-bold text-white tracking-tight leading-tight">
+                    <h2
+                      id="service-detail-title"
+                      className="text-2xl font-display font-bold text-white tracking-tight leading-tight"
+                    >
                       {service.title}
                     </h2>
                   </div>

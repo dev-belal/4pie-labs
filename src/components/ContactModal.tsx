@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { initialFormState, submitContact } from "@/lib/actions";
+import { useDialogA11y } from "@/lib/use-dialog-a11y";
 import { CustomDropdown } from "./CustomDropdown";
 
 interface ContactModalProps {
@@ -27,6 +28,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
   );
   const [isHovered, setIsHovered] = useState(false);
   const [serviceType, setServiceType] = useState("AI Automation");
+  useDialogA11y(isOpen, onClose);
 
   useEffect(() => {
     if (state.status === "success") {
@@ -57,6 +59,9 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
           />
 
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="contact-title"
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -75,7 +80,10 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
             <div className="p-6 md:p-8 relative">
               <div className="mb-6">
-                <h2 className="text-2xl font-display font-bold mb-1">
+                <h2
+                  id="contact-title"
+                  className="text-2xl font-display font-bold mb-1"
+                >
                   Get Started
                 </h2>
                 <p className="text-white/40 text-sm">
