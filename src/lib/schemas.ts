@@ -58,7 +58,12 @@ export const testimonialInsertSchema = z.object({
 });
 
 export const bookingSchema = z.object({
-  startISO: z.string().datetime({ message: "Pick a valid time slot" }),
+  // Cal.com slot starts include tz offsets (e.g. "...-04:00"), not just "Z",
+  // so allow offsets. `local` would also match naive strings; we want a
+  // real absolute moment, so only { offset: true }.
+  startISO: z
+    .string()
+    .datetime({ offset: true, message: "Pick a valid time slot" }),
   name: z.string().min(2, "Name must be at least 2 characters").max(100),
   email: z.string().email("Enter a valid email address").max(200),
   phone: z.string().max(40).optional(),
