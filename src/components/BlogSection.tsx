@@ -2,12 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { blogs as staticBlogs, type BlogPost } from "@/data/blogs";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public-client";
 import { cn } from "@/lib/utils";
 
 async function getLatestPosts(): Promise<BlogPost[]> {
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data } = await supabase
       .from("blogs")
       .select(

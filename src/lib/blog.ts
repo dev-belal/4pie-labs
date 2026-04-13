@@ -4,7 +4,7 @@ import {
   getBlogBySlug as getStaticBySlug,
   type BlogPost,
 } from "@/data/blogs";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public-client";
 
 /**
  * Column alias: map the snake_case Postgres column `read_time` to the
@@ -15,7 +15,8 @@ const BLOG_SELECT =
 
 export const getAllPosts = cache(async (): Promise<BlogPost[]> => {
   try {
-    const supabase = await createClient();
+    // Public anonymous read — no cookies, lets Next.js statically ISR.
+    const supabase = createPublicClient();
     const { data } = await supabase
       .from("blogs")
       .select(BLOG_SELECT)
@@ -31,7 +32,7 @@ export const getAllPosts = cache(async (): Promise<BlogPost[]> => {
 export const getPostBySlug = cache(
   async (slug: string): Promise<BlogPost | undefined> => {
     try {
-      const supabase = await createClient();
+      const supabase = createPublicClient();
       const { data } = await supabase
         .from("blogs")
         .select(BLOG_SELECT)
@@ -48,17 +49,17 @@ export const getPostBySlug = cache(
 
 export async function trackBlogView(slug: string, title: string) {
   try {
-    const supabase = await createClient();
-    // Atomic increment via RPC if available; otherwise best-effort read-then-write
+    // Public client: the RPC is `security definer` and the metrics insert
+    // policy allows anon. Staying off the SSR client keeps /blog/[slug]
+    // eligible for ISR instead of being forced fully dynamic.
+    const supabase = createPublicClient();
+
     const rpc = await supabase.rpc("increment_blog_views", { p_slug: slug });
     if (rpc.error) {
-      const { data: current } = await supabase
-        .from("blogs")
-        .select("views")
-        .eq("slug", slug)
-        .maybeSingle();
-      const next = ((current?.views as number | undefined) ?? 0) + 1;
-      await supabase.from("blogs").update({ views: next }).eq("slug", slug);
+      // Fallback: only admins can UPDATE blogs.views directly under our
+      // RLS, so this path won't actually bump the counter for anon users.
+      // Left in place as a no-op safety net if the RPC is ever dropped;
+      // the metrics event below still records the view.
     }
 
     await supabase.from("metrics").insert({

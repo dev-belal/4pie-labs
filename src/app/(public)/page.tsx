@@ -9,6 +9,13 @@ import { faqs } from "@/data/faqs";
 import { BlogSection } from "@/components/BlogSection";
 import { JsonLd } from "@/components/JsonLd";
 
+// Pre-render + ISR. Without this, every visit triggers fresh Supabase
+// queries from Testimonials + BlogSection, which adds 300–800ms per
+// navigation (and blocks Next's <Link> prefetch). Cache at the edge
+// for 5 minutes; admin publish actions call revalidatePath('/') so
+// new content surfaces immediately.
+export const revalidate = 300;
+
 export default function HomePage() {
   const faqSchema = {
     "@context": "https://schema.org",

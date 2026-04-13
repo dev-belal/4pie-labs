@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public-client";
 import {
   TestimonialsCarousel,
   type Testimonial,
@@ -52,7 +52,7 @@ export async function Testimonials() {
   let testimonials: Testimonial[] = STATIC_TESTIMONIALS;
 
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data } = await supabase
       .from("testimonials")
       .select("headline, title, quote, name, role, avatar")
