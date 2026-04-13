@@ -26,7 +26,7 @@ export function Hero() {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <section className="relative pt-32 pb-24 overflow-hidden min-h-[85vh] flex flex-col justify-center">
+    <section className="relative pt-44 md:pt-52 pb-24 overflow-hidden min-h-[90vh] flex flex-col justify-center">
       {/* Layer 1 — soft brand glow */}
       <div className="hero-glow" />
 
