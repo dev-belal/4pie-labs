@@ -39,6 +39,24 @@ export const categories: ServiceCategory[] = [
   "Digital Marketing",
 ];
 
+/**
+ * URL-safe slugs for each category. Used by the footer links and the
+ * `/services?category=<slug>` query param so visitors can deep-link to
+ * a pre-filtered catalog.
+ */
+export const SERVICE_CATEGORY_SLUGS = {
+  "AI Systems": "ai-systems",
+  "Design Creatives": "design",
+  "Digital Marketing": "marketing",
+} as const satisfies Record<ServiceCategory, string>;
+
+export function categoryFromSlug(slug: string): ServiceCategory | null {
+  for (const [cat, s] of Object.entries(SERVICE_CATEGORY_SLUGS)) {
+    if (s === slug) return cat as ServiceCategory;
+  }
+  return null;
+}
+
 export const services: Service[] = [
   {
     title: "AI Operating Systems",

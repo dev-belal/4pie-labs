@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ChevronRight, Search, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   categories,
+  categoryFromSlug,
+  SERVICE_CATEGORY_SLUGS,
   services,
   type Service,
   type ServiceCategory,
@@ -15,10 +18,44 @@ import { useModals } from "./modal-provider";
 
 export function ServicesBrowser() {
   const { openContact, openCustomRequest } = useModals();
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  /** Resolve the initial category from `?category=<slug>` in the URL on
+   *  first render — lets the footer / other pages deep-link into a
+   *  pre-filtered catalog. Falls back to the first category. */
+  const categoryFromUrl = (): ServiceCategory => {
+    const raw = searchParams.get("category");
+    const match = raw ? categoryFromSlug(raw) : null;
+    return match ?? "AI Systems";
+  };
+
   const [activeCategory, setActiveCategory] =
-    useState<ServiceCategory>("AI Systems");
+    useState<ServiceCategory>(categoryFromUrl);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedService, setSelectedService] = useState<Service | null>(null);
+
+  // Keep state in sync with URL changes (e.g. visitor clicks the footer
+  // while already on /services, or hits back/forward).
+  useEffect(() => {
+    const next = categoryFromUrl();
+    setActiveCategory((prev) => (prev === next ? prev : next));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  // When the visitor picks a tab, mirror it into the URL so the choice
+  // is shareable / bookmarkable / survives a refresh. Use `replace` so
+  // we don't flood the back-button stack with every tab click.
+  const selectCategory = useCallback(
+    (cat: ServiceCategory) => {
+      setActiveCategory(cat);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("category", SERVICE_CATEGORY_SLUGS[cat]);
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
 
   const filteredServices = services.filter(
     (s) =>
@@ -57,7 +94,7 @@ export function ServicesBrowser() {
                 <button
                   type="button"
                   key={cat}
-                  onClick={() => setActiveCategory(cat)}
+                  onClick={() => selectCategory(cat)}
                   className={cn(
                     "w-full flex items-center justify-between px-6 py-4 rounded-2xl text-left font-bold transition-all",
                     activeCategory === cat

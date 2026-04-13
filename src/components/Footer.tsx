@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { SERVICE_CATEGORY_SLUGS } from "@/data/services";
 
 const QUICK_LINKS = [
   { label: "Home", href: "/" },
@@ -7,7 +8,16 @@ const QUICK_LINKS = [
   { label: "Services", href: "/services" },
 ];
 
-const SERVICES = ["AI Automation", "Design Creatives", "Digital Marketing"];
+/**
+ * Visitor-facing labels use the brand voice ("AI Automation"); the URL
+ * slugs map to the internal ServiceCategory taxonomy. Clicking any of
+ * these deep-links to /services with the category pre-selected.
+ */
+const SERVICES: { label: string; slug: string }[] = [
+  { label: "AI Automation", slug: SERVICE_CATEGORY_SLUGS["AI Systems"] },
+  { label: "Design Creatives", slug: SERVICE_CATEGORY_SLUGS["Design Creatives"] },
+  { label: "Digital Marketing", slug: SERVICE_CATEGORY_SLUGS["Digital Marketing"] },
+];
 
 export function Footer() {
   return (
@@ -78,8 +88,13 @@ export function Footer() {
             </h4>
             <ul className="space-y-3 text-white/40 text-sm">
               {SERVICES.map((s) => (
-                <li key={s}>
-                  <span className="cursor-default">{s}</span>
+                <li key={s.slug}>
+                  <Link
+                    href={`/services?category=${s.slug}`}
+                    className="hover:text-white transition-colors"
+                  >
+                    {s.label}
+                  </Link>
                 </li>
               ))}
             </ul>
