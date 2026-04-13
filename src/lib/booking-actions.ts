@@ -79,15 +79,52 @@ export async function bookSlot(
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Unknown error";
     console.error("Cal.com booking error:", msg);
-    if (/no longer available|conflict|busy|full/i.test(msg)) {
+
+    // Conflict / slot-taken — broad net because Cal.com wording varies.
+    if (
+      /no\s+longer\s+available|already\s+booked|conflict|slot.*(?:taken|busy|unavailable|gone)|time.*(?:taken|busy|unavailable)|not\s+available/i.test(
+        msg,
+      )
+    ) {
       return {
         status: "error",
-        message: "That slot was just taken — please pick another.",
+        code: "slot_taken",
+        message:
+          "That slot was just taken — I've refreshed the times, please pick another.",
       };
     }
+
+    // Cal.com minimum-notice / buffer rules rejecting.
+    if (/too\s+late|minimum\s+notice|buffer|cutoff|past|advance/i.test(msg)) {
+      return {
+        status: "error",
+        code: "too_late",
+        message:
+          "This time doesn't meet the booking window. Please pick a later slot.",
+      };
+    }
+
+    // Try to pull a human-readable message out of Cal's response body,
+    // which looks like `Cal.com booking 400: {"status":"error","message":"…"}`.
+    const humanMsg = extractCalMessage(msg);
     return {
       status: "error",
-      message: "Couldn't confirm the booking — please try again.",
+      message:
+        humanMsg ?? "Couldn't confirm the booking — please try again.",
     };
   }
+}
+
+function extractCalMessage(msg: string): string | null {
+  const match = msg.match(/\{[^]*\}/); // greedy body after "Cal.com booking …:"
+  if (!match) return null;
+  try {
+    const parsed = JSON.parse(match[0]) as { message?: unknown };
+    if (typeof parsed.message === "string" && parsed.message.length < 200) {
+      return parsed.message;
+    }
+  } catch {
+    /* ignore */
+  }
+  return null;
 }

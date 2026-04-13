@@ -2,8 +2,10 @@
 
 import {
   useActionState,
+  useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   useTransition,
 } from "react";
@@ -71,6 +73,14 @@ function formatLongDateTime(iso: string, timeZone: string) {
   }).format(new Date(iso));
 }
 
+/** How often we silently re-fetch availability while the booking UI is
+ *  open, to keep the calendar / time grid fresh as new bookings land. */
+const BACKGROUND_REFRESH_MS = 45_000;
+
+/** Briefly block the "submit" button on the details step right after
+ *  landing there, to absorb double-clicks coming from the time grid. */
+const SUBMIT_UNLOCK_DELAY_MS = 450;
+
 export function BookingFlow() {
   const [step, setStep] = useState<Step>("date");
   const [timeZone, setTimeZone] = useState("UTC");
@@ -83,22 +93,53 @@ export function BookingFlow() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [selectedDay, setSelectedDay] = useState<Date | undefined>();
   const [selectedSlot, setSelectedSlot] = useState<string | undefined>();
+  const [submitUnlocked, setSubmitUnlocked] = useState(false);
   const [, startTransition] = useTransition();
 
   const [state, formAction, pending] = useActionState(bookSlot, bookingInitial);
+
+  /** Latest month/tz captured in a ref so the interval/focus handlers
+   *  always refetch the *current* visible month without re-binding the
+   *  listener on every state change. */
+  const currentRef = useRef({ year: 0, monthNum: 0, timeZone: "UTC" });
+  currentRef.current = {
+    year: month.getFullYear(),
+    monthNum: month.getMonth() + 1,
+    timeZone,
+  };
+
+  const refreshSlots = useCallback(
+    async (opts: { quiet?: boolean } = {}) => {
+      const { year, monthNum, timeZone: tz } = currentRef.current;
+      if (!tz || tz === "UTC") return;
+      if (!opts.quiet) {
+        setLoading(true);
+        setLoadError(null);
+      }
+      const res = await getMonthSlots(year, monthNum, tz);
+      if (res.ok) {
+        setSlotsByDay(res.slots);
+        if (!opts.quiet) setLoadError(null);
+      } else if (!opts.quiet) {
+        setLoadError(res.error);
+      }
+      if (!opts.quiet) setLoading(false);
+    },
+    [],
+  );
 
   // Resolve visitor timezone after mount (Intl is browser-only).
   useEffect(() => {
     setTimeZone(detectTimeZone());
   }, []);
 
-  // Fetch slots whenever the visible month or timezone changes.
+  // Fetch slots whenever the visible month or timezone changes (loud fetch).
   useEffect(() => {
     if (!timeZone || timeZone === "UTC") return;
     let cancelled = false;
-    setLoading(true);
-    setLoadError(null);
     startTransition(async () => {
+      setLoading(true);
+      setLoadError(null);
       const res = await getMonthSlots(
         month.getFullYear(),
         month.getMonth() + 1,
@@ -114,10 +155,76 @@ export function BookingFlow() {
     };
   }, [month, timeZone]);
 
-  // Move to success step + reset selection on a successful booking.
+  // Background auto-refresh + refresh on tab focus, only while the visitor
+  // is still picking (date/time steps). Prevents stale slots from leading
+  // to a "just taken" error at submit time.
   useEffect(() => {
-    if (state.status === "success") setStep("success");
-  }, [state.status]);
+    if (step !== "date" && step !== "time") return;
+
+    const interval = window.setInterval(() => {
+      if (document.visibilityState === "visible") {
+        void refreshSlots({ quiet: true });
+      }
+    }, BACKGROUND_REFRESH_MS);
+
+    const onFocus = () => void refreshSlots({ quiet: true });
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") {
+        void refreshSlots({ quiet: true });
+      }
+    };
+
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [step, refreshSlots]);
+
+  // Move to success step on a successful booking; on a slot-taken
+  // conflict, refresh + kick back to the time step + clear the selection.
+  useEffect(() => {
+    if (state.status === "success") {
+      setStep("success");
+      return;
+    }
+    if (state.status === "error" && state.code === "slot_taken") {
+      setSelectedSlot(undefined);
+      setStep(selectedDay ? "time" : "date");
+      void refreshSlots();
+    }
+  }, [state, selectedDay, refreshSlots]);
+
+  // Brief submit lockout when entering the details step to prevent a
+  // stray Enter / double-click from firing before the user sees the form.
+  useEffect(() => {
+    if (step !== "details") {
+      setSubmitUnlocked(false);
+      return;
+    }
+    const t = window.setTimeout(
+      () => setSubmitUnlocked(true),
+      SUBMIT_UNLOCK_DELAY_MS,
+    );
+    return () => window.clearTimeout(t);
+  }, [step]);
+
+  // If a background refresh wipes out the currently-picked slot (someone
+  // else booked it while the visitor was on the details page), bounce
+  // them back to the time grid instead of letting them submit a dead slot.
+  useEffect(() => {
+    if (step !== "details" || !selectedSlot || !selectedDay) return;
+    const stillAvailable = (slotsByDay[ymdKey(selectedDay)] ?? []).some(
+      (s) => s.start === selectedSlot,
+    );
+    if (!stillAvailable) {
+      setSelectedSlot(undefined);
+      setStep("time");
+    }
+  }, [slotsByDay, selectedSlot, selectedDay, step]);
 
   const availableDays = useMemo(() => {
     return Object.keys(slotsByDay)
@@ -218,10 +325,29 @@ export function BookingFlow() {
             All times shown in {timeZone}
           </p>
 
+          {state.status === "error" && state.code === "slot_taken" && (
+            <div
+              role="status"
+              aria-live="polite"
+              className="mb-6 px-4 py-3 rounded-2xl bg-amber-400/10 border border-amber-400/30 text-amber-200 text-sm"
+            >
+              {state.message}
+            </div>
+          )}
+
           {slotsForSelectedDay.length === 0 ? (
-            <p className="text-white/50 text-center py-12">
-              No availability on this day. Pick another.
-            </p>
+            <div className="text-center py-12">
+              <p className="text-white/50 mb-4">
+                No availability on this day. Pick another.
+              </p>
+              <button
+                type="button"
+                onClick={() => setStep("date")}
+                className="text-xs font-bold uppercase tracking-widest text-primary hover:underline"
+              >
+                Back to calendar
+              </button>
+            </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {slotsForSelectedDay.map((slot) => {
@@ -369,7 +495,7 @@ export function BookingFlow() {
 
           <button
             type="submit"
-            disabled={pending}
+            disabled={pending || !submitUnlocked}
             className="w-full flex items-center justify-center gap-3 bg-white text-black px-7 py-3.5 rounded-2xl text-base font-bold hover:scale-[1.01] active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             {pending ? (

@@ -17,9 +17,18 @@ export interface BookingResult {
   status: string;
 }
 
+export type BookingErrorCode = "slot_taken" | "too_late";
+
 export type BookingState =
   | { status: "idle" }
   | { status: "success"; booking: BookingResult }
-  | { status: "error"; message: string; errors?: Record<string, string[]> };
+  | {
+      status: "error";
+      message: string;
+      errors?: Record<string, string[]>;
+      /** Machine-readable classifier so the UI can recover differently
+       *  for e.g. slot-taken (refresh + back to time step) vs validation. */
+      code?: BookingErrorCode;
+    };
 
 export const bookingInitial: BookingState = { status: "idle" };
