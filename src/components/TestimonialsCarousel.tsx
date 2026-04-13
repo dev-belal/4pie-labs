@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
@@ -43,6 +43,15 @@ const transition = {
   filter: { duration: 0.4, ease: "easeInOut" as const },
 };
 
+/** Minimum horizontal distance (px) to register as a swipe. */
+const SWIPE_THRESHOLD = 50;
+
+/** Minimum wheel deltaX (px per gesture) to count as a scroll intent. */
+const WHEEL_THRESHOLD = 40;
+
+/** Cool-down between gesture-driven paginations (both touch + wheel). */
+const GESTURE_COOLDOWN_MS = 500;
+
 export function TestimonialsCarousel({
   testimonials,
 }: {
@@ -51,12 +60,92 @@ export function TestimonialsCarousel({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
-  const paginate = (newDirection: number) => {
-    setDirection(newDirection);
-    setCurrentIndex(
-      (prev) => (prev + newDirection + testimonials.length) % testimonials.length,
-    );
-  };
+  const containerRef = useRef<HTMLDivElement>(null);
+  const touchStartXRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
+  const lastGestureAtRef = useRef(0);
+  const wheelAccumRef = useRef(0);
+
+  const paginate = useCallback(
+    (newDirection: number) => {
+      setDirection(newDirection);
+      setCurrentIndex(
+        (prev) =>
+          (prev + newDirection + testimonials.length) % testimonials.length,
+      );
+    },
+    [testimonials.length],
+  );
+
+  /**
+   * Gesture-driven pagination. One tick per cooldown window so a single
+   * physical swipe / trackpad flick can't skip several testimonials.
+   */
+  const paginateFromGesture = useCallback(
+    (newDirection: number) => {
+      const now = Date.now();
+      if (now - lastGestureAtRef.current < GESTURE_COOLDOWN_MS) return;
+      lastGestureAtRef.current = now;
+      paginate(newDirection);
+    },
+    [paginate],
+  );
+
+  // Touch swipe (mobile + touchscreen laptops). Track X/Y on start so we
+  // can distinguish horizontal swipes from accidental vertical scrolls.
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    const t = e.touches[0];
+    touchStartXRef.current = t.clientX;
+    touchStartYRef.current = t.clientY;
+  }, []);
+
+  const onTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      const startX = touchStartXRef.current;
+      const startY = touchStartYRef.current;
+      touchStartXRef.current = null;
+      touchStartYRef.current = null;
+      if (startX == null || startY == null) return;
+
+      const end = e.changedTouches[0];
+      const dx = end.clientX - startX;
+      const dy = end.clientY - startY;
+
+      // Horizontal intent only — ignore vertical page scrolls.
+      if (Math.abs(dx) < SWIPE_THRESHOLD) return;
+      if (Math.abs(dy) > Math.abs(dx)) return;
+
+      paginateFromGesture(dx < 0 ? 1 : -1);
+    },
+    [paginateFromGesture],
+  );
+
+  // Trackpad two-finger horizontal scroll. Accumulate deltaX until it
+  // crosses the threshold so slow flicks still register, then reset.
+  // Use a non-passive listener so we can preventDefault and stop the
+  // browser from scrolling the page horizontally while we navigate.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      // Only react when horizontal intent dominates — preserves vertical
+      // page scrolling when the user is scrolling through the page.
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+
+      e.preventDefault();
+      wheelAccumRef.current += e.deltaX;
+
+      if (Math.abs(wheelAccumRef.current) >= WHEEL_THRESHOLD) {
+        const dir = wheelAccumRef.current > 0 ? 1 : -1;
+        wheelAccumRef.current = 0;
+        paginateFromGesture(dir);
+      }
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [paginateFromGesture]);
 
   const getVisibleTestimonials = () => {
     const items: Testimonial[] = [];
@@ -68,7 +157,12 @@ export function TestimonialsCarousel({
 
   return (
     <>
-      <div className="relative px-4 md:px-16 group/carousel">
+      <div
+        ref={containerRef}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+        className="relative px-4 md:px-16 group/carousel touch-pan-y select-none"
+      >
         <div className="absolute top-1/2 -translate-y-1/2 left-0 z-20 hidden md:block">
           <button
             type="button"
