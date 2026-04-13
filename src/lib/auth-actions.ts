@@ -11,7 +11,6 @@ const signInSchema = z.object({
 });
 
 import type { SignInState } from "@/lib/form-types";
-export type { SignInState };
 
 export async function signIn(
   _prev: SignInState,

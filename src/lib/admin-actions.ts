@@ -5,7 +5,6 @@ import { createClient } from "@/lib/supabase/server";
 import { blogInsertSchema, testimonialInsertSchema } from "@/lib/schemas";
 
 import type { PublishState } from "@/lib/form-types";
-export type { PublishState };
 
 async function requireAdmin() {
   const supabase = await createClient();

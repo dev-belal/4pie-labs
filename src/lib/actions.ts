@@ -10,7 +10,6 @@ import {
 } from "@/lib/schemas";
 
 import type { FormState } from "@/lib/form-types";
-export type { FormState };
 
 async function guardAndIp(routeKey: string, limit = 5, windowMs = 60_000) {
   const h = await headers();

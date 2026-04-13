@@ -4,15 +4,8 @@ import { headers } from "next/headers";
 import { clientIp } from "@/lib/n8n";
 import { rateLimit } from "@/lib/rate-limit";
 import { bookingSchema } from "@/lib/schemas";
-import {
-  createBooking,
-  fetchSlots,
-  type BookingResult,
-  type SlotsByDay,
-} from "@/lib/cal";
-
-import type { BookingState } from "@/lib/booking-types";
-export type { BookingState };
+import { createBooking, fetchSlots } from "@/lib/cal";
+import type { BookingState, SlotsByDay } from "@/lib/booking-types";
 
 /**
  * Fetch available slots for a calendar month, scoped to the visitor's
