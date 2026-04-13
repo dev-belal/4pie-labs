@@ -10,7 +10,7 @@ const STATS = [
   { label: "Successful Deployments", val: "50+" },
   { label: "Reduction in processing time", val: "83%" },
   { label: "Hours automated for clients", val: "115k" },
-  { label: "Cost savings delivered", val: "$2.4M" },
+  { label: "Cost savings delivered", val: "$500k" },
 ];
 
 // three.js touches `window` at module-eval time, so the scene must never
@@ -47,16 +47,6 @@ export function Hero() {
 
       {/* Layer 4 — content */}
       <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-morphism border-white/10 text-[10px] font-bold tracking-[0.3em] uppercase text-white/70 mb-8"
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          AI Automation · Design · Marketing
-        </motion.div>
-
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
