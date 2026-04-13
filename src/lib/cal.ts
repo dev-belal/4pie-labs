@@ -9,6 +9,10 @@
  * Docs: https://cal.com/docs/api-reference/v2/introduction
  */
 
+import type { BookingResult, SlotsByDay } from "@/lib/booking-types";
+
+export type { BookingResult, SlotsByDay };
+
 const CAL_BASE = "https://api.cal.com/v2";
 
 function requireKey(): string {
@@ -21,10 +25,6 @@ function eventTypeId(): number {
   const id = Number(process.env.CAL_EVENT_TYPE_ID);
   if (!id) throw new Error("CAL_EVENT_TYPE_ID env var is not set");
   return id;
-}
-
-export interface SlotsByDay {
-  [yyyymmdd: string]: { start: string }[];
 }
 
 /**
@@ -65,15 +65,6 @@ export interface CreateBookingInput {
   timeZone: string;
   notes?: string;
   phone?: string;
-}
-
-export interface BookingResult {
-  id: number;
-  uid: string;
-  start: string;
-  end: string;
-  meetingUrl?: string;
-  status: string;
 }
 
 /**

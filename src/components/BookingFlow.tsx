@@ -22,9 +22,7 @@ import {
   Video,
 } from "lucide-react";
 import { bookSlot, getMonthSlots } from "@/lib/booking-actions";
-import { bookingInitial } from "@/lib/booking-types";
-import type { SlotsByDay } from "@/lib/cal";
-import "react-day-picker/style.css";
+import { bookingInitial, type SlotsByDay } from "@/lib/booking-types";
 
 type Step = "date" | "time" | "details" | "success";
 
