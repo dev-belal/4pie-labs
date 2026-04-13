@@ -14,14 +14,6 @@ const STATIC_TESTIMONIALS: Testimonial[] = [
     avatar: "/testimonials/israel.jpeg",
   },
   {
-    headline: "Our content workflow went from chaos to clockwork.",
-    quote:
-      "We were publishing maybe 2 blogs a month with zero SEO consistency. Now we're pushing out 8 to 10 optimized posts a month and organic traffic has nearly tripled. Feels like we added a whole content team.",
-    name: "Iman Motamed",
-    role: "CEO & Founder, Bloomhouse Marketing, USA",
-    avatar: "/testimonials/iman.png",
-  },
-  {
     headline: "Really Helpful in automating the hectic work we had",
     quote:
       "Really goes above and beyond to support me and my business. Not only puts together great solutions, but also helps explain them and why they will benefit our team. Would highly recommended!",
