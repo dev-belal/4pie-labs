@@ -3,7 +3,8 @@
 import { useActionState, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Calculator, Check, Mail, Zap } from "lucide-react";
-import { initialFormState, submitROI } from "@/lib/actions";
+import { submitROI } from "@/lib/actions";
+import { initialFormState } from "@/lib/form-types";
 
 export function ROICalculator() {
   const [hours, setHours] = useState(20);

@@ -13,7 +13,8 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { initialFormState, submitCustomRequest } from "@/lib/actions";
+import { submitCustomRequest } from "@/lib/actions";
+import { initialFormState } from "@/lib/form-types";
 import { useDialogA11y } from "@/lib/use-dialog-a11y";
 import { CustomDropdown } from "./CustomDropdown";
 

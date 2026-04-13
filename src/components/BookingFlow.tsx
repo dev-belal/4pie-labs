@@ -21,11 +21,8 @@ import {
   User,
   Video,
 } from "lucide-react";
-import {
-  bookingInitial,
-  bookSlot,
-  getMonthSlots,
-} from "@/lib/booking-actions";
+import { bookSlot, getMonthSlots } from "@/lib/booking-actions";
+import { bookingInitial } from "@/lib/booking-types";
 import type { SlotsByDay } from "@/lib/cal";
 import "react-day-picker/style.css";
 

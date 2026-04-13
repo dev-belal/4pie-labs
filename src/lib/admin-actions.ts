@@ -4,13 +4,8 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { blogInsertSchema, testimonialInsertSchema } from "@/lib/schemas";
 
-export type PublishState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-  errors?: Record<string, string[]>;
-};
-
-export const publishInitial: PublishState = { status: "idle" };
+import type { PublishState } from "@/lib/form-types";
+export type { PublishState };
 
 async function requireAdmin() {
   const supabase = await createClient();

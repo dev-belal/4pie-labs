@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 import { ArrowRight, Lock, User } from "lucide-react";
-import { signIn, signInInitial } from "@/lib/auth-actions";
+import { signIn } from "@/lib/auth-actions";
+import { signInInitial } from "@/lib/form-types";
 
 export function LoginForm({ next }: { next?: string }) {
   const [state, formAction, pending] = useActionState(signIn, signInInitial);
