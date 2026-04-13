@@ -57,9 +57,19 @@ export const testimonialInsertSchema = z.object({
   rating: z.number().int().min(1).max(5),
 });
 
+export const bookingSchema = z.object({
+  startISO: z.string().datetime({ message: "Pick a valid time slot" }),
+  name: z.string().min(2, "Name must be at least 2 characters").max(100),
+  email: z.string().email("Enter a valid email address").max(200),
+  phone: z.string().max(40).optional(),
+  notes: z.string().max(1000).optional(),
+  timeZone: z.string().min(1).max(100),
+});
+
 export type ContactInput = z.infer<typeof contactSchema>;
 export type CustomRequestInput = z.infer<typeof customRequestSchema>;
 export type RoiInput = z.infer<typeof roiSchema>;
 export type ChatInput = z.infer<typeof chatSchema>;
 export type BlogInsertInput = z.infer<typeof blogInsertSchema>;
 export type TestimonialInsertInput = z.infer<typeof testimonialInsertSchema>;
+export type BookingInput = z.infer<typeof bookingSchema>;

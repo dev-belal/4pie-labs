@@ -78,10 +78,8 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center justify-end gap-4">
-          <a
-            href="https://cal.com/four-pie-labs/30min"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/book"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             className="hidden md:flex items-center gap-2 bg-white text-black px-6 py-2.5 rounded-full text-sm font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]"
@@ -114,7 +112,7 @@ export function Navbar() {
                 )}
               </AnimatePresence>
             </span>
-          </a>
+          </Link>
           <button
             type="button"
             className="md:hidden p-2 text-white"
@@ -138,14 +136,12 @@ export function Navbar() {
               {item.label}
             </Link>
           ))}
-          <a
-            href="https://cal.com/four-pie-labs/30min"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/book"
             className="flex items-center justify-center gap-2 bg-white text-black px-5 py-3 rounded-full text-base font-bold"
           >
             Schedule Call
-          </a>
+          </Link>
         </div>
       )}
     </nav>

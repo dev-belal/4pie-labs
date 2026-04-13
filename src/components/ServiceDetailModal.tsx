@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, X, Zap } from "lucide-react";
 import type { Service } from "@/data/services";
@@ -123,25 +124,23 @@ export function ServiceDetailModal({
                 <Zap className="w-4 h-4 fill-current" />
               </button>
 
-              <a
-                href="https://cal.com/four-pie-labs/30min"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/book"
+                onClick={onClose}
                 className="hidden sm:block ml-auto group"
               >
                 <div className="flex items-center gap-2 text-primary font-bold text-[11px] uppercase tracking-widest">
                   Consult Expert
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>
-              </a>
-              <a
-                href="https://cal.com/four-pie-labs/30min"
-                target="_blank"
-                rel="noopener noreferrer"
+              </Link>
+              <Link
+                href="/book"
+                onClick={onClose}
                 className="sm:hidden w-full px-6 py-3 bg-white/5 text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 border border-white/10 hover:bg-white/10 transition-all"
               >
                 Book Strategy Session
-              </a>
+              </Link>
             </div>
           </motion.div>
         </div>
