@@ -176,25 +176,18 @@ export function BookingFlow() {
                   setSelectedSlot(undefined);
                   setStep("time");
                 }}
-                modifiers={{ available: availableDays }}
+                modifiers={
+                  availableDays.length > 0
+                    ? { available: availableDays }
+                    : undefined
+                }
                 modifiersClassNames={{
-                  available:
-                    "!font-bold !text-primary aria-[selected=false]:bg-primary/5 hover:!bg-primary/15",
-                  selected: "!bg-primary !text-white",
-                  today: "!underline",
+                  available: "font-bold text-primary",
+                  selected: "bg-primary text-white",
                 }}
-                disabled={[
-                  { before: new Date() },
-                  (day) => (slotsByDay[ymdKey(day)]?.length ?? 0) === 0,
-                ]}
+                disabled={{ before: new Date() }}
                 classNames={{
-                  caption_label: "font-display font-semibold text-lg",
-                  nav_button:
-                    "p-2 rounded-full hover:bg-white/5 transition-colors",
-                  head_cell:
-                    "text-[10px] font-bold uppercase tracking-widest text-white/30",
-                  day: "rounded-xl w-10 h-10 text-sm transition-colors text-white/30 cursor-not-allowed",
-                  day_disabled: "opacity-30",
+                  day: "rounded-xl w-10 h-10 text-sm transition-colors",
                 }}
               />
             </div>
