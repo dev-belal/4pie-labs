@@ -3,7 +3,8 @@
 import { useActionState, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, BarChart3, CheckCircle2, ChevronRight, Link2, Loader2 } from "lucide-react";
-import { publishBlog, publishInitial } from "@/lib/admin-actions";
+import { publishBlog } from "@/lib/admin-actions";
+import { publishInitial } from "@/lib/form-types";
 
 function generateSlug(title: string) {
   return title

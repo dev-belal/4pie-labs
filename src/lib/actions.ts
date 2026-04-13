@@ -9,14 +9,8 @@ import {
   roiSchema,
 } from "@/lib/schemas";
 
-export type FormState = {
-  status: "idle" | "success" | "error";
-  message?: string;
-  errors?: Record<string, string[]>;
-};
-
-const INITIAL: FormState = { status: "idle" };
-export const initialFormState = INITIAL;
+import type { FormState } from "@/lib/form-types";
+export type { FormState };
 
 async function guardAndIp(routeKey: string, limit = 5, windowMs = 60_000) {
   const h = await headers();

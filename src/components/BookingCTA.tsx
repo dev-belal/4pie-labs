@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Calendar, Phone, Sparkles } from "lucide-react";
 
@@ -39,10 +40,8 @@ export function BookingCTA() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <a
-                href="https://cal.com/four-pie-labs/30min"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/book"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 className="group flex items-center gap-3 bg-white text-black px-10 py-5 rounded-full text-lg font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]"
@@ -76,7 +75,7 @@ export function BookingCTA() {
                     )}
                   </AnimatePresence>
                 </span>
-              </a>
+              </Link>
 
               <div className="flex -space-x-3 items-center">
                 {[11, 12, 13, 14].map((i) => (

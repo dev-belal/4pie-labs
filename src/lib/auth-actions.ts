@@ -10,12 +10,8 @@ const signInSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters").max(200),
 });
 
-export type SignInState = {
-  status: "idle" | "error";
-  message?: string;
-};
-
-export const signInInitial: SignInState = { status: "idle" };
+import type { SignInState } from "@/lib/form-types";
+export type { SignInState };
 
 export async function signIn(
   _prev: SignInState,

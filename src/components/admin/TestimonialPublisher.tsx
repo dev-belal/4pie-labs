@@ -3,7 +3,8 @@
 import { useActionState, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, CheckCircle2, ChevronRight, Loader2 } from "lucide-react";
-import { publishInitial, publishTestimonial } from "@/lib/admin-actions";
+import { publishTestimonial } from "@/lib/admin-actions";
+import { publishInitial } from "@/lib/form-types";
 
 export function TestimonialPublisher() {
   const [state, formAction, pending] = useActionState(
