@@ -74,6 +74,15 @@ export interface CreateBookingInput {
 export async function createBooking(
   input: CreateBookingInput,
 ): Promise<BookingResult> {
+  // Cal.com event types can have extra required booking fields beyond
+  // name/email (our event type requires `title`). Always populate it so
+  // the API doesn't reject the booking with
+  //   "responses - {title}error_required_field".
+  const bookingFieldsResponses: Record<string, string> = {
+    title: `Discovery call with ${input.name}`,
+  };
+  if (input.notes) bookingFieldsResponses.notes = input.notes;
+
   const body: Record<string, unknown> = {
     start: input.startISO,
     eventTypeId: eventTypeId(),
@@ -83,12 +92,9 @@ export async function createBooking(
       timeZone: input.timeZone,
       language: "en",
     },
+    bookingFieldsResponses,
   };
 
-  // Optional fields — only sent when present so we don't override Cal defaults.
-  if (input.notes) {
-    body.bookingFieldsResponses = { notes: input.notes };
-  }
   if (input.phone) {
     body.metadata = { phone: input.phone };
   }
