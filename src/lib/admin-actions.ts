@@ -1,19 +1,16 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
+import { requireAdminSession } from "@/lib/admin-session";
 import { blogInsertSchema, testimonialInsertSchema } from "@/lib/schemas";
 
 import type { PublishState } from "@/lib/form-types";
-import type { LeadStatus } from "@/lib/admin-data";
+import type { LeadStatus, ConversationMessage } from "@/lib/admin-data";
 
 async function requireAdmin() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Unauthorized");
-  return supabase;
+  await requireAdminSession();
+  return createServiceClient();
 }
 
 const ALLOWED_LEAD_STATUS: LeadStatus[] = [
@@ -74,6 +71,26 @@ export async function deleteLead(
     if (error) return { ok: false, error: error.message };
     revalidatePath("/admin");
     return { ok: true };
+  } catch {
+    return { ok: false, error: "Unauthorized" };
+  }
+}
+
+export async function fetchConversationTranscript(
+  conversationId: string,
+): Promise<
+  | { ok: true; messages: ConversationMessage[] }
+  | { ok: false; error: string }
+> {
+  try {
+    const supabase = await requireAdmin();
+    const { data, error } = await supabase
+      .from("messages")
+      .select("id, conversation_id, role, content, created_at")
+      .eq("conversation_id", conversationId)
+      .order("created_at", { ascending: true });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true, messages: (data ?? []) as ConversationMessage[] };
   } catch {
     return { ok: false, error: "Unauthorized" };
   }

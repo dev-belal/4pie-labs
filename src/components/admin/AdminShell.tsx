@@ -8,18 +8,24 @@ import {
   Inbox,
   LayoutDashboard,
   LogOut,
+  MessageCircle,
   MessageSquarePlus,
   PenTool,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 import { signOut } from "@/lib/auth-actions";
 import type { DashboardData } from "@/lib/admin-data";
 import { OverviewPanel } from "./OverviewPanel";
 import { BlogPublisher } from "./BlogPublisher";
 import { TestimonialPublisher } from "./TestimonialPublisher";
 import { LeadsPanel } from "./LeadsPanel";
+import { ConversationsPanel } from "./ConversationsPanel";
 
-type Tab = "overview" | "leads" | "testimonials" | "blogs";
+type Tab =
+  | "overview"
+  | "leads"
+  | "conversations"
+  | "testimonials"
+  | "blogs";
 
 export function AdminShell({
   data,
@@ -32,46 +38,32 @@ export function AdminShell({
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  // Realtime: when blogs/testimonials/metrics change, refresh the RSC tree.
+  // We dropped the Supabase realtime channel when we moved off Supabase Auth
+  // — the anon client can no longer SELECT leads/conversations/messages, so
+  // RLS would suppress the events. Poll every 15s while the tab is visible;
+  // server actions still force an immediate revalidate on explicit edits.
   useEffect(() => {
-    const supabase = createClient();
-    const channel = supabase
-      .channel("admin-dashboard-realtime")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "blogs" },
-        () => startTransition(() => router.refresh()),
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "testimonials" },
-        () => startTransition(() => router.refresh()),
-      )
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "metrics" },
-        () => startTransition(() => router.refresh()),
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "leads" },
-        () => startTransition(() => router.refresh()),
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
+    const tick = () => {
+      if (document.visibilityState === "visible") {
+        startTransition(() => router.refresh());
+      }
     };
+    const id = window.setInterval(tick, 15_000);
+    return () => window.clearInterval(id);
   }, [router]);
 
   const headings: Record<Tab, { title: string; sub: string }> = {
     overview: {
       title: "Analytics Dashboard",
-      sub: "Real-time metrics · Auto-refreshing",
+      sub: "Live metrics · Auto-refreshing every 15s",
     },
     leads: {
       title: "Inbound Leads",
       sub: "Contact, custom requests, ROI, and chatbot leads",
+    },
+    conversations: {
+      title: "Chat Conversations",
+      sub: "Every chatbot session, live from Supabase",
     },
     testimonials: {
       title: "Add Testimonial",
@@ -109,6 +101,15 @@ export function AdminShell({
             icon={<Inbox className="w-4 h-4" />}
             label="Leads"
             badge={data.newLeads > 0 ? data.newLeads : undefined}
+          />
+          <TabButton
+            active={tab === "conversations"}
+            onClick={() => setTab("conversations")}
+            icon={<MessageCircle className="w-4 h-4" />}
+            label="Conversations"
+            badge={
+              data.totalConversations > 0 ? data.totalConversations : undefined
+            }
           />
           <TabButton
             active={tab === "testimonials"}
@@ -158,7 +159,7 @@ export function AdminShell({
             <span
               className={`w-1.5 h-1.5 rounded-full animate-pulse ${isPending ? "bg-amber-400" : "bg-emerald-400"}`}
             />
-            {isPending ? "Syncing" : "Realtime"}
+            {isPending ? "Syncing" : "Live"}
           </div>
         </header>
 
@@ -181,6 +182,16 @@ export function AdminShell({
               exit={{ opacity: 0, y: -10 }}
             >
               <LeadsPanel leads={data.leads} />
+            </motion.div>
+          )}
+          {tab === "conversations" && (
+            <motion.div
+              key="conversations"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              <ConversationsPanel conversations={data.conversations} />
             </motion.div>
           )}
           {tab === "testimonials" && (

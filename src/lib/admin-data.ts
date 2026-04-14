@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 
 export interface BlogStat {
   id: string;
@@ -68,7 +68,7 @@ export interface DashboardData {
 }
 
 export const getDashboardData = cache(async (): Promise<DashboardData> => {
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const [
     { data: blogs },
@@ -119,9 +119,6 @@ export const getDashboardData = cache(async (): Promise<DashboardData> => {
     last_message_at: string;
   }>;
 
-  // Per-conversation message counts + last user message preview.
-  // One round-trip per conversation would be wasteful; batch with a single
-  // grouped query.
   let conversations: ConversationSummary[] = conversationRows.map((c) => ({
     ...c,
     message_count: 0,
@@ -182,7 +179,7 @@ export const getDashboardData = cache(async (): Promise<DashboardData> => {
 export async function getConversationMessages(
   conversationId: string,
 ): Promise<ConversationMessage[]> {
-  const supabase = await createClient();
+  const supabase = createServiceClient();
   const { data } = await supabase
     .from("messages")
     .select("id, conversation_id, role, content, created_at")

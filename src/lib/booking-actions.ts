@@ -1,7 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
-import { clientIp } from "@/lib/n8n";
+import { clientIp } from "@/lib/client-ip";
 import { rateLimit } from "@/lib/rate-limit";
 import { bookingSchema } from "@/lib/schemas";
 import { createBooking, fetchSlots } from "@/lib/cal";

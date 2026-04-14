@@ -2,38 +2,49 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
-
-const signInSchema = z.object({
-  email: z.string().email("Enter a valid email address").max(200),
-  password: z.string().min(6, "Password must be at least 6 characters").max(200),
-});
+import { timingSafeEqual } from "node:crypto";
+import {
+  endAdminSession,
+  startAdminSession,
+} from "@/lib/admin-session";
 
 import type { SignInState } from "@/lib/form-types";
+
+function safeEqual(a: string, b: string): boolean {
+  const ab = Buffer.from(a, "utf8");
+  const bb = Buffer.from(b, "utf8");
+  if (ab.length !== bb.length) return false;
+  return timingSafeEqual(ab, bb);
+}
 
 export async function signIn(
   _prev: SignInState,
   formData: FormData,
 ): Promise<SignInState> {
-  const parsed = signInSchema.safeParse({
-    email: formData.get("email"),
-    password: formData.get("password"),
-  });
-  if (!parsed.success) {
-    const first = parsed.error.issues[0]?.message ?? "Invalid credentials.";
-    return { status: "error", message: first };
-  }
+  const rawEmail = (formData.get("email") as string | null)?.trim() ?? "";
+  const rawPassword = (formData.get("password") as string | null) ?? "";
+  // Password managers often append a trailing NBSP / newline on autofill.
+  const password = rawPassword.replace(/^\s+|\s+$/g, "");
 
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword(parsed.data);
+  const expectedEmail = process.env.ADMIN_EMAIL;
+  const expectedPassword = process.env.ADMIN_PASSWORD;
 
-  if (error) {
+  if (!expectedEmail || !expectedPassword) {
     return {
       status: "error",
-      message: error.message ?? "Invalid credentials. Please try again.",
+      message:
+        "Admin credentials are not configured on the server. Contact the operator.",
     };
   }
+
+  const emailOk = safeEqual(rawEmail.toLowerCase(), expectedEmail.toLowerCase());
+  const passwordOk = safeEqual(password, expectedPassword);
+
+  if (!emailOk || !passwordOk) {
+    return { status: "error", message: "Invalid credentials. Please try again." };
+  }
+
+  await startAdminSession(expectedEmail);
 
   const next = (formData.get("next") as string | null) ?? "/admin";
   revalidatePath("/admin", "layout");
@@ -41,8 +52,7 @@ export async function signIn(
 }
 
 export async function signOut() {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
+  await endAdminSession();
   revalidatePath("/admin", "layout");
   redirect("/admin/login");
 }

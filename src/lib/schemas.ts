@@ -31,7 +31,17 @@ export const roiSchema = z.object({
 });
 
 export const chatSchema = z.object({
+  sessionId: z.string().uuid("Invalid session id"),
   message: z.string().min(1, "Message cannot be empty").max(2000),
+  history: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant"]),
+        content: z.string().min(1).max(4000),
+      }),
+    )
+    .max(40)
+    .default([]),
 });
 
 export const blogInsertSchema = z.object({

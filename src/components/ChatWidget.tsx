@@ -14,7 +14,7 @@ interface Message {
 
 const GREETING_MESSAGE: Message = {
   id: "greeting",
-  text: "Hi there! 👋 I'm Pie, your 4Pie Labs assistant. How can I help you scale your business today?",
+  text: "Hi there! I'm Pie, your 4Pie Labs assistant. How can I help you scale your business today?",
   sender: "bot",
   timestamp: new Date(),
 };
@@ -28,13 +28,72 @@ const SUGGESTIONS = [
 const ASSISTANT_AVATAR =
   "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=200&auto=format&fit=crop";
 
+const SESSION_KEY = "fpl_chat_session_id";
+
+function ensureSessionId(): string {
+  if (typeof window === "undefined") return "";
+  let id = window.localStorage.getItem(SESSION_KEY);
+  if (!id) {
+    id = crypto.randomUUID();
+    window.localStorage.setItem(SESSION_KEY, id);
+  }
+  return id;
+}
+
+/**
+ * Lightweight Markdown renderer — the chat brain only emits plain text plus
+ * the occasional [label](url) link. We deliberately do NOT pull in a full
+ * Markdown lib; anything beyond links is treated as plain text.
+ */
+function RenderMessage({ text }: { text: string }) {
+  const parts: Array<string | { label: string; href: string }> = [];
+  const re = /\[([^\]]+)\]\(([^)]+)\)/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    parts.push({ label: match[1], href: match[2] });
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+
+  return (
+    <>
+      {parts.map((p, i) =>
+        typeof p === "string" ? (
+          <span key={i} className="whitespace-pre-wrap">
+            {p}
+          </span>
+        ) : (
+          <a
+            key={i}
+            href={p.href}
+            className="text-primary underline decoration-primary/50 hover:decoration-primary"
+            target={p.href.startsWith("http") ? "_blank" : undefined}
+            rel={p.href.startsWith("http") ? "noopener noreferrer" : undefined}
+          >
+            {p.label}
+          </a>
+        ),
+      )}
+    </>
+  );
+}
+
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([GREETING_MESSAGE]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const sessionIdRef = useRef<string>("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    sessionIdRef.current = ensureSessionId();
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -65,6 +124,19 @@ export function ChatWidget() {
       sender: "user",
       timestamp: new Date(),
     };
+
+    // Build the history the API expects: everything prior to this turn,
+    // excluding the hard-coded greeting (it's frontend chrome, not real
+    // conversation context).
+    const history = messages
+      .filter((m) => m.id !== "greeting")
+      .map((m) => ({
+        role: (m.sender === "user" ? "user" : "assistant") as
+          | "user"
+          | "assistant",
+        content: m.text,
+      }));
+
     setMessages((prev) => [...prev, userMsg]);
     setInputValue("");
     setIsTyping(true);
@@ -73,38 +145,23 @@ export function ChatWidget() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({
+          sessionId: sessionIdRef.current || ensureSessionId(),
+          message: text,
+          history,
+        }),
       });
 
-      if (!response.ok) throw new Error("Chat proxy failed");
+      if (!response.ok) throw new Error("Chat failed");
 
-      const data = await response.json();
-
-      let botText = "";
-      if (typeof data === "string") {
-        botText = data;
-      } else if (Array.isArray(data) && data[0]) {
-        const item = data[0];
-        botText =
-          item.output ??
-          item.text ??
-          item.message ??
-          item.response ??
-          JSON.stringify(item);
-      } else {
-        botText =
-          data.output ??
-          data.text ??
-          data.message ??
-          data.response ??
-          JSON.stringify(data);
-      }
+      const data = (await response.json()) as { reply?: string };
+      const botText =
+        data.reply?.trim() ||
+        "I'm having a bit of trouble right now — you can also email us at fourpielabs@gmail.com.";
 
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
-        text:
-          botText ||
-          "I'm sorry, I couldn't process that. Would you like to book a call instead?",
+        text: botText,
         sender: "bot",
         timestamp: new Date(),
       };
@@ -113,7 +170,7 @@ export function ChatWidget() {
       console.error("Chatbot error:", error);
       const errorMsg: Message = {
         id: (Date.now() + 1).toString(),
-        text: "I'm having a bit of trouble connecting right now. Please feel free to book a discovery call or try again in a moment!",
+        text: "I'm having a bit of trouble connecting right now. Please feel free to [book a discovery call](/book) or email us at fourpielabs@gmail.com.",
         sender: "bot",
         timestamp: new Date(),
       };
@@ -205,7 +262,7 @@ export function ChatWidget() {
                           : "bg-white/10 text-white/80 rounded-tl-none border border-white/5"
                       }`}
                     >
-                      {msg.text}
+                      <RenderMessage text={msg.text} />
                     </div>
                   </div>
                 </div>
@@ -265,7 +322,7 @@ export function ChatWidget() {
                 <button
                   type="submit"
                   aria-label="Send message"
-                  disabled={!inputValue.trim()}
+                  disabled={!inputValue.trim() || isTyping}
                   className="p-2 text-primary hover:scale-110 disabled:grayscale disabled:opacity-30 disabled:hover:scale-100 transition-all"
                 >
                   <Send className="w-4 h-4" />
