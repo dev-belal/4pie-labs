@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Play, Rocket } from "lucide-react";
@@ -25,15 +25,38 @@ export function Hero() {
   const { openContact } = useModals();
   const [isHovered, setIsHovered] = useState(false);
 
+  // Only mount (and thus only download the ~200KB three.js chunk) on
+  // viewports >=768px. Mobile gets the vignette + glow + copy; the
+  // backdrop 3D was visually drowned out at that size anyway.
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    setIsDesktop(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   return (
     <section className="relative pt-44 md:pt-52 pb-24 overflow-hidden min-h-screen flex flex-col justify-center">
       {/* Layer 1 — soft brand glow */}
       <div className="hero-glow" />
 
-      {/* Layer 2 — full-bleed 3D background scene */}
-      <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden>
-        <HeroScene />
-      </div>
+      {/*
+        Layer 2 — full-bleed 3D background scene.
+        Conditionally mounted only on desktop (>=md) so the ~200KB
+        three.js chunk is never fetched on phones. isDesktop starts
+        false so SSR renders the empty layer, then flips on the client
+        once we resolve the viewport.
+      */}
+      {isDesktop && (
+        <div
+          className="absolute inset-0 z-0 pointer-events-none"
+          aria-hidden
+        >
+          <HeroScene />
+        </div>
+      )}
 
       {/* Layer 3 — radial vignette + subtle bottom fade for text legibility */}
       <div

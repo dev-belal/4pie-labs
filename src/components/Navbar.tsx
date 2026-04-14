@@ -115,7 +115,7 @@ export function Navbar() {
           </Link>
           <button
             type="button"
-            className="md:hidden p-2 text-white"
+            className="md:hidden w-11 h-11 flex items-center justify-center rounded-full text-white hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMobileMenuOpen}
             onClick={() => setIsMobileMenuOpen((v) => !v)}

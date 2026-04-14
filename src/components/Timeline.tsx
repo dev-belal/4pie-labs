@@ -1,6 +1,6 @@
 "use client";
 
-import type { MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import {
   motion,
   useMotionValue,
@@ -56,7 +56,27 @@ const steps: Step[] = [
   },
 ];
 
+/**
+ * Respect the OS-level "reduce motion" preference. When on, we skip the
+ * mouse-follow 3D tilt entirely — both for accessibility (vestibular
+ * disorders) and to avoid jank on low-end devices that tend to match
+ * this setting by default.
+ */
+function usePrefersReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return reduced;
+}
+
 function TimelineCard({ step, index }: { step: Step; index: number }) {
+  const reduced = usePrefersReducedMotion();
+
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -67,6 +87,7 @@ function TimelineCard({ step, index }: { step: Step; index: number }) {
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (reduced) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const xPct = (e.clientX - rect.left) / rect.width - 0.5;
     const yPct = (e.clientY - rect.top) / rect.height - 0.5;
@@ -90,17 +111,17 @@ function TimelineCard({ step, index }: { step: Step; index: number }) {
     >
       <div className="flex-1 md:w-1/2 px-4 md:px-12 text-center md:text-left">
         <motion.div
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
+          onMouseMove={reduced ? undefined : handleMouseMove}
+          onMouseLeave={reduced ? undefined : handleMouseLeave}
           style={{
-            rotateX,
-            rotateY,
+            rotateX: reduced ? "0deg" : rotateX,
+            rotateY: reduced ? "0deg" : rotateY,
             transformStyle: "preserve-3d",
           }}
           initial={{ opacity: 0, x: index % 2 === 0 ? 30 : -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="group relative p-8 glass-morphism rounded-[32px] border-white/10 hover:border-white/20 hover:bg-white/[0.07] transition-colors shadow-2xl cursor-default"
+          className="group relative p-8 glass-morphism rounded-[32px] border-white/10 hover:border-white/20 hover:bg-white/[0.07] transition-colors shadow-2xl cursor-default transform-gpu"
         >
           <div style={{ transform: "translateZ(50px)" }} className="relative z-10">
             <div className="text-primary font-bold mb-2 tracking-widest uppercase text-xs">

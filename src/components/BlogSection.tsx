@@ -51,7 +51,7 @@ export async function BlogSection() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mx-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {featuredPosts.map((post, i) => (
             <Link
               key={post.id}

@@ -93,7 +93,7 @@ export function BookingCTA() {
                   </div>
                 ))}
                 <span className="pl-6 text-sm text-white/40 font-medium">
-                  Joined by 50+ agencies
+                  Joined by 20+ agencies
                 </span>
               </div>
             </div>

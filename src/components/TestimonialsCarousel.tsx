@@ -168,7 +168,7 @@ export function TestimonialsCarousel({
             type="button"
             aria-label="Previous testimonial"
             onClick={() => paginate(-1)}
-            className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 hover:bg-white/[0.05] transition-all group/btn"
+            className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn"
           >
             <ChevronLeft className="w-6 h-6 text-white/50 group-hover/btn:text-primary transition-colors" />
           </button>
@@ -178,7 +178,7 @@ export function TestimonialsCarousel({
             type="button"
             aria-label="Next testimonial"
             onClick={() => paginate(1)}
-            className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 hover:bg-white/[0.05] transition-all group/btn"
+            className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn"
           >
             <ChevronRight className="w-6 h-6 text-white/50 group-hover/btn:text-primary transition-colors" />
           </button>
@@ -247,7 +247,7 @@ export function TestimonialsCarousel({
           type="button"
           aria-label="Previous testimonial"
           onClick={() => paginate(-1)}
-          className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 text-white/50"
+          className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-white/50"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -255,7 +255,7 @@ export function TestimonialsCarousel({
           type="button"
           aria-label="Next testimonial"
           onClick={() => paginate(1)}
-          className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 text-white/50"
+          className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-white/50"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
@@ -271,7 +271,7 @@ export function TestimonialsCarousel({
               setDirection(i > currentIndex ? 1 : -1);
               setCurrentIndex(i);
             }}
-            className={`h-1.5 rounded-full transition-all duration-500 ${
+            className={`h-1.5 rounded-full transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
               i === currentIndex
                 ? "bg-primary w-8"
                 : "bg-white/10 w-2 hover:bg-white/20"

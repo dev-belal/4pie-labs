@@ -141,7 +141,7 @@ export function ROICalculator() {
                   placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-full py-3 px-12 text-sm focus:outline-none focus:border-primary/50 transition-all text-white placeholder:text-white/20"
+                  className="w-full bg-white/5 border border-white/10 rounded-full py-3 px-12 text-sm focus:outline-none focus:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/50 transition-all text-white placeholder:text-white/20"
                 />
               </div>
               {state.errors?.email && (
