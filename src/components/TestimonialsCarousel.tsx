@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 
 export interface Testimonial {
@@ -13,34 +13,60 @@ export interface Testimonial {
   avatar: string;
 }
 
-const slideVariants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? "100%" : "-100%",
-    opacity: 0,
-    scale: 0.9,
-    filter: "blur(10px)",
-  }),
-  center: {
-    zIndex: 1,
-    x: 0,
-    opacity: 1,
-    scale: 1,
-    filter: "blur(0px)",
-  },
-  exit: (direction: number) => ({
-    zIndex: 0,
-    x: direction > 0 ? "-100%" : "100%",
-    opacity: 0,
-    scale: 0.9,
-    filter: "blur(10px)",
-  }),
-};
+/**
+ * Per-card slide variants. The custom prop here is:
+ *   { direction: -1 | 1, index: number, reduced: boolean }
+ *
+ * `direction` is which way the carousel moved (+1 = next, −1 = prev).
+ * `index` is the slot within the visible trio (0/1/2) — used to
+ *   stagger entries so cards cascade in instead of jumping together.
+ * `reduced` collapses the animation to a simple fade when the visitor
+ *   has `prefers-reduced-motion: reduce`.
+ */
+type SlideCustom = { direction: number; index: number; reduced: boolean };
 
-const transition = {
-  x: { type: "spring" as const, stiffness: 200, damping: 25, restDelta: 0.5 },
-  opacity: { duration: 0.4, ease: "easeInOut" as const },
-  scale: { duration: 0.4, ease: "easeInOut" as const },
-  filter: { duration: 0.4, ease: "easeInOut" as const },
+const slideVariants = {
+  enter: ({ direction, reduced }: SlideCustom) =>
+    reduced
+      ? { opacity: 0 }
+      : {
+          x: direction > 0 ? "60%" : "-60%",
+          rotateY: direction > 0 ? 18 : -18,
+          opacity: 0,
+          scale: 0.92,
+          filter: "blur(6px)",
+        },
+  center: ({ index, reduced }: SlideCustom) =>
+    reduced
+      ? { opacity: 1, transition: { duration: 0.25 } }
+      : {
+          x: 0,
+          rotateY: 0,
+          opacity: 1,
+          scale: 1,
+          filter: "blur(0px)",
+          transition: {
+            // Cascade each visible card in, rightward. Gives a "magazine
+            // spread" feel vs. the old synchronous slide.
+            delay: index * 0.08,
+            x: { type: "spring" as const, stiffness: 260, damping: 28 },
+            rotateY: { type: "spring" as const, stiffness: 260, damping: 28 },
+            opacity: { duration: 0.45, ease: "easeOut" as const },
+            scale: { duration: 0.45, ease: "easeOut" as const },
+            filter: { duration: 0.35, ease: "easeOut" as const },
+          },
+        },
+  exit: ({ direction, reduced }: SlideCustom) =>
+    reduced
+      ? { opacity: 0, transition: { duration: 0.18 } }
+      : {
+          x: direction > 0 ? "-40%" : "40%",
+          rotateY: direction > 0 ? -12 : 12,
+          opacity: 0,
+          scale: 0.9,
+          filter: "blur(4px)",
+          transition: { duration: 0.35, ease: "easeIn" as const },
+        },
 };
 
 /** Minimum horizontal distance (px) to register as a swipe. */
@@ -57,6 +83,7 @@ export function TestimonialsCarousel({
 }: {
   testimonials: Testimonial[];
 }) {
+  const reduced = useReducedMotion() ?? false;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
@@ -184,19 +211,27 @@ export function TestimonialsCarousel({
           </button>
         </div>
 
-        <div className="relative min-h-[460px]">
+        <div
+          className="relative min-h-[460px]"
+          style={{ perspective: "1400px" }}
+        >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <AnimatePresence initial={false} custom={direction} mode="popLayout">
+            <AnimatePresence initial={false} mode="popLayout">
               {getVisibleTestimonials().map((t, i) => (
                 <motion.div
                   key={`${t.name}-${currentIndex}-${i}`}
-                  custom={direction}
+                  custom={{ direction, index: i, reduced }}
                   variants={slideVariants}
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  transition={transition}
-                  className={`p-8 glass-morphism rounded-[40px] border-white/10 hover:border-primary/20 hover:bg-white/[0.07] transition-all shadow-2xl flex flex-col justify-between h-full ${
+                  whileHover={
+                    reduced
+                      ? undefined
+                      : { y: -6, scale: 1.015, transition: { duration: 0.25 } }
+                  }
+                  style={{ transformStyle: "preserve-3d" }}
+                  className={`p-8 glass-morphism rounded-[40px] border-white/10 hover:border-primary/30 hover:bg-white/[0.07] hover:shadow-[0_20px_50px_-12px_rgba(139,92,246,0.25)] shadow-2xl flex flex-col justify-between h-full transform-gpu ${
                     i > 0 ? "hidden md:flex" : "flex"
                   }`}
                 >
