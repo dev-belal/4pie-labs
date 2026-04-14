@@ -1,21 +1,61 @@
 "use server";
 
 import { headers } from "next/headers";
-import { clientIp, postToN8N } from "@/lib/n8n";
 import { rateLimit } from "@/lib/rate-limit";
 import {
   contactSchema,
   customRequestSchema,
   roiSchema,
 } from "@/lib/schemas";
-
+import { createPublicClient } from "@/lib/supabase/public-client";
 import type { FormState } from "@/lib/form-types";
+
+function clientIp(headers: Headers): string {
+  const xff = headers.get("x-forwarded-for");
+  if (xff) return xff.split(",")[0]?.trim() ?? "unknown";
+  return (
+    headers.get("x-real-ip") ??
+    headers.get("cf-connecting-ip") ??
+    "unknown"
+  );
+}
 
 async function guardAndIp(routeKey: string, limit = 5, windowMs = 60_000) {
   const h = await headers();
   const ip = clientIp(h);
   const rl = rateLimit(`${routeKey}:${ip}`, limit, windowMs);
   return { ip, allowed: rl.allowed };
+}
+
+interface InsertLeadInput {
+  type: "contact" | "custom_request" | "roi";
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  source: string;
+  payload: Record<string, unknown>;
+}
+
+async function insertLead(input: InsertLeadInput): Promise<boolean> {
+  try {
+    const supabase = createPublicClient();
+    const { error } = await supabase.from("leads").insert({
+      type: input.type,
+      name: input.name ?? null,
+      email: input.email ?? null,
+      phone: input.phone ?? null,
+      source: input.source,
+      payload: input.payload,
+    });
+    if (error) {
+      console.error("[leads] insert failed:", error);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("[leads] insert threw:", err);
+    return false;
+  }
 }
 
 export async function submitContact(
@@ -46,13 +86,20 @@ export async function submitContact(
     };
   }
 
-  const result = await postToN8N(process.env.N8N_WEBHOOK_CONTACT_URL, {
-    ...parsed.data,
+  const ok = await insertLead({
+    type: "contact",
+    name: parsed.data.name,
+    email: parsed.data.email,
+    phone: parsed.data.phone,
     source: "Contact Modal",
-    ip,
+    payload: {
+      serviceType: parsed.data.serviceType,
+      description: parsed.data.description,
+      ip,
+    },
   });
 
-  if (!result.ok) {
+  if (!ok) {
     return {
       status: "error",
       message: "We couldn't submit right now — please try again shortly.",
@@ -90,20 +137,30 @@ export async function submitCustomRequest(
     };
   }
 
-  const result = await postToN8N(process.env.N8N_WEBHOOK_CUSTOM_REQUEST_URL, {
-    ...parsed.data,
+  const ok = await insertLead({
+    type: "custom_request",
+    name: parsed.data.name,
+    email: parsed.data.email,
+    phone: parsed.data.phone,
     source: "Custom Request Modal",
-    ip,
+    payload: {
+      requestType: parsed.data.requestType,
+      details: parsed.data.details,
+      ip,
+    },
   });
 
-  if (!result.ok) {
+  if (!ok) {
     return {
       status: "error",
       message: "We couldn't submit right now — please try again shortly.",
     };
   }
 
-  return { status: "success", message: "Request sent — our architects will reach out." };
+  return {
+    status: "success",
+    message: "Request sent — our architects will reach out.",
+  };
 }
 
 export async function submitROI(
@@ -135,18 +192,29 @@ export async function submitROI(
     };
   }
 
-  const result = await postToN8N(process.env.N8N_WEBHOOK_ROI_URL, {
-    ...parsed.data,
+  const ok = await insertLead({
+    type: "roi",
+    email: parsed.data.email,
     source: "ROI Calculator",
-    ip,
+    payload: {
+      hoursPerWeek: parsed.data.hoursPerWeek,
+      employees: parsed.data.employees,
+      costPerHour: parsed.data.costPerHour,
+      monthlyManualCost: parsed.data.monthlyManualCost,
+      automationSavings: parsed.data.automationSavings,
+      ip,
+    },
   });
 
-  if (!result.ok) {
+  if (!ok) {
     return {
       status: "error",
-      message: "We couldn't send your report — please try again shortly.",
+      message: "We couldn't save your report — please try again shortly.",
     };
   }
 
-  return { status: "success", message: "Report sent — check your inbox." };
+  return {
+    status: "success",
+    message: "Got it! We'll send your detailed report shortly.",
+  };
 }

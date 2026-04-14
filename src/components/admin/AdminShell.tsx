@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  Inbox,
   LayoutDashboard,
   LogOut,
   MessageSquarePlus,
@@ -16,8 +17,9 @@ import type { DashboardData } from "@/lib/admin-data";
 import { OverviewPanel } from "./OverviewPanel";
 import { BlogPublisher } from "./BlogPublisher";
 import { TestimonialPublisher } from "./TestimonialPublisher";
+import { LeadsPanel } from "./LeadsPanel";
 
-type Tab = "overview" | "testimonials" | "blogs";
+type Tab = "overview" | "leads" | "testimonials" | "blogs";
 
 export function AdminShell({
   data,
@@ -50,6 +52,11 @@ export function AdminShell({
         { event: "INSERT", schema: "public", table: "metrics" },
         () => startTransition(() => router.refresh()),
       )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "leads" },
+        () => startTransition(() => router.refresh()),
+      )
       .subscribe();
 
     return () => {
@@ -61,6 +68,10 @@ export function AdminShell({
     overview: {
       title: "Analytics Dashboard",
       sub: "Real-time metrics · Auto-refreshing",
+    },
+    leads: {
+      title: "Inbound Leads",
+      sub: "Contact, custom requests, ROI, and chatbot leads",
     },
     testimonials: {
       title: "Add Testimonial",
@@ -91,6 +102,13 @@ export function AdminShell({
             onClick={() => setTab("overview")}
             icon={<LayoutDashboard className="w-4 h-4" />}
             label="Analytics"
+          />
+          <TabButton
+            active={tab === "leads"}
+            onClick={() => setTab("leads")}
+            icon={<Inbox className="w-4 h-4" />}
+            label="Leads"
+            badge={data.newLeads > 0 ? data.newLeads : undefined}
           />
           <TabButton
             active={tab === "testimonials"}
@@ -155,6 +173,16 @@ export function AdminShell({
               <OverviewPanel data={data} />
             </motion.div>
           )}
+          {tab === "leads" && (
+            <motion.div
+              key="leads"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              <LeadsPanel leads={data.leads} />
+            </motion.div>
+          )}
           {tab === "testimonials" && (
             <motion.div
               key="testimonials"
@@ -188,11 +216,13 @@ function TabButton({
   onClick,
   icon,
   label,
+  badge,
 }: {
   active: boolean;
   onClick: () => void;
   icon: React.ReactNode;
   label: string;
+  badge?: number;
 }) {
   return (
     <button
@@ -205,7 +235,12 @@ function TabButton({
       }`}
     >
       {icon}
-      {label}
+      <span className="flex-1 text-left">{label}</span>
+      {typeof badge === "number" && (
+        <span className="min-w-[20px] h-5 px-1.5 inline-flex items-center justify-center text-[10px] font-bold rounded-full bg-primary text-white">
+          {badge}
+        </span>
+      )}
     </button>
   );
 }

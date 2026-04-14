@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { blogInsertSchema, testimonialInsertSchema } from "@/lib/schemas";
 
 import type { PublishState } from "@/lib/form-types";
+import type { LeadStatus } from "@/lib/admin-data";
 
 async function requireAdmin() {
   const supabase = await createClient();
@@ -13,6 +14,69 @@ async function requireAdmin() {
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
   return supabase;
+}
+
+const ALLOWED_LEAD_STATUS: LeadStatus[] = [
+  "new",
+  "in_progress",
+  "won",
+  "lost",
+];
+
+export async function updateLeadStatus(
+  leadId: string,
+  status: LeadStatus,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!ALLOWED_LEAD_STATUS.includes(status)) {
+    return { ok: false, error: "Invalid status" };
+  }
+  try {
+    const supabase = await requireAdmin();
+    const { error } = await supabase
+      .from("leads")
+      .update({ status })
+      .eq("id", leadId);
+    if (error) return { ok: false, error: error.message };
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "Unauthorized" };
+  }
+}
+
+export async function updateLeadNotes(
+  leadId: string,
+  notes: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (notes.length > 4000) {
+    return { ok: false, error: "Notes too long" };
+  }
+  try {
+    const supabase = await requireAdmin();
+    const { error } = await supabase
+      .from("leads")
+      .update({ notes })
+      .eq("id", leadId);
+    if (error) return { ok: false, error: error.message };
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "Unauthorized" };
+  }
+}
+
+export async function deleteLead(
+  leadId: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  try {
+    const supabase = await requireAdmin();
+    const { error } = await supabase.from("leads").delete().eq("id", leadId);
+    if (error) return { ok: false, error: error.message };
+    revalidatePath("/admin");
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "Unauthorized" };
+  }
 }
 
 export async function publishBlog(
