@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 
 export interface Testimonial {
@@ -13,62 +13,6 @@ export interface Testimonial {
   avatar: string;
 }
 
-/**
- * Per-card slide variants. The custom prop here is:
- *   { direction: -1 | 1, index: number, reduced: boolean }
- *
- * `direction` is which way the carousel moved (+1 = next, −1 = prev).
- * `index` is the slot within the visible trio (0/1/2) — used to
- *   stagger entries so cards cascade in instead of jumping together.
- * `reduced` collapses the animation to a simple fade when the visitor
- *   has `prefers-reduced-motion: reduce`.
- */
-type SlideCustom = { direction: number; index: number; reduced: boolean };
-
-const slideVariants = {
-  enter: ({ direction, reduced }: SlideCustom) =>
-    reduced
-      ? { opacity: 0 }
-      : {
-          x: direction > 0 ? "60%" : "-60%",
-          rotateY: direction > 0 ? 18 : -18,
-          opacity: 0,
-          scale: 0.92,
-          filter: "blur(6px)",
-        },
-  center: ({ index, reduced }: SlideCustom) =>
-    reduced
-      ? { opacity: 1, transition: { duration: 0.25 } }
-      : {
-          x: 0,
-          rotateY: 0,
-          opacity: 1,
-          scale: 1,
-          filter: "blur(0px)",
-          transition: {
-            // Cascade each visible card in, rightward. Gives a "magazine
-            // spread" feel vs. the old synchronous slide.
-            delay: index * 0.08,
-            x: { type: "spring" as const, stiffness: 260, damping: 28 },
-            rotateY: { type: "spring" as const, stiffness: 260, damping: 28 },
-            opacity: { duration: 0.45, ease: "easeOut" as const },
-            scale: { duration: 0.45, ease: "easeOut" as const },
-            filter: { duration: 0.35, ease: "easeOut" as const },
-          },
-        },
-  exit: ({ direction, reduced }: SlideCustom) =>
-    reduced
-      ? { opacity: 0, transition: { duration: 0.18 } }
-      : {
-          x: direction > 0 ? "-40%" : "40%",
-          rotateY: direction > 0 ? -12 : 12,
-          opacity: 0,
-          scale: 0.9,
-          filter: "blur(4px)",
-          transition: { duration: 0.35, ease: "easeIn" as const },
-        },
-};
-
 /** Minimum horizontal distance (px) to register as a swipe. */
 const SWIPE_THRESHOLD = 50;
 
@@ -76,7 +20,14 @@ const SWIPE_THRESHOLD = 50;
 const WHEEL_THRESHOLD = 40;
 
 /** Cool-down between gesture-driven paginations (both touch + wheel). */
-const GESTURE_COOLDOWN_MS = 500;
+const GESTURE_COOLDOWN_MS = 350;
+
+/** How many cards are visible side-by-side at the desktop breakpoint. */
+const VISIBLE_DESKTOP = 3;
+
+function clamp(v: number, lo: number, hi: number) {
+  return Math.max(lo, Math.min(hi, v));
+}
 
 export function TestimonialsCarousel({
   testimonials,
@@ -84,8 +35,32 @@ export function TestimonialsCarousel({
   testimonials: Testimonial[];
 }) {
   const reduced = useReducedMotion() ?? false;
+  const total = testimonials.length;
+
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    setIsDesktop(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  /**
+   * `visible` = how many cards fit in the viewport at this breakpoint.
+   * Used to size the strip and clamp scroll position so we never reveal
+   * empty space past the last card.
+   */
+  const visible = isDesktop ? VISIBLE_DESKTOP : 1;
+  const maxIndex = Math.max(0, total - visible);
+
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
+
+  // Re-clamp when the viewport flips (e.g. rotate phone) so we never
+  // get stuck pointing at a now-out-of-range card.
+  useEffect(() => {
+    setCurrentIndex((i) => clamp(i, 0, maxIndex));
+  }, [maxIndex]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartXRef = useRef<number | null>(null);
@@ -93,33 +68,32 @@ export function TestimonialsCarousel({
   const lastGestureAtRef = useRef(0);
   const wheelAccumRef = useRef(0);
 
-  const paginate = useCallback(
-    (newDirection: number) => {
-      setDirection(newDirection);
-      setCurrentIndex(
-        (prev) =>
-          (prev + newDirection + testimonials.length) % testimonials.length,
-      );
+  const goTo = useCallback(
+    (next: number) => {
+      setCurrentIndex(clamp(next, 0, maxIndex));
     },
-    [testimonials.length],
+    [maxIndex],
   );
 
-  /**
-   * Gesture-driven pagination. One tick per cooldown window so a single
-   * physical swipe / trackpad flick can't skip several testimonials.
-   */
+  const paginate = useCallback(
+    (dir: number) => {
+      goTo(currentIndex + dir);
+    },
+    [goTo, currentIndex],
+  );
+
   const paginateFromGesture = useCallback(
-    (newDirection: number) => {
+    (dir: number) => {
       const now = Date.now();
       if (now - lastGestureAtRef.current < GESTURE_COOLDOWN_MS) return;
       lastGestureAtRef.current = now;
-      paginate(newDirection);
+      paginate(dir);
     },
     [paginate],
   );
 
-  // Touch swipe (mobile + touchscreen laptops). Track X/Y on start so we
-  // can distinguish horizontal swipes from accidental vertical scrolls.
+  // Touch swipe — distinguishes horizontal from vertical so vertical
+  // page scroll still flows through naturally.
   const onTouchStart = useCallback((e: React.TouchEvent) => {
     const t = e.touches[0];
     touchStartXRef.current = t.clientX;
@@ -138,7 +112,6 @@ export function TestimonialsCarousel({
       const dx = end.clientX - startX;
       const dy = end.clientY - startY;
 
-      // Horizontal intent only — ignore vertical page scrolls.
       if (Math.abs(dx) < SWIPE_THRESHOLD) return;
       if (Math.abs(dy) > Math.abs(dx)) return;
 
@@ -147,22 +120,16 @@ export function TestimonialsCarousel({
     [paginateFromGesture],
   );
 
-  // Trackpad two-finger horizontal scroll. Accumulate deltaX until it
-  // crosses the threshold so slow flicks still register, then reset.
-  // Use a non-passive listener so we can preventDefault and stop the
-  // browser from scrolling the page horizontally while we navigate.
+  // Trackpad horizontal scroll — only when horizontal intent dominates
+  // vertical, so vertical page scroll still flows through.
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
     const onWheel = (e: WheelEvent) => {
-      // Only react when horizontal intent dominates — preserves vertical
-      // page scrolling when the user is scrolling through the page.
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
-
       e.preventDefault();
       wheelAccumRef.current += e.deltaX;
-
       if (Math.abs(wheelAccumRef.current) >= WHEEL_THRESHOLD) {
         const dir = wheelAccumRef.current > 0 ? 1 : -1;
         wheelAccumRef.current = 0;
@@ -174,13 +141,20 @@ export function TestimonialsCarousel({
     return () => el.removeEventListener("wheel", onWheel);
   }, [paginateFromGesture]);
 
-  const getVisibleTestimonials = () => {
-    const items: Testimonial[] = [];
-    for (let i = 0; i < Math.min(3, testimonials.length); i++) {
-      items.push(testimonials[(currentIndex + i) % testimonials.length]);
-    }
-    return items;
-  };
+  // Strip math:
+  //   strip width = (total / visible) × 100% of the viewport container
+  //   each card   = (100 / total)% of the strip → exactly viewport/visible
+  //   translateX  = -(currentIndex / total) × strip-width
+  //                = -(currentIndex / total) × (total / visible) × 100%
+  //                = -(currentIndex / visible) × 100%   (relative to viewport)
+  // We feed the equivalent expressed relative to the strip's own width
+  // so framer-motion can interpolate a single % string.
+  const stripWidthPct = (100 * total) / visible;
+  const cardWidthPct = 100 / total;
+  const translatePct = -currentIndex * cardWidthPct;
+
+  const isAtStart = currentIndex === 0;
+  const isAtEnd = currentIndex === maxIndex;
 
   return (
     <>
@@ -190,12 +164,14 @@ export function TestimonialsCarousel({
         onTouchEnd={onTouchEnd}
         className="relative px-4 md:px-16 group/carousel touch-pan-y select-none"
       >
+        {/* Prev / Next — desktop overlay */}
         <div className="absolute top-1/2 -translate-y-1/2 left-0 z-20 hidden md:block">
           <button
             type="button"
             aria-label="Previous testimonial"
             onClick={() => paginate(-1)}
-            className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn"
+            disabled={isAtStart}
+            className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-white/10 disabled:hover:bg-transparent"
           >
             <ChevronLeft className="w-6 h-6 text-white/50 group-hover/btn:text-primary transition-colors" />
           </button>
@@ -205,35 +181,38 @@ export function TestimonialsCarousel({
             type="button"
             aria-label="Next testimonial"
             onClick={() => paginate(1)}
-            className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn"
+            disabled={isAtEnd}
+            className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-white/10 disabled:hover:bg-transparent"
           >
             <ChevronRight className="w-6 h-6 text-white/50 group-hover/btn:text-primary transition-colors" />
           </button>
         </div>
 
-        <div
-          className="relative min-h-[460px]"
-          style={{ perspective: "1400px" }}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <AnimatePresence initial={false} mode="popLayout">
-              {getVisibleTestimonials().map((t, i) => (
+        {/* Viewport — clips the strip to one row of cards. */}
+        <div className="overflow-hidden">
+          <motion.div
+            className="flex"
+            style={{ width: `${stripWidthPct}%` }}
+            animate={{ x: `${translatePct}%` }}
+            transition={
+              reduced
+                ? { duration: 0 }
+                : { type: "spring", stiffness: 240, damping: 32, mass: 0.9 }
+            }
+          >
+            {testimonials.map((t) => (
+              <article
+                key={t.name}
+                style={{ flex: `0 0 ${cardWidthPct}%` }}
+                className="px-3"
+              >
                 <motion.div
-                  key={`${t.name}-${currentIndex}-${i}`}
-                  custom={{ direction, index: i, reduced }}
-                  variants={slideVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
                   whileHover={
                     reduced
                       ? undefined
-                      : { y: -6, scale: 1.015, transition: { duration: 0.25 } }
+                      : { y: -6, transition: { duration: 0.25 } }
                   }
-                  style={{ transformStyle: "preserve-3d" }}
-                  className={`p-8 glass-morphism rounded-[40px] border-white/10 hover:border-primary/30 hover:bg-white/[0.07] hover:shadow-[0_20px_50px_-12px_rgba(139,92,246,0.25)] shadow-2xl flex flex-col justify-between h-full transform-gpu ${
-                    i > 0 ? "hidden md:flex" : "flex"
-                  }`}
+                  className="p-8 glass-morphism rounded-[40px] border-white/10 hover:border-primary/30 hover:bg-white/[0.07] hover:shadow-[0_20px_50px_-12px_rgba(139,92,246,0.25)] shadow-2xl flex flex-col justify-between h-full transform-gpu transition-colors"
                 >
                   <div>
                     <div className="flex gap-1 mb-6">
@@ -264,25 +243,29 @@ export function TestimonialsCarousel({
                       />
                     </div>
                     <div>
-                      <div className="font-bold text-sm text-white">{t.name}</div>
+                      <div className="font-bold text-sm text-white">
+                        {t.name}
+                      </div>
                       <div className="text-[10px] text-white/30 uppercase tracking-wider font-semibold">
                         {t.role}
                       </div>
                     </div>
                   </div>
                 </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
+              </article>
+            ))}
+          </motion.div>
         </div>
       </div>
 
+      {/* Mobile prev / next */}
       <div className="flex md:hidden justify-center gap-4 mt-8">
         <button
           type="button"
           aria-label="Previous testimonial"
           onClick={() => paginate(-1)}
-          className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-white/50"
+          disabled={isAtStart}
+          className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-white/50 disabled:opacity-30 disabled:cursor-not-allowed"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -290,22 +273,21 @@ export function TestimonialsCarousel({
           type="button"
           aria-label="Next testimonial"
           onClick={() => paginate(1)}
-          className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-white/50"
+          disabled={isAtEnd}
+          className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-white/50 disabled:opacity-30 disabled:cursor-not-allowed"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
       </div>
 
+      {/* Pagination dots — one per scroll position, not per card */}
       <div className="flex justify-center gap-2 mt-12">
-        {testimonials.map((t, i) => (
+        {Array.from({ length: maxIndex + 1 }, (_, i) => (
           <button
             type="button"
-            key={t.name}
-            aria-label={`Go to testimonial ${i + 1}`}
-            onClick={() => {
-              setDirection(i > currentIndex ? 1 : -1);
-              setCurrentIndex(i);
-            }}
+            key={i}
+            aria-label={`Go to slide ${i + 1}`}
+            onClick={() => goTo(i)}
             className={`h-1.5 rounded-full transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
               i === currentIndex
                 ? "bg-primary w-8"
