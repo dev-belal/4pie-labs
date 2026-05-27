@@ -39,7 +39,8 @@ export async function BlogSection() {
               Articles &amp; Insights.
             </h2>
             <p className="text-white/40 text-lg">
-              Stay ahead of the curve with our latest AI research.
+              Insights on AI-first marketing, local SEO, and answer engine
+              optimization for service businesses.
             </p>
           </div>
           <Link
