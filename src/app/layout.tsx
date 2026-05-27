@@ -59,7 +59,8 @@ export default function RootLayout({
     legalName: "4Pie Labs AI Automation Agency",
     url: SITE.url,
     logo: `${SITE.url}/logo.png`,
-    description: SITE.description,
+    description:
+      "4Pie Labs helps painting contractors, tour operators, and local service businesses dominate Google, Maps, and AI answer engines. AI-first marketing built by a tech company — not a traditional agency.",
     sameAs: [
       "https://www.linkedin.com/company/4-pie-labs/",
       "https://www.instagram.com/devbelaal",

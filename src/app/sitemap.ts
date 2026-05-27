@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
+import { SITE } from "@/lib/site";
 
-const SITE_URL = "https://4pielabs.com";
+const SITE_URL = SITE.url;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
