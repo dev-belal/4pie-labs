@@ -102,11 +102,17 @@ export function BookingFlow() {
    *  always refetch the *current* visible month without re-binding the
    *  listener on every state change. */
   const currentRef = useRef({ year: 0, monthNum: 0, timeZone: "UTC" });
-  currentRef.current = {
-    year: month.getFullYear(),
-    monthNum: month.getMonth() + 1,
-    timeZone,
-  };
+  // Sync at commit time, not during render: the interval / focus / visibility
+  // handlers read this ref asynchronously and need the latest *committed*
+  // month/tz. Writing a ref during render is unsafe under concurrent rendering
+  // (this component uses startTransition), so the update lives in an effect.
+  useEffect(() => {
+    currentRef.current = {
+      year: month.getFullYear(),
+      monthNum: month.getMonth() + 1,
+      timeZone,
+    };
+  }, [month, timeZone]);
 
   const refreshSlots = useCallback(
     async (opts: { quiet?: boolean } = {}) => {
@@ -130,6 +136,7 @@ export function BookingFlow() {
 
   // Resolve visitor timezone after mount (Intl is browser-only).
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time post-mount read of the browser-only IANA timezone; SSR default stays "UTC" until hydration.
     setTimeZone(detectTimeZone());
   }, []);
 
@@ -186,6 +193,9 @@ export function BookingFlow() {
 
   // Move to success step on a successful booking; on a slot-taken
   // conflict, refresh + kick back to the time step + clear the selection.
+  /* eslint-disable react-hooks/set-state-in-effect --
+     Navigates booking steps in response to the server-action result (`state`);
+     fires only on a completed booking attempt, not on every render. */
   useEffect(() => {
     if (state.status === "success") {
       setStep("success");
@@ -197,11 +207,13 @@ export function BookingFlow() {
       void refreshSlots();
     }
   }, [state, selectedDay, refreshSlots]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Brief submit lockout when entering the details step to prevent a
   // stray Enter / double-click from firing before the user sees the form.
   useEffect(() => {
     if (step !== "details") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- resets the submit lockout when leaving the details step; deliberate UI sync to `step`, paired with the timed unlock below.
       setSubmitUnlocked(false);
       return;
     }
@@ -215,6 +227,9 @@ export function BookingFlow() {
   // If a background refresh wipes out the currently-picked slot (someone
   // else booked it while the visitor was on the details page), bounce
   // them back to the time grid instead of letting them submit a dead slot.
+  /* eslint-disable react-hooks/set-state-in-effect --
+     Bounces the visitor back to the time grid if their picked slot disappears
+     on a background refresh; responds to external slot data, not every render. */
   useEffect(() => {
     if (step !== "details" || !selectedSlot || !selectedDay) return;
     const stillAvailable = (slotsByDay[ymdKey(selectedDay)] ?? []).some(
@@ -225,6 +240,7 @@ export function BookingFlow() {
       setStep("time");
     }
   }, [slotsByDay, selectedSlot, selectedDay, step]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const availableDays = useMemo(() => {
     return Object.keys(slotsByDay)
