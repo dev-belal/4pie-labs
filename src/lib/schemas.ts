@@ -30,6 +30,20 @@ export const roiSchema = z.object({
   automationSavings: z.number().nonnegative(),
 });
 
+// Lead captured by the homepage Marketing Budget Calculator modal. Stored in
+// the leads table under type "roi" (closest existing enum value) with the
+// calculator context in the payload.
+export const budgetLeadSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters").max(100),
+  email: z.string().email("Enter a valid email address").max(200),
+  businessName: z.string().min(1, "Enter your business name").max(200),
+  monthlyRevenue: z.coerce.number().int().min(0).max(100_000_000),
+  industry: z.string().max(100).optional(),
+  growthGoal: z.string().max(100).optional(),
+  recommendedBudget: z.coerce.number().nonnegative().optional(),
+  currentSpend: z.coerce.number().nonnegative().optional(),
+});
+
 export const chatSchema = z.object({
   sessionId: z.string().uuid("Invalid session id"),
   message: z.string().min(1, "Message cannot be empty").max(2000),
@@ -92,6 +106,7 @@ export const bookingSchema = z.object({
 export type ContactInput = z.infer<typeof contactSchema>;
 export type CustomRequestInput = z.infer<typeof customRequestSchema>;
 export type RoiInput = z.infer<typeof roiSchema>;
+export type BudgetLeadInput = z.infer<typeof budgetLeadSchema>;
 export type ChatInput = z.infer<typeof chatSchema>;
 export type BlogInsertInput = z.infer<typeof blogInsertSchema>;
 export type TestimonialInsertInput = z.infer<typeof testimonialInsertSchema>;
