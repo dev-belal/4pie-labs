@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Play, Rocket } from "lucide-react";
-import { useModals } from "./modal-provider";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
+// PLACEHOLDER STATS: User will replace numbers and verify labels before public
+// launch. Do not invent new numbers — keep these exact placeholder values.
 const STATS = [
-  { label: "Successful Deployments", val: "50+" },
-  { label: "Reduction in processing time", val: "83%" },
-  { label: "Hours automated for clients", val: "115k" },
-  { label: "Cost savings delivered", val: "$500k" },
+  { label: "Active Clients", val: "50+" },
+  { label: "Average Lead Increase", val: "83%" },
+  { label: "Monthly Searches Won", val: "115k" },
+  { label: "Client Revenue Influenced", val: "$500k" },
 ];
 
 // three.js touches `window` at module-eval time, so the scene must never
@@ -22,9 +24,6 @@ const HeroScene = dynamic(() => import("./HeroScene"), {
 });
 
 export function Hero() {
-  const { openContact } = useModals();
-  const [isHovered, setIsHovered] = useState(false);
-
   // Only mount (and thus only download the ~200KB three.js chunk) on
   // viewports >=768px. Mobile gets the vignette + glow + copy; the
   // backdrop 3D was visually drowned out at that size anyway.
@@ -76,75 +75,48 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl font-display font-semibold leading-[1.05] tracking-tight mb-8 [text-wrap:balance]"
         >
-          Scale your operations{" "}
-          <span className="text-gradient font-bold">10×</span>
-          <br className="hidden sm:block" /> without hiring{" "}
-          <span className="text-white/40 font-light italic">100</span> people.
+          Become the business everyone in your area{" "}
+          <span className="text-gradient font-bold">finds first.</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="max-w-xl text-base md:text-lg text-white/60 mb-10 mx-auto leading-relaxed"
+          className="max-w-2xl text-base md:text-lg text-white/60 mb-10 mx-auto leading-relaxed"
         >
-          Humans should do human work. AI should do everything else. We build
-          the systems that make this happen for high-growth agencies.
+          4Pie Labs helps painting contractors, tour operators, and local
+          service businesses dominate Google, Maps, and AI answer engines — so
+          the next customer in your market calls you, not your competitor.
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          className="flex flex-col items-center justify-center gap-4"
         >
-          <button
-            type="button"
-            onClick={openContact}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            className="w-full sm:w-auto flex items-center justify-center gap-3 bg-white text-black px-7 py-3.5 rounded-full text-base font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+          <Link
+            href="/book"
+            className="group w-full sm:w-auto flex items-center justify-center gap-3 bg-white text-black px-7 py-3.5 rounded-full text-base font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]"
           >
-            Start Your Automation
-            <span className="relative w-4 h-4 overflow-hidden">
-              <AnimatePresence mode="wait">
-                {isHovered ? (
-                  <motion.span
-                    key="rocket"
-                    initial={{ y: 16, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -16, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute inset-0"
-                  >
-                    <Rocket className="w-4 h-4 text-primary" />
-                  </motion.span>
-                ) : (
-                  <motion.span
-                    key="arrow"
-                    initial={{ y: 16, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -16, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute inset-0"
-                  >
-                    <ArrowRight className="w-4 h-4" />
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </span>
-          </button>
-          <button
-            type="button"
-            className="w-full sm:w-auto flex items-center justify-center gap-2 glass-morphism border-white/10 px-7 py-3.5 rounded-full text-base font-bold hover:bg-white/5 transition-all"
+            Book a Strategy Call
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+
+          {/* TODO: replace with /audit landing page in Phase 1F */}
+          <Link
+            href="/book?source=audit"
+            className="group inline-flex items-center gap-2 text-sm font-bold text-white/60 hover:text-white transition-colors"
           >
-            <Play className="w-4 h-4 fill-current" />
-            Watch Video
-          </button>
+            Get a free AI marketing audit
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </motion.div>
       </div>
 
       {/* Stats — clear of the 3D, sits on the bottom fade */}
+      {/* PLACEHOLDER STATS: User will replace numbers and verify labels before public launch. Do not invent new numbers — keep these exact placeholder values. */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
