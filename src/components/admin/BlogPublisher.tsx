@@ -28,6 +28,13 @@ export function BlogPublisher() {
     { type: "success" | "error"; message: string } | null
   >(null);
 
+  /* eslint-disable react-hooks/set-state-in-effect --
+     One-shot reaction to the server-action result (`state` from useActionState):
+     show a transient notice and reset the form after a completed submit. This
+     fires only when `state` changes (a finished submission), not on every
+     render, so it does not cause the cascading re-renders the rule guards
+     against. The controlled-field resets are genuine one-shot side effects and
+     the dismiss timer is cleaned up below. */
   useEffect(() => {
     if (state.status === "idle") return;
     if (state.status === "success") {
@@ -44,6 +51,7 @@ export function BlogPublisher() {
     const t = setTimeout(() => setNotice(null), 4000);
     return () => clearTimeout(t);
   }, [state]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleTitleChange = (value: string) => {
     setTitle(value);
