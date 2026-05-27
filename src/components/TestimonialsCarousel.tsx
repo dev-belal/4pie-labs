@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { useMediaQuery } from "@/lib/use-media-query";
 
 export interface Testimonial {
   headline: string;
@@ -37,14 +38,7 @@ export function TestimonialsCarousel({
   const reduced = useReducedMotion() ?? false;
   const total = testimonials.length;
 
-  const [isDesktop, setIsDesktop] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    setIsDesktop(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   /**
    * `visible` = how many cards fit in the viewport at this breakpoint.
@@ -54,13 +48,11 @@ export function TestimonialsCarousel({
   const visible = isDesktop ? VISIBLE_DESKTOP : 1;
   const maxIndex = Math.max(0, total - visible);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [rawIndex, setRawIndex] = useState(0);
 
-  // Re-clamp when the viewport flips (e.g. rotate phone) so we never
-  // get stuck pointing at a now-out-of-range card.
-  useEffect(() => {
-    setCurrentIndex((i) => clamp(i, 0, maxIndex));
-  }, [maxIndex]);
+  // Clamp during render so a viewport flip (e.g. rotating the phone) can
+  // never leave us pointing past the last card — derived, no effect needed.
+  const currentIndex = clamp(rawIndex, 0, maxIndex);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartXRef = useRef<number | null>(null);
@@ -70,7 +62,7 @@ export function TestimonialsCarousel({
 
   const goTo = useCallback(
     (next: number) => {
-      setCurrentIndex(clamp(next, 0, maxIndex));
+      setRawIndex(clamp(next, 0, maxIndex));
     },
     [maxIndex],
   );

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState, type MouseEvent } from "react";
+import { type MouseEvent } from "react";
 import {
   motion,
   useMotionValue,
   useSpring,
   useTransform,
 } from "framer-motion";
+import { useMediaQuery } from "@/lib/use-media-query";
 import {
   Megaphone,
   Search,
@@ -63,15 +64,7 @@ const steps: Step[] = [
  * this setting by default.
  */
 function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
-  return reduced;
+  return useMediaQuery("(prefers-reduced-motion: reduce)");
 }
 
 function TimelineCard({ step, index }: { step: Step; index: number }) {
