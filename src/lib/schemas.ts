@@ -67,6 +67,14 @@ export const testimonialInsertSchema = z.object({
   rating: z.number().int().min(1).max(5),
 });
 
+export const trackViewSchema = z.object({
+  slug: z
+    .string()
+    .min(1)
+    .max(120)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Invalid slug"),
+});
+
 export const bookingSchema = z.object({
   // Cal.com slot starts include tz offsets (e.g. "...-04:00"), not just "Z",
   // so allow offsets. `local` would also match naive strings; we want a
@@ -87,4 +95,5 @@ export type RoiInput = z.infer<typeof roiSchema>;
 export type ChatInput = z.infer<typeof chatSchema>;
 export type BlogInsertInput = z.infer<typeof blogInsertSchema>;
 export type TestimonialInsertInput = z.infer<typeof testimonialInsertSchema>;
+export type TrackViewInput = z.infer<typeof trackViewSchema>;
 export type BookingInput = z.infer<typeof bookingSchema>;
