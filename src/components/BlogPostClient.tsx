@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { Link as LinkIcon } from "lucide-react";
 
@@ -29,6 +29,32 @@ function LinkedinIcon({ className }: { className?: string }) {
 }
 
 export { FacebookIcon, TwitterIcon, LinkedinIcon };
+
+/**
+ * Fires a single per-visit view-tracking beacon to the API route. This lives
+ * on the client on purpose: the blog post page is ISR-cached (revalidate=3600),
+ * so tracking from the server render would only fire on cache regeneration
+ * (~once/hour per slug) instead of once per visitor. The ref guard prevents
+ * React Strict Mode's dev double-invoke from double-counting.
+ */
+export function TrackView({ slug }: { slug: string }) {
+  const fired = useRef(false);
+
+  useEffect(() => {
+    if (fired.current) return;
+    fired.current = true;
+    fetch("/api/blog/track-view", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug }),
+      keepalive: true,
+    }).catch(() => {
+      // Non-fatal: a missed view count shouldn't surface to the reader.
+    });
+  }, [slug]);
+
+  return null;
+}
 
 export function ReadingProgress() {
   const { scrollYProgress } = useScroll();

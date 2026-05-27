@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight, Clock, User } from "lucide-react";
 import { blogs as staticBlogs } from "@/data/blogs";
-import { getPostBySlug, trackBlogView } from "@/lib/blog";
+import { getPostBySlug } from "@/lib/blog";
 import { JsonLd } from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
 import {
@@ -12,6 +12,7 @@ import {
   MarqueeFooter,
   ReadingProgress,
   ShareActions,
+  TrackView,
   TwitterIcon,
 } from "@/components/BlogPostClient";
 
@@ -97,8 +98,9 @@ export default async function BlogPostPage({ params }: Props) {
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  // Fire-and-forget view tracking (server-side, atomic when RPC is present)
-  await trackBlogView(slug, post.title);
+  // View tracking is fired per-visit from the client (<TrackView/>), not here:
+  // this page is ISR-cached (revalidate=3600), so a server-side call would only
+  // run on cache regeneration rather than on every visit.
 
   const article = {
     "@context": "https://schema.org",
@@ -147,6 +149,7 @@ export default async function BlogPostPage({ params }: Props) {
     <div className="min-h-screen bg-background overflow-x-hidden pt-20">
       <JsonLd data={article} />
       <JsonLd data={breadcrumb} />
+      <TrackView slug={slug} />
       <ReadingProgress />
 
       <div className="max-w-4xl mx-auto px-4 py-20 relative">
