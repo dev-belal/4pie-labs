@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Play, Rocket } from "lucide-react";
 import { useModals } from "./modal-provider";
+import { useMediaQuery } from "@/lib/use-media-query";
 
 const STATS = [
   { label: "Successful Deployments", val: "50+" },
@@ -28,14 +29,7 @@ export function Hero() {
   // Only mount (and thus only download the ~200KB three.js chunk) on
   // viewports >=768px. Mobile gets the vignette + glow + copy; the
   // backdrop 3D was visually drowned out at that size anyway.
-  const [isDesktop, setIsDesktop] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    setIsDesktop(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   return (
     <section className="relative pt-44 md:pt-52 pb-24 overflow-hidden min-h-screen flex flex-col justify-center">
