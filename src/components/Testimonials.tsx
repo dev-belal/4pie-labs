@@ -4,38 +4,37 @@ import {
   type Testimonial,
 } from "./TestimonialsCarousel";
 
+// PLACEHOLDER TESTIMONIALS — see the marker comment above the carousel below.
+// Real, anonymized-by-industry+region quotes replace these before public
+// launch. Neutral initials avatars (ui-avatars) avoid misattributing a real
+// person's photo to a placeholder.
 const STATIC_TESTIMONIALS: Testimonial[] = [
   {
-    headline: "Hiring used to take us weeks. Now it takes hours.",
+    headline: "[PLACEHOLDER headline]",
     quote:
-      "We process hundreds of CVs every week and it was all manual. They built us a system that generates standardized CVs and scores candidates. What used to take our recruiters two full days now happens in the background.",
-    name: "Israel Sanc Rueda",
-    role: "CEO & Founder, NexAi Automations, Espana",
-    avatar: "/testimonials/israel.jpeg",
+      "[PLACEHOLDER — Real quote about how 4Pie Labs helped them go from being invisible online to being the top-ranked tour operator in their market. Specific before-state, specific result, specific quality of working with us.]",
+    name: "Tour Operator",
+    role: "[Region], multi-year client",
+    avatar:
+      "https://ui-avatars.com/api/?name=Tour+Operator&background=random&color=fff",
   },
   {
-    headline: "Really Helpful in automating the hectic work we had",
+    headline: "[PLACEHOLDER headline]",
     quote:
-      "Really goes above and beyond to support me and my business. Not only puts together great solutions, but also helps explain them and why they will benefit our team. Would highly recommended!",
-    name: "Louis Modeste",
-    role: "Wealth Manager, Edward Bond Associates, UK",
-    avatar: "/testimonials/louis.jpeg",
+      "[PLACEHOLDER — Real quote from a painting contractor about leaving a traditional agency, working with us, and seeing predictable lead flow within months. Reference dashboards or AI agent if relevant.]",
+    name: "Painting Contractor",
+    role: "[Region], multi-year client",
+    avatar:
+      "https://ui-avatars.com/api/?name=Painting+Contractor&background=random&color=fff",
   },
   {
-    headline: "Leads stopped falling through the cracks.",
+    headline: "[PLACEHOLDER headline]",
     quote:
-      "Now we have an AI chatbot handling first-touch support, booking calls, and following up automatically. Every inquiry gets an instant response, and we've seen a real jump in conversions.",
-    name: "Saad Ali Khan",
-    role: "CEO & Founder, Botyama AI, UK",
-    avatar: "/testimonials/saad.jpeg",
-  },
-  {
-    headline: "Finally, reporting that doesn't eat up our week.",
-    quote:
-      "They built us a fully automated system with a live dashboard where clients can see occupancy and revenue in real time. That one system alone freed up enough time to take on 20 more units.",
-    name: "Abdul Kareem",
-    role: "Lead Engineer, ZJ Rentals, USA",
-    avatar: "/testimonials/abdul.jpeg",
+      "[PLACEHOLDER — Real quote from a tour operator or local service business about the difference between working with a 'tech company that does marketing' vs. a traditional agency. Reference dashboards, AI agents, AEO, or custom work.]",
+    name: "Local Service Business",
+    role: "[Region], multi-year client",
+    avatar:
+      "https://ui-avatars.com/api/?name=Local+Service&background=random&color=fff",
   },
 ];
 
@@ -91,6 +90,7 @@ export async function Testimonials() {
           </h2>
         </div>
 
+        {/* PLACEHOLDER TESTIMONIALS: Real quotes from real clients (anonymized by industry + region) will be added before public launch. Do not invent specific numbers or scenarios in the placeholders. */}
         <TestimonialsCarousel testimonials={testimonials} />
       </div>
     </section>

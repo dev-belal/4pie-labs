@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { SERVICE_CATEGORY_SLUGS } from "@/data/services";
 
 const QUICK_LINKS = [
   { label: "Home", href: "/" },
@@ -8,15 +7,12 @@ const QUICK_LINKS = [
   { label: "Services", href: "/services" },
 ];
 
-/**
- * Visitor-facing labels use the brand voice ("AI Automation"); the URL
- * slugs map to the internal ServiceCategory taxonomy. Clicking any of
- * these deep-links to /services with the category pre-selected.
- */
-const SERVICES: { label: string; slug: string }[] = [
-  { label: "AI Automation", slug: SERVICE_CATEGORY_SLUGS["AI Systems"] },
-  { label: "Design Creatives", slug: SERVICE_CATEGORY_SLUGS["Design Creatives"] },
-  { label: "Digital Marketing", slug: SERVICE_CATEGORY_SLUGS["Digital Marketing"] },
+// The three pivot pillars. Linked to the /services catalog for now; per-pillar
+// anchors land in Phase 1C when /services is rebuilt.
+const SERVICES: { label: string; href: string }[] = [
+  { label: "AI-First SEO + AEO", href: "/services" },
+  { label: "Performance Ads", href: "/services" },
+  { label: "Custom AI Systems", href: "/services" },
 ];
 
 export function Footer() {
@@ -34,7 +30,8 @@ export function Footer() {
             />
           </Link>
           <p className="text-white/30 max-w-xs mb-6 px-4 md:px-0">
-            Building the systems that make autonomous agencies possible.
+            Building the AI-first marketing systems that make local businesses
+            unmissable.
           </p>
           <div className="flex items-center gap-4 justify-center md:justify-start">
             <a
@@ -88,9 +85,9 @@ export function Footer() {
             </h4>
             <ul className="space-y-3 text-white/40 text-sm">
               {SERVICES.map((s) => (
-                <li key={s.slug}>
+                <li key={s.label}>
                   <Link
-                    href={`/services?category=${s.slug}`}
+                    href={s.href}
                     className="hover:text-white transition-colors"
                   >
                     {s.label}
@@ -117,8 +114,7 @@ export function Footer() {
         </div>
       </div>
       <div className="mt-12 pt-12 border-t border-white/5 text-center text-white/20 text-xs">
-        © {new Date().getFullYear()} 4Pie Labs AI Automation Agency. All rights
-        reserved.
+        © {new Date().getFullYear()} 4Pie Labs. All rights reserved.
       </div>
     </footer>
   );

@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { rateLimit } from "@/lib/rate-limit";
 import {
+  budgetLeadSchema,
   contactSchema,
   customRequestSchema,
   roiSchema,
@@ -216,5 +217,73 @@ export async function submitROI(
   return {
     status: "success",
     message: "Got it! We'll send your detailed report shortly.",
+  };
+}
+
+export async function submitBudgetLead(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const { allowed, ip } = await guardAndIp("budget-calc");
+  if (!allowed) {
+    return {
+      status: "error",
+      message: "Too many requests. Please wait a minute and try again.",
+    };
+  }
+
+  const parsed = budgetLeadSchema.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    businessName: formData.get("businessName"),
+    monthlyRevenue: formData.get("monthlyRevenue"),
+    industry: formData.get("industry"),
+    growthGoal: formData.get("growthGoal"),
+    recommendedBudget: formData.get("recommendedBudget"),
+    currentSpend: formData.get("currentSpend"),
+  });
+
+  if (!parsed.success) {
+    return {
+      status: "error",
+      message: "Please check the fields and try again.",
+      errors: parsed.error.flatten().fieldErrors,
+    };
+  }
+
+  // TODO: wire PDF delivery in Phase 1D. For now we just capture the lead and
+  // log it; the user is told the breakdown arrives by email within 24h.
+  console.log("[budget-calc] lead captured:", {
+    email: parsed.data.email,
+    businessName: parsed.data.businessName,
+    industry: parsed.data.industry,
+  });
+
+  const ok = await insertLead({
+    type: "roi",
+    name: parsed.data.name,
+    email: parsed.data.email,
+    source: "Marketing Budget Calculator",
+    payload: {
+      businessName: parsed.data.businessName,
+      monthlyRevenue: parsed.data.monthlyRevenue,
+      industry: parsed.data.industry,
+      growthGoal: parsed.data.growthGoal,
+      recommendedBudget: parsed.data.recommendedBudget,
+      currentSpend: parsed.data.currentSpend,
+      ip,
+    },
+  });
+
+  if (!ok) {
+    return {
+      status: "error",
+      message: "We couldn't submit right now — please try again shortly.",
+    };
+  }
+
+  return {
+    status: "success",
+    message: "Thanks — we'll email you the breakdown within 24 hours.",
   };
 }

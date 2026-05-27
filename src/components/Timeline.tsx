@@ -8,11 +8,11 @@ import {
   useTransform,
 } from "framer-motion";
 import {
-  Calendar,
-  CheckCircle2,
-  Code,
-  Rocket,
+  Megaphone,
   Search,
+  Sparkles,
+  TrendingUp,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 
@@ -27,32 +27,32 @@ const steps: Step[] = [
   {
     week: "Week 1",
     title: "Discovery & Audit",
-    desc: "We dive deep into your manual workflows to find the biggest leverage points for automation.",
+    desc: "We map your current presence (Google, Maps, GBP, AI engines, ads) against your top competitors and your top 50 buyer queries. You see exactly where you're losing — and what's possible.",
     icon: Search,
   },
   {
-    week: "Week 1",
-    title: "Architecture Design",
-    desc: "Designing the custom AI Operating System tailored to your specific agency needs.",
-    icon: Code,
+    week: "Week 2",
+    title: "Foundation Build",
+    desc: "Website, technical SEO, GBP, tracking, and landing pages set up correctly the first time. No legacy junk carried forward.",
+    icon: Wrench,
   },
   {
-    week: "Week 2-3",
-    title: "Development & Integration",
-    desc: "Building and integrating the automation layers into your existing tech stack.",
-    icon: Rocket,
+    week: "Week 3–4",
+    title: "AEO + Content Engine",
+    desc: "Your business gets structured for AI answer engines and search engines simultaneously. First wave of content, schema, and citations go live.",
+    icon: Sparkles,
   },
   {
-    week: "Week 4",
-    title: "Testing & Refinement",
-    desc: "Rigorous testing to ensure 99.9% reliability and accuracy across all automated systems.",
-    icon: CheckCircle2,
+    week: "Week 5–8",
+    title: "Ads Launch + Optimization",
+    desc: "Campaigns go live with AI-optimized bidding and creative. Daily monitoring, weekly tuning. Lead flow begins.",
+    icon: Megaphone,
   },
   {
-    week: "Week 5",
-    title: "Deployment & Scaling",
-    desc: "Going live and training your team on how to manage their new autonomous systems.",
-    icon: Calendar,
+    week: "Week 9–12",
+    title: "Scale & Compound",
+    desc: "Rankings climb, ad efficiency improves, and the AI lead-handling layer comes online. From here, every additional week compounds.",
+    icon: TrendingUp,
   },
 ];
 
@@ -150,12 +150,15 @@ export function Timeline() {
 
       <div className="max-w-7xl mx-auto relative">
         <div className="text-center mb-20">
+          <div className="text-xs font-bold text-white/30 uppercase tracking-[0.2em] mb-4">
+            Ready to rank?
+          </div>
           <h2 className="text-4xl md:text-6xl font-display font-bold mb-6">
-            Lightning-quick <br />
-            <span className="text-white/50">deployment.</span>
+            From signed to ranked <br />
+            <span className="text-white/50">— in 90 days.</span>
           </h2>
           <p className="text-white/40 max-w-2xl mx-auto text-lg">
-            From manual bottleneck to autonomous operation in just 5 weeks.
+            A structured rollout designed to compound from week one.
           </p>
         </div>
 

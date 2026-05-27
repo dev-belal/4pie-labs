@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Calendar, Phone, Sparkles } from "lucide-react";
@@ -25,18 +24,18 @@ export function BookingCTA() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-primary text-xs font-bold tracking-widest uppercase mb-8">
               <Sparkles className="w-4 h-4" />
-              Ready to scale?
+              Ready to grow?
             </div>
 
             <h2 className="text-4xl md:text-6xl font-display font-bold mb-8 leading-tight">
-              Build your{" "}
-              <span className="text-gradient">Autonomous Agency</span> <br />
-              today.
+              Become the obvious choice{" "}
+              <span className="text-gradient">in your market.</span>
             </h2>
 
             <p className="text-white/50 text-xl max-w-2xl mx-auto mb-12">
-              Stop wasting time on manual work. Schedule a strategy session with
-              our experts and see how AI can transform your operations.
+              Stop watching competitors outrank you. Book a free 30-minute
+              strategy session and we&apos;ll show you exactly what&apos;s
+              holding your business back — and what we&apos;d do about it.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
@@ -47,7 +46,7 @@ export function BookingCTA() {
                 className="group flex items-center gap-3 bg-white text-black px-10 py-5 rounded-full text-lg font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]"
               >
                 <Calendar className="w-5 h-5" />
-                Schedule a call with expert
+                Book a Strategy Call
                 <span className="relative w-5 h-5 overflow-hidden">
                   <AnimatePresence mode="wait">
                     {isHovered ? (
@@ -77,25 +76,10 @@ export function BookingCTA() {
                 </span>
               </Link>
 
-              <div className="flex -space-x-3 items-center">
-                {[11, 12, 13, 14].map((i) => (
-                  <div
-                    key={i}
-                    className="w-10 h-10 rounded-full border-2 border-background bg-card overflow-hidden relative"
-                  >
-                    <Image
-                      src={`https://i.pravatar.cc/100?img=${i}`}
-                      alt="Client avatar"
-                      fill
-                      sizes="40px"
-                      className="object-cover"
-                    />
-                  </div>
-                ))}
-                <span className="pl-6 text-sm text-white/40 font-medium">
-                  Joined by 20+ agencies
-                </span>
-              </div>
+              <p className="text-sm text-white/40 font-medium max-w-xs sm:text-left text-center">
+                No pitch, no pressure. Just a real conversation about your
+                market.
+              </p>
             </div>
           </motion.div>
 
