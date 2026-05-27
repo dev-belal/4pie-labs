@@ -38,9 +38,11 @@ export function ConversationsPanel({
   useEffect(() => {
     if (!openId) return;
     let cancelled = false;
-    setLoading(true);
-    setThread(null);
     (async () => {
+      // Inside the async IIFE (runs synchronously until the first await) so
+      // these aren't synchronous setState calls in the effect body.
+      setLoading(true);
+      setThread(null);
       const result = await fetchConversationTranscript(openId);
       if (!cancelled) {
         setThread(result.ok ? result.messages : []);
