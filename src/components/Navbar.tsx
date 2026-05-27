@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Menu, Phone, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -19,7 +18,6 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export function Navbar() {
-  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -31,9 +29,9 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [pathname]);
+  // Close the mobile menu when the visitor taps a destination. (We do this in
+  // the link handlers rather than reacting to a pathname change in an effect.)
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
     <nav
@@ -52,7 +50,12 @@ export function Navbar() {
         )}
       >
         <div className="flex items-center justify-start md:ml-5">
-          <Link href="/" className="group inline-flex" aria-label="4Pie Labs home">
+          <Link
+            href="/"
+            onClick={closeMobileMenu}
+            className="group inline-flex"
+            aria-label="4Pie Labs home"
+          >
             <Image
               src="/logo.png"
               alt="4Pie Labs"
@@ -131,6 +134,7 @@ export function Navbar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={closeMobileMenu}
               className="text-lg font-medium text-white/70 hover:text-white transition-colors text-left"
             >
               {item.label}
@@ -138,6 +142,7 @@ export function Navbar() {
           ))}
           <Link
             href="/book"
+            onClick={closeMobileMenu}
             className="flex items-center justify-center gap-2 bg-white text-black px-5 py-3 rounded-full text-base font-bold"
           >
             Schedule Call
