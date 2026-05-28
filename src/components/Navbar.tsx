@@ -39,23 +39,25 @@ type DropdownItem = {
   tagColor?: "primary";
 };
 
+// Hrefs use `?category=<slug>` so ServicesBrowser deep-links to the right
+// tab on click. Slugs match SERVICE_CATEGORY_SLUGS in src/data/services.ts.
 const SERVICE_ITEMS: DropdownItem[] = [
   {
     title: "AI-First SEO + AEO",
     sub: "Get cited by ChatGPT, Perplexity, Gemini.",
-    href: "/services#aeo",
+    href: "/services?category=aeo",
     Icon: MessageCircle,
   },
   {
     title: "Performance Ads",
     sub: "Paid that pays. Google, Meta, YouTube.",
-    href: "/services#ads",
+    href: "/services?category=ads",
     Icon: Search,
   },
   {
     title: "Custom AI Systems",
     sub: "Agents, dashboards, CRM automation.",
-    href: "/services#ai",
+    href: "/services?category=ai",
     Icon: Cpu,
   },
 ];

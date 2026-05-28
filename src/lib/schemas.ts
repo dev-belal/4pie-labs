@@ -4,7 +4,11 @@ export const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100),
   email: z.string().email("Enter a valid email address").max(200),
   phone: z.string().min(6, "Enter a valid phone number").max(40),
-  serviceType: z.enum(["AI Automation", "Design Creatives", "Digital Marketing"]),
+  serviceType: z.enum([
+    "AI-First SEO + AEO",
+    "Performance Ads",
+    "Custom AI Systems",
+  ]),
   description: z.string().min(10, "Tell us a bit more (10+ characters)").max(2000),
 });
 

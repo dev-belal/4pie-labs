@@ -28,7 +28,7 @@ export function ServicesBrowser() {
   const categoryFromUrl = (): ServiceCategory => {
     const raw = searchParams.get("category");
     const match = raw ? categoryFromSlug(raw) : null;
-    return match ?? "AI Systems";
+    return match ?? "AI-First SEO + AEO";
   };
 
   const [activeCategory, setActiveCategory] =
@@ -70,11 +70,12 @@ export function ServicesBrowser() {
         <aside className="lg:w-80 flex-shrink-0">
           <div className="sticky top-40 space-y-8">
             <div>
-              <h1 className="text-4xl font-display font-bold mb-4">
-                Our Services
-              </h1>
-              <p className="text-foreground/40 text-sm">
-                Explore every layer of the autonomous agency.
+              <h2 className="text-2xl font-semibold tracking-tight mb-2 text-foreground">
+                Browse by category
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                Three buckets — the same three you see in the nav. Pick one
+                or search across all.
               </p>
             </div>
 

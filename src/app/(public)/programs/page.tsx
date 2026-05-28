@@ -1,111 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  Activity,
-  ArrowRight,
-  Box,
-  CheckCircle2,
-  Layers,
-  Plus,
-  type LucideIcon,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ArrowRight, Plus } from "lucide-react";
+import { ProgramsCarousel } from "@/components/ProgramsCarousel";
 
 export const metadata: Metadata = {
   title: "Programs",
   description:
     "Four programs from foundation to full-stack — Core, Pipeline, Operating System, Pulse. AEO is included in every tier. No pricing on the site — book a call.",
 };
-
-type Program = {
-  id: string;
-  name: string;
-  tagline: string;
-  tag: string;
-  tagColor?: "primary";
-  featured?: boolean;
-  intro: string;
-  whatsIncluded: string[];
-  terms: string;
-  Icon: LucideIcon;
-};
-
-const PROGRAMS: Program[] = [
-  {
-    id: "core",
-    name: "Core",
-    tagline: "Foundation",
-    tag: "Foundation",
-    intro:
-      "Where most clients start. Visibility-first — search, maps, AI answer engines, and the website that converts them.",
-    whatsIncluded: [
-      "Local SEO + on-page technical SEO",
-      "Answer Engine Optimization (ChatGPT / Perplexity / AI Overviews / Gemini)",
-      "Google Business Profile management + review velocity",
-      "Conversion-tuned website (or rebuild)",
-      "Monthly content production — long-form pages tuned for AI retrieval",
-      "Market exclusivity in your service area",
-    ],
-    terms: "Month-to-month after an initial 90-day commitment.",
-    Icon: Layers,
-  },
-  {
-    id: "pipeline",
-    name: "Pipeline",
-    tagline: "Most popular",
-    tag: "Most popular",
-    tagColor: "primary",
-    featured: true,
-    intro:
-      "Core, plus the demand-capture engine. Paid that pays — and the AI scoring layer that turns clicks into booked jobs.",
-    whatsIncluded: [
-      "Everything in Core",
-      "Google Search + Maps ads",
-      "Per-campaign landing pages built to convert",
-      "AI lead scoring + routing",
-      "Call tracking + attribution",
-      "Weekly performance tuning",
-    ],
-    terms: "6-month minimum engagement.",
-    Icon: Plus,
-  },
-  {
-    id: "os",
-    name: "Operating System",
-    tagline: "Full-stack",
-    tag: "Full-stack",
-    intro:
-      "Pipeline, plus the AI operating layer most agencies can't build. The full stack — visibility, capture, automation, and your own performance dashboards.",
-    whatsIncluded: [
-      "Everything in Pipeline",
-      "Multi-channel ads (Google / Meta / YouTube)",
-      "Custom AI agent for your inquiries",
-      "CRM automation + integrations",
-      "Your own performance dashboards (the ones we use)",
-      "Quarterly strategy sessions",
-    ],
-    terms: "12-month minimum engagement.",
-    Icon: Box,
-  },
-  {
-    id: "pulse",
-    name: "Pulse",
-    tagline: "Social-first",
-    tag: "Social-first",
-    intro:
-      "A parallel path for brands whose growth is on social. Creative production + paid social, run in parallel with Pipeline or standalone.",
-    whatsIncluded: [
-      "Meta + Instagram ads",
-      "YouTube + TikTok short-form ads",
-      "Creative production (scripts, edits, assets)",
-      "Community + DM management",
-      "Monthly creative refresh",
-      "Weekly performance review",
-    ],
-    terms: "6-month minimum engagement.",
-    Icon: Activity,
-  },
-];
 
 const FAQS = [
   {
@@ -138,7 +40,7 @@ export default function ProgramsPage() {
   return (
     <main className="px-4 pb-32">
       {/* Hero */}
-      <section className="max-w-3xl mx-auto text-center pt-12 pb-16 md:pt-20 md:pb-20">
+      <section className="max-w-3xl mx-auto text-center pt-12 pb-12 md:pt-20 md:pb-14">
         <span className="inline-block text-xs font-medium text-primary tracking-widest uppercase mb-4">
           Programs
         </span>
@@ -150,111 +52,19 @@ export default function ProgramsPage() {
         </h1>
         <p className="text-lg text-muted-foreground">
           Every engagement combines some mix of these. AEO runs through all of
-          them — it&apos;s the floor, not an upsell. No pricing on the site —
-          book a call and we&apos;ll quote against your market.
+          them — it&apos;s the floor, not an upsell. Swipe, arrow, or pick from
+          the deck below to jump between tiers.
         </p>
       </section>
 
-      {/* Programs grid */}
-      <section className="max-w-[1240px] mx-auto grid md:grid-cols-2 gap-5 md:gap-6">
-        {PROGRAMS.map((p) => (
-          <article
-            id={p.id}
-            key={p.id}
-            className={cn(
-              "rounded-2xl p-8 md:p-10 border flex flex-col",
-              p.featured
-                ? "bg-foreground text-background border-foreground"
-                : "bg-surface border-card-border",
-            )}
-          >
-            <div className="flex items-start justify-between mb-6">
-              <span className="w-11 h-11 rounded-xl grid place-items-center bg-primary-muted text-primary">
-                <p.Icon className="w-5 h-5" />
-              </span>
-              <span
-                className={cn(
-                  "text-xs font-medium px-2.5 py-1 rounded-full",
-                  p.featured
-                    ? "bg-primary-muted text-primary"
-                    : p.tagColor === "primary"
-                      ? "text-primary"
-                      : "text-muted-foreground",
-                )}
-              >
-                {p.tag}
-              </span>
-            </div>
-            <h2 className="text-2xl font-semibold tracking-tight mb-3">
-              {p.name}
-              <span
-                className={cn(
-                  "ml-2 text-sm font-normal align-middle",
-                  p.featured ? "text-background/60" : "text-muted-foreground",
-                )}
-              >
-                · {p.tagline}
-              </span>
-            </h2>
-            <p
-              className={cn(
-                "leading-relaxed mb-6",
-                p.featured ? "text-background/85" : "text-muted-foreground",
-              )}
-            >
-              {p.intro}
-            </p>
-
-            <h3
-              className={cn(
-                "text-xs font-medium uppercase tracking-widest mb-3",
-                p.featured ? "text-background/60" : "text-subtle-foreground",
-              )}
-            >
-              What&apos;s included
-            </h3>
-            <ul className="space-y-2.5 mb-6 flex-1">
-              {p.whatsIncluded.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-start gap-2.5 text-sm leading-snug"
-                >
-                  <CheckCircle2
-                    className={cn(
-                      "w-4 h-4 shrink-0 mt-0.5",
-                      p.featured ? "text-primary" : "text-success",
-                    )}
-                  />
-                  <span
-                    className={
-                      p.featured ? "text-background/90" : "text-foreground/90"
-                    }
-                  >
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <div
-              className={cn(
-                "text-xs pt-4 border-t",
-                p.featured
-                  ? "text-background/60 border-background/15"
-                  : "text-subtle-foreground border-border",
-              )}
-            >
-              {p.terms}
-            </div>
-          </article>
-        ))}
-      </section>
+      {/* Carousel — client component owns hash + keyboard + swipe state */}
+      <ProgramsCarousel />
 
       {/* CTA strip */}
       <section className="max-w-3xl mx-auto text-center mt-20 mb-24">
         <Link
           href="/book"
-          className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-on-primary px-7 py-3.5 rounded-lg text-base font-medium transition-colors"
+          className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-on-primary px-7 py-3.5 rounded-lg text-base font-semibold transition-all shadow-[var(--shadow-cta)] hover:shadow-[var(--shadow-cta-strong)]"
         >
           Book a strategy call
           <ArrowRight className="w-4 h-4" />
