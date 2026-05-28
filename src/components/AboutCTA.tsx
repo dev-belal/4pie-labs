@@ -2,35 +2,48 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { useModals } from "./modal-provider";
 
 export function AboutCTA() {
   const { openContact } = useModals();
 
   return (
-    <section className="max-w-4xl mx-auto text-center">
+    <section className="relative z-10 max-w-3xl mx-auto text-center">
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.97 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
-        className="glass-morphism rounded-[40px] p-16 border-foreground/10 relative overflow-hidden"
+        transition={{ duration: 0.5 }}
+        className="bg-surface border border-card-border rounded-2xl p-10 md:p-14 shadow-[0_4px_12px_rgba(26,26,26,0.06),0_1px_3px_rgba(26,26,26,0.04)]"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
-        <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 relative z-10">
-          Ready to build the future?
+        <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-3 [text-wrap:balance]">
+          Ready to be the{" "}
+          <span className="font-serif italic font-normal text-primary">
+            first call
+          </span>{" "}
+          in your market?
         </h2>
-        <p className="text-foreground/50 mb-8 relative z-10">
-          Let&apos;s talk about how 4Pie Labs can transform your agency
-          operations.
+        <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
+          Book a 30-minute strategy call or grab a free 12-point audit. Either
+          way, you leave with a plan.
         </p>
-        <button
-          type="button"
-          onClick={openContact}
-          className="relative z-10 flex items-center gap-3 mx-auto bg-primary text-white px-10 py-5 rounded-full text-lg font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.15)]"
-        >
-          Start Your Automation
-          <ArrowRight className="w-5 h-5" />
-        </button>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Link
+            href="/book"
+            className="group inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-7 py-3.5 rounded-lg text-base font-medium transition-all hover:shadow-[0_2px_4px_rgba(124,92,255,0.18)]"
+          >
+            Book a strategy call
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+          <button
+            type="button"
+            onClick={openContact}
+            className="inline-flex items-center gap-2 bg-surface hover:bg-surface-2 border border-border text-foreground px-7 py-3.5 rounded-lg text-base font-medium transition-colors"
+          >
+            Talk to us
+          </button>
+        </div>
       </motion.div>
     </section>
   );
