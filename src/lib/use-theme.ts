@@ -9,7 +9,10 @@ import { useCallback, useEffect, useState } from "react";
  * persists user choice to localStorage.
  */
 
-const STORAGE_KEY = "4pielabs:theme";
+// Versioned key — bumped to :v2 when the brand pivoted to black + amber,
+// invalidating everyone's previously-cached "dark" choice so the new
+// default takes hold for both fresh and returning visitors.
+const STORAGE_KEY = "4pielabs:theme:v2";
 
 export type Theme = "light" | "dark";
 

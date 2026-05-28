@@ -215,6 +215,15 @@ h1, h2, h3, h4, h5, h6 {
    Legacy custom utilities — repurposed for the amber system.
 ============================================================================= */
 
+/* Logo PNG is dark-near-black on transparent — invisible against the off-
+   black dark-mode bg. Invert flips the dark to cream; the hue-rotate(180)
+   keeps the amber accent on the "e" approximately on-brand instead of
+   flipping it to teal. Marked images carry `data-logo` so the rule scopes
+   tightly. (Footer logo is inside data-theme="light" so it's unaffected.) */
+:root[data-theme="dark"] [data-logo] {
+  filter: invert(1) hue-rotate(180deg);
+}
+
 /* Was a dark gradient + heavy shadow. Now a clean themed surface card. */
 .glass-morphism {
   background: var(--color-surface);

@@ -163,6 +163,7 @@ export function Navbar() {
               width={128}
               height={32}
               priority
+              data-logo
               className="h-7 w-auto"
             />
           </Link>
