@@ -60,7 +60,7 @@ export function TestimonialPublisher() {
               name="name"
               type="text"
               required
-              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all"
+              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all"
               placeholder="John Doe"
             />
             {state.errors?.name && (
@@ -81,7 +81,7 @@ export function TestimonialPublisher() {
               name="role"
               type="text"
               required
-              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all"
+              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all"
               placeholder="CEO, TechCo"
             />
             {state.errors?.role && (
@@ -103,7 +103,7 @@ export function TestimonialPublisher() {
             name="headline"
             type="text"
             required
-            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all"
+            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all"
             placeholder="Impactful title..."
           />
           {state.errors?.headline && (
@@ -124,7 +124,7 @@ export function TestimonialPublisher() {
             name="quote"
             rows={4}
             required
-            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all resize-none"
+            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all resize-none"
             placeholder="Enter the client's words..."
           />
           {state.errors?.quote && (
@@ -162,7 +162,7 @@ export function TestimonialPublisher() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full bg-white text-black py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
+          className="w-full bg-primary text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
         >
           {pending ? (
             <>
@@ -184,8 +184,8 @@ export function TestimonialPublisher() {
             exit={{ opacity: 0, y: 50 }}
             className={`fixed bottom-12 right-12 z-50 px-8 py-4 rounded-3xl shadow-2xl flex items-center gap-4 ${
               notice.type === "success"
-                ? "bg-emerald-500 text-white"
-                : "bg-red-500 text-white"
+                ? "bg-emerald-500 text-foreground"
+                : "bg-red-500 text-foreground"
             }`}
           >
             {notice.type === "success" ? (

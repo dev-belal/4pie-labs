@@ -86,7 +86,7 @@ export function BlogPublisher() {
                 required
                 value={title}
                 onChange={(e) => handleTitleChange(e.target.value)}
-                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all font-display text-xl"
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all font-display text-xl"
                 placeholder="The Future of AI..."
               />
               {state.errors?.title && (
@@ -115,7 +115,7 @@ export function BlogPublisher() {
                   required
                   value={slug}
                   onChange={(e) => handleSlugChange(e.target.value)}
-                  className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 pl-[5.5rem] pr-6 text-white focus:outline-none focus:border-primary/50 transition-all font-mono text-sm"
+                  className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 pl-[5.5rem] pr-6 text-foreground focus:outline-none focus:border-primary/50 transition-all font-mono text-sm"
                   placeholder="the-future-of-ai"
                 />
               </div>
@@ -143,7 +143,7 @@ export function BlogPublisher() {
                   id="blog-category"
                   name="category"
                   defaultValue="GUIDE"
-                  className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all appearance-none cursor-pointer"
+                  className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all appearance-none cursor-pointer"
                 >
                   <option>GUIDE</option>
                   <option>STRATEGY</option>
@@ -162,7 +162,7 @@ export function BlogPublisher() {
                   id="blog-read-time"
                   name="readTime"
                   type="text"
-                  className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all"
+                  className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all"
                   placeholder="5 min read"
                 />
               </div>
@@ -181,7 +181,7 @@ export function BlogPublisher() {
                 type="text"
                 defaultValue="Syed Belal"
                 required
-                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all"
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all"
                 placeholder="Author name"
               />
             </div>
@@ -205,7 +205,7 @@ export function BlogPublisher() {
                 <button
                   type="button"
                   onClick={() => setImage("")}
-                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-foreground/60 hover:text-white transition-colors text-sm font-bold"
+                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-background/60 flex items-center justify-center text-foreground/60 hover:text-foreground transition-colors text-sm font-bold"
                 >
                   ✕
                 </button>
@@ -240,7 +240,7 @@ export function BlogPublisher() {
             name="excerpt"
             rows={2}
             required
-            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all resize-none"
+            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all resize-none"
             placeholder="Catchy hook for the listing card..."
           />
           {state.errors?.excerpt && (
@@ -262,7 +262,7 @@ export function BlogPublisher() {
             name="content"
             rows={12}
             required
-            className="w-full bg-foreground/10 border border-foreground/10 rounded-[32px] py-8 px-8 text-white focus:outline-none focus:border-primary/50 transition-all resize-none font-mono text-sm leading-relaxed"
+            className="w-full bg-foreground/10 border border-foreground/10 rounded-[32px] py-8 px-8 text-foreground focus:outline-none focus:border-primary/50 transition-all resize-none font-mono text-sm leading-relaxed"
             placeholder={`# Start writing your masterpiece...\n\nUse standard markdown for formatting.`}
           />
           {state.errors?.content && (
@@ -297,8 +297,8 @@ export function BlogPublisher() {
             exit={{ opacity: 0, y: 50 }}
             className={`fixed bottom-12 right-12 z-50 px-8 py-4 rounded-3xl shadow-2xl flex items-center gap-4 ${
               notice.type === "success"
-                ? "bg-emerald-500 text-white"
-                : "bg-red-500 text-white"
+                ? "bg-emerald-500 text-foreground"
+                : "bg-red-500 text-foreground"
             }`}
           >
             {notice.type === "success" ? (

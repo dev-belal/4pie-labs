@@ -29,11 +29,11 @@ export async function BlogSection() {
   return (
     <section
       id="blog"
-      className="py-24 px-4 border-t border-foreground/5 bg-[#080808] relative overflow-hidden"
+      className="py-24 px-4 border-t border-foreground/5 bg-background relative overflow-hidden"
     >
       <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-foreground/5 blur-[120px] rounded-full -translate-y-1/2 -translate-x-1/2 pointer-events-none" />
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 text-white">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 text-foreground">
           <div>
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
               Articles &amp; Insights.
@@ -45,7 +45,7 @@ export async function BlogSection() {
           </div>
           <Link
             href="/blog"
-            className="flex items-center gap-2 text-sm font-bold bg-white text-black px-6 py-3 rounded-full hover:scale-105 transition-transform"
+            className="flex items-center gap-2 text-sm font-bold bg-primary text-white px-6 py-3 rounded-full hover:scale-105 transition-transform"
           >
             VIEW ALL ARTICLES
             <ArrowUpRight className="w-4 h-4" />
@@ -70,14 +70,14 @@ export async function BlogSection() {
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover group-hover:scale-110 transition-transform duration-500"
                 />
-                <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-foreground/80">
+                <div className="absolute top-4 left-4 bg-background/50 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-foreground/80">
                   {post.category}
                 </div>
               </div>
               <div className="flex items-center gap-3 text-foreground/30 text-xs font-bold mb-3 uppercase tracking-widest">
                 {post.date}
               </div>
-              <h3 className="text-xl font-display font-bold leading-tight group-hover:text-primary transition-colors text-white">
+              <h3 className="text-xl font-display font-bold leading-tight group-hover:text-primary transition-colors text-foreground">
                 {post.title}
               </h3>
             </Link>

@@ -58,7 +58,7 @@ function renderContent(content: string) {
       return (
         <h2
           key={key}
-          className="text-3xl font-display font-bold text-white pt-8"
+          className="text-3xl font-display font-bold text-foreground pt-8"
         >
           {line.replace("## ", "")}
         </h2>
@@ -68,7 +68,7 @@ function renderContent(content: string) {
       return (
         <h3
           key={key}
-          className="text-2xl font-display font-bold text-white pt-4"
+          className="text-2xl font-display font-bold text-foreground pt-4"
         >
           {line.replace("### ", "")}
         </h3>
@@ -76,7 +76,7 @@ function renderContent(content: string) {
     }
     if (line.startsWith("**")) {
       return (
-        <p key={key} className="font-bold text-white">
+        <p key={key} className="font-bold text-foreground">
           {line.replace(/\*\*/g, "")}
         </p>
       );
@@ -168,7 +168,7 @@ export default async function BlogPostPage({ params }: Props) {
             <span>{post.date}</span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-display font-bold text-white mb-10 leading-[1.1]">
+          <h1 className="text-4xl md:text-6xl font-display font-bold text-foreground mb-10 leading-[1.1]">
             {post.title}
           </h1>
 
@@ -181,7 +181,7 @@ export default async function BlogPostPage({ params }: Props) {
                 <div className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest">
                   Written By
                 </div>
-                <div className="text-white font-bold">{post.author}</div>
+                <div className="text-foreground font-bold">{post.author}</div>
               </div>
             </div>
 
@@ -193,7 +193,7 @@ export default async function BlogPostPage({ params }: Props) {
                 <div className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest">
                   Reading Time
                 </div>
-                <div className="text-white font-bold">{post.readTime}</div>
+                <div className="text-foreground font-bold">{post.readTime}</div>
               </div>
             </div>
 
@@ -227,14 +227,14 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="flex items-center gap-4">
               <button
                 type="button"
-                className="flex items-center gap-2 glass-morphism px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#1877F2]/20 transition-all text-white"
+                className="flex items-center gap-2 glass-morphism px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#1877F2]/20 transition-all text-foreground"
               >
                 <FacebookIcon className="w-3.5 h-3.5" />
                 Facebook
               </button>
               <button
                 type="button"
-                className="flex items-center gap-2 glass-morphism px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#1DA1F2]/20 transition-all text-white"
+                className="flex items-center gap-2 glass-morphism px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#1DA1F2]/20 transition-all text-foreground"
               >
                 <TwitterIcon className="w-3.5 h-3.5" />
                 Twitter
@@ -244,7 +244,7 @@ export default async function BlogPostPage({ params }: Props) {
 
           <Link
             href="/blog"
-            className="flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 transition-all text-sm"
+            className="flex items-center gap-3 bg-primary text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-all text-sm"
           >
             Back to all articles
             <ChevronRight className="w-4 h-4" />

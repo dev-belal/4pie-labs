@@ -200,8 +200,8 @@ function FilterRow<T extends string>({
           onClick={() => onChange(opt.value)}
           className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
             value === opt.value
-              ? "bg-white text-black"
-              : "bg-foreground/5 text-foreground/50 hover:bg-foreground/10 hover:text-white"
+              ? "bg-primary text-white"
+              : "bg-foreground/5 text-foreground/50 hover:bg-foreground/10 hover:text-foreground"
           }`}
         >
           {opt.label}
@@ -256,7 +256,7 @@ function LeadRow({
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-0.5">
-            <span className="font-bold text-sm text-white truncate">
+            <span className="font-bold text-sm text-foreground truncate">
               {lead.name ?? lead.email ?? "(no name)"}
             </span>
             <span
@@ -409,7 +409,7 @@ function ContactRow({
         {icon}
         {label}
       </div>
-      <div className="text-sm font-medium text-white truncate">{value}</div>
+      <div className="text-sm font-medium text-foreground truncate">{value}</div>
     </div>
   );
 }
@@ -505,7 +505,7 @@ function NotesEditor({
         onChange={(e) => setValue(e.target.value)}
         disabled={disabled || saving}
         placeholder="Follow-up reminders, deal context, etc."
-        className="w-full bg-foreground/[0.03] border border-foreground/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 transition-all resize-none"
+        className="w-full bg-foreground/[0.03] border border-foreground/10 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 transition-all resize-none"
       />
       {error && (
         <p className="text-xs text-red-400 mt-1 inline-flex items-center gap-1">
@@ -517,7 +517,7 @@ function NotesEditor({
         type="button"
         onClick={save}
         disabled={!dirty || saving}
-        className="mt-2 px-4 py-1.5 rounded-full text-xs font-bold bg-foreground/5 hover:bg-foreground/10 text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="mt-2 px-4 py-1.5 rounded-full text-xs font-bold bg-foreground/5 hover:bg-foreground/10 text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         {saving ? "Saving…" : "Save notes"}
       </button>

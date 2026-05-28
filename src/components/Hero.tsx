@@ -91,7 +91,7 @@ export function Hero() {
         >
           <Link
             href="/book"
-            className="group w-full sm:w-auto flex items-center justify-center gap-3 bg-white text-black px-7 py-3.5 rounded-full text-base font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+            className="group w-full sm:w-auto flex items-center justify-center gap-3 bg-primary text-white px-7 py-3.5 rounded-full text-base font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]"
           >
             Book a Strategy Call
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -100,7 +100,7 @@ export function Hero() {
           {/* TODO: replace with /audit landing page in Phase 1F */}
           <Link
             href="/book?source=audit"
-            className="group inline-flex items-center gap-2 text-sm font-bold text-foreground/60 hover:text-white transition-colors"
+            className="group inline-flex items-center gap-2 text-sm font-bold text-foreground/60 hover:text-foreground transition-colors"
           >
             Get a free AI marketing audit
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />

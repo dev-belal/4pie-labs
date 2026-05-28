@@ -20,9 +20,9 @@ export function BlogBrowser({ posts }: { posts: BlogPost[] }) {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 text-white">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 text-foreground">
         <div className="max-w-2xl">
-          <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight text-white">
+          <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight text-foreground">
             Latest <span className="text-gradient">Insights</span> <br />
             &amp; AI Research.
           </h1>
@@ -39,7 +39,7 @@ export function BlogBrowser({ posts }: { posts: BlogPost[] }) {
             placeholder="Search articles..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-12 py-4 text-white focus:outline-none focus:border-primary/50 focus:bg-foreground/10 transition-all"
+            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-12 py-4 text-foreground focus:outline-none focus:border-primary/50 focus:bg-foreground/10 transition-all"
           />
         </div>
       </div>
@@ -52,8 +52,8 @@ export function BlogBrowser({ posts }: { posts: BlogPost[] }) {
             onClick={() => setActiveCategory(cat)}
             className={`px-6 py-2.5 rounded-full text-xs font-bold tracking-widest transition-all ${
               activeCategory === cat
-                ? "bg-white text-black scale-105 shadow-xl"
-                : "glass-morphism text-foreground/40 hover:text-white hover:bg-foreground/10"
+                ? "bg-primary text-white scale-105 shadow-xl"
+                : "glass-morphism text-foreground/40 hover:text-foreground hover:bg-foreground/10"
             }`}
           >
             {cat}
@@ -85,12 +85,12 @@ export function BlogBrowser({ posts }: { posts: BlogPost[] }) {
                       sizes="(max-width: 768px) 100vw, 33vw"
                       className="object-cover group-hover:scale-110 transition-transform duration-700"
                     />
-                    <div className="absolute top-6 left-6 bg-black/60 backdrop-blur-md border border-foreground/10 px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest text-primary shadow-lg">
+                    <div className="absolute top-6 left-6 bg-background/60 backdrop-blur-md border border-foreground/10 px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest text-primary shadow-lg">
                       {blog.category}
                     </div>
                   </div>
 
-                  <div className="p-8 flex-1 flex flex-col text-white">
+                  <div className="p-8 flex-1 flex flex-col text-foreground">
                     <div className="flex items-center gap-4 text-[10px] font-bold text-foreground/30 uppercase tracking-[0.2em] mb-4">
                       <span className="flex items-center gap-1.5">
                         <Clock className="w-3 h-3" />
@@ -117,7 +117,7 @@ export function BlogBrowser({ posts }: { posts: BlogPost[] }) {
                           {blog.author}
                         </span>
                       </div>
-                      <div className="p-2 rounded-full bg-foreground/5 group-hover:bg-primary group-hover:text-white transition-all">
+                      <div className="p-2 rounded-full bg-foreground/5 group-hover:bg-primary group-hover:text-foreground transition-all">
                         <ArrowUpRight className="w-4 h-4" />
                       </div>
                     </div>
@@ -126,7 +126,7 @@ export function BlogBrowser({ posts }: { posts: BlogPost[] }) {
               </motion.div>
             ))
           ) : (
-            <div className="col-span-full py-32 text-center text-white">
+            <div className="col-span-full py-32 text-center text-foreground">
               <Sparkles className="w-12 h-12 text-foreground/10 mx-auto mb-6" />
               <h3 className="text-2xl font-display font-bold text-foreground/20">
                 No matching articles found.

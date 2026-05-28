@@ -98,7 +98,7 @@ export function ServicesBrowser() {
                   className={cn(
                     "w-full flex items-center justify-between px-6 py-4 rounded-2xl text-left font-bold transition-all",
                     activeCategory === cat
-                      ? "glass-morphism border-primary/20 text-white translate-x-1"
+                      ? "glass-morphism border-primary/20 text-foreground translate-x-1"
                       : "text-foreground/30 hover:text-foreground/50",
                   )}
                 >
@@ -191,7 +191,7 @@ export function ServicesBrowser() {
                   <button
                     type="button"
                     onClick={openCustomRequest}
-                    className="flex items-center gap-3 bg-primary hover:bg-primary/90 text-white px-10 py-4 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(139,92,246,0.3)]"
+                    className="flex items-center gap-3 bg-primary hover:bg-primary/90 text-foreground px-10 py-4 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(139,92,246,0.3)]"
                   >
                     Submit Custom Request
                     <ArrowRight className="w-5 h-5" />

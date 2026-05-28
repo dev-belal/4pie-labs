@@ -76,8 +76,8 @@ export function AdminShell({
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex">
-      <aside className="w-72 border-r border-foreground/5 bg-black/40 backdrop-blur-xl p-8 flex-col hidden md:flex">
+    <div className="min-h-screen bg-background text-foreground flex">
+      <aside className="w-72 border-r border-foreground/5 bg-background/40 backdrop-blur-xl p-8 flex-col hidden md:flex">
         <div className="flex items-center gap-3 mb-12">
           <Image
             src="/logo.png"
@@ -241,8 +241,8 @@ function TabButton({
       onClick={onClick}
       className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${
         active
-          ? "bg-foreground/10 text-white shadow-lg"
-          : "text-foreground/40 hover:text-white hover:bg-foreground/5"
+          ? "bg-foreground/10 text-foreground shadow-lg"
+          : "text-foreground/40 hover:text-foreground hover:bg-foreground/5"
       }`}
     >
       {icon}

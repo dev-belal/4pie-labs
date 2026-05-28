@@ -76,7 +76,7 @@ export async function Testimonials() {
   return (
     <section
       id="results"
-      className="py-24 px-4 bg-[#050505] overflow-hidden relative border-t border-foreground/5"
+      className="py-24 px-4 bg-background overflow-hidden relative border-t border-foreground/5"
     >
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full -translate-y-1/2 pointer-events-none" />
 
@@ -85,7 +85,7 @@ export async function Testimonials() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-morphism text-[10px] font-bold text-primary mb-6 tracking-widest uppercase">
             RESULTS & FEEDBACK
           </div>
-          <h2 className="text-4xl md:text-6xl font-display font-bold italic text-white">
+          <h2 className="text-4xl md:text-6xl font-display font-bold italic text-foreground">
             Don&apos;t take our word for it.
           </h2>
         </div>

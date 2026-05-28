@@ -215,7 +215,7 @@ export function TestimonialsCarousel({
                         />
                       ))}
                     </div>
-                    <h3 className="text-xl font-bold mb-4 text-white leading-tight min-h-[3.5rem]">
+                    <h3 className="text-xl font-bold mb-4 text-foreground leading-tight min-h-[3.5rem]">
                       {t.headline}
                     </h3>
                     <p className="text-sm text-foreground/50 leading-relaxed mb-8 italic">
@@ -235,7 +235,7 @@ export function TestimonialsCarousel({
                       />
                     </div>
                     <div>
-                      <div className="font-bold text-sm text-white">
+                      <div className="font-bold text-sm text-foreground">
                         {t.name}
                       </div>
                       <div className="text-[10px] text-foreground/30 uppercase tracking-wider font-semibold">

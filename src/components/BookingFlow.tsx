@@ -329,7 +329,7 @@ export function BookingFlow() {
           <button
             type="button"
             onClick={() => setStep("date")}
-            className="flex items-center gap-2 text-foreground/50 hover:text-white text-xs font-bold uppercase tracking-widest mb-6 transition-colors"
+            className="flex items-center gap-2 text-foreground/50 hover:text-foreground text-xs font-bold uppercase tracking-widest mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to calendar
@@ -399,7 +399,7 @@ export function BookingFlow() {
           <button
             type="button"
             onClick={() => setStep("time")}
-            className="flex items-center gap-2 text-foreground/50 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors"
+            className="flex items-center gap-2 text-foreground/50 hover:text-foreground text-xs font-bold uppercase tracking-widest transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Change time
@@ -408,7 +408,7 @@ export function BookingFlow() {
           <div className="rounded-2xl bg-primary/10 border border-primary/20 px-5 py-4 flex items-center gap-3">
             <CalendarIcon className="w-5 h-5 text-primary flex-shrink-0" />
             <div className="text-sm">
-              <div className="font-bold text-white">
+              <div className="font-bold text-foreground">
                 {formatLongDateTime(selectedSlot, timeZone)}
               </div>
               <div className="text-xs text-foreground/50 mt-0.5">
@@ -435,7 +435,7 @@ export function BookingFlow() {
               type="text"
               required
               placeholder="John Doe"
-              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
+              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
             />
             {state.status === "error" && state.errors?.name && (
               <p className="text-xs text-red-400 ml-1">{state.errors.name[0]}</p>
@@ -457,7 +457,7 @@ export function BookingFlow() {
                 type="email"
                 required
                 placeholder="john@example.com"
-                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
               />
               {state.status === "error" && state.errors?.email && (
                 <p className="text-xs text-red-400 ml-1">{state.errors.email[0]}</p>
@@ -477,7 +477,7 @@ export function BookingFlow() {
                 name="phone"
                 type="tel"
                 placeholder="+1 (555) 000-0000"
-                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
               />
             </div>
           </div>
@@ -496,7 +496,7 @@ export function BookingFlow() {
               name="notes"
               rows={3}
               placeholder="Tell us a bit about your project so we come prepared…"
-              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all resize-none"
+              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all resize-none"
             />
           </div>
 
@@ -512,7 +512,7 @@ export function BookingFlow() {
           <button
             type="submit"
             disabled={pending || !submitUnlocked}
-            className="w-full flex items-center justify-center gap-3 bg-white text-black px-7 py-3.5 rounded-2xl text-base font-bold hover:scale-[1.01] active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className="w-full flex items-center justify-center gap-3 bg-primary text-white px-7 py-3.5 rounded-2xl text-base font-bold hover:scale-[1.01] active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             {pending ? (
               <>
@@ -540,7 +540,7 @@ export function BookingFlow() {
           <p className="text-foreground/60 mb-8 max-w-md mx-auto">
             We&apos;ve sent a calendar invite + Google Meet link to your email.
             See you on{" "}
-            <span className="text-white font-bold">
+            <span className="text-foreground font-bold">
               {formatLongDateTime(state.booking.start, timeZone)}
             </span>
             .

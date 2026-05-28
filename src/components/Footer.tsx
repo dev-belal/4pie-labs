@@ -17,7 +17,7 @@ const SERVICES: { label: string; href: string }[] = [
 
 export function Footer() {
   return (
-    <footer className="pt-24 pb-12 px-4 border-t border-foreground/5 bg-[#050505] glass-morphism">
+    <footer className="pt-24 pb-12 px-4 border-t border-foreground/5 bg-background glass-morphism">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12 items-center md:items-start">
         <div className="text-center md:text-left md:ml-5 flex flex-col items-center md:items-start">
           <Link href="/" className="mb-4 inline-flex items-center gap-3">
@@ -66,13 +66,13 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row gap-8 md:gap-16 text-center md:text-left items-center md:items-start">
           <div>
-            <h4 className="text-white font-semibold text-sm uppercase tracking-widest mb-4">
+            <h4 className="text-foreground font-semibold text-sm uppercase tracking-widest mb-4">
               Quick Links
             </h4>
             <ul className="space-y-3 text-foreground/40 text-sm">
               {QUICK_LINKS.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="hover:text-white transition-colors">
+                  <Link href={l.href} className="hover:text-foreground transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -80,7 +80,7 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-semibold text-sm uppercase tracking-widest mb-4">
+            <h4 className="text-foreground font-semibold text-sm uppercase tracking-widest mb-4">
               Services
             </h4>
             <ul className="space-y-3 text-foreground/40 text-sm">
@@ -88,7 +88,7 @@ export function Footer() {
                 <li key={s.label}>
                   <Link
                     href={s.href}
-                    className="hover:text-white transition-colors"
+                    className="hover:text-foreground transition-colors"
                   >
                     {s.label}
                   </Link>
@@ -97,14 +97,14 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-semibold text-sm uppercase tracking-widest mb-4">
+            <h4 className="text-foreground font-semibold text-sm uppercase tracking-widest mb-4">
               Admin
             </h4>
             <ul className="space-y-3 text-foreground/40 text-sm">
               <li>
                 <Link
                   href="/admin/login"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-foreground transition-colors"
                 >
                   Internal Portal
                 </Link>

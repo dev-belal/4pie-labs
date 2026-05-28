@@ -110,7 +110,7 @@ export default function AboutPage() {
                       href="https://www.instagram.com/devbelaal"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white transition-all duration-300 hover:text-[#E4405F] hover:drop-shadow-[0_0_8px_rgba(225,48,108,0.8)]"
+                      className="text-foreground transition-all duration-300 hover:text-[#E4405F] hover:drop-shadow-[0_0_8px_rgba(225,48,108,0.8)]"
                       aria-label="Instagram"
                     >
                       <svg
@@ -125,7 +125,7 @@ export default function AboutPage() {
                       href="https://www.linkedin.com/in/syedbilalraza"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white transition-all duration-300 hover:text-[#0A66C2] hover:drop-shadow-[0_0_8px_rgba(10,102,194,0.8)]"
+                      className="text-foreground transition-all duration-300 hover:text-[#0A66C2] hover:drop-shadow-[0_0_8px_rgba(10,102,194,0.8)]"
                       aria-label="LinkedIn"
                     >
                       <svg
@@ -140,7 +140,7 @@ export default function AboutPage() {
                       href="https://www.x.com/devbelaal"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white transition-all duration-300 hover:text-gray-400 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]"
+                      className="text-foreground transition-all duration-300 hover:text-gray-400 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]"
                       aria-label="X"
                     >
                       <svg
@@ -155,7 +155,7 @@ export default function AboutPage() {
                       href="https://www.youtube.com/@devbelaal"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white transition-all duration-300 hover:text-[#FF0000] hover:drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]"
+                      className="text-foreground transition-all duration-300 hover:text-[#FF0000] hover:drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]"
                       aria-label="YouTube"
                     >
                       <svg

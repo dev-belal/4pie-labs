@@ -191,7 +191,7 @@ export function ChatWidget() {
             initial={{ opacity: 0, y: 20, scale: 0.95, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, y: 20, scale: 0.95, filter: "blur(10px)" }}
-            className="absolute bottom-16 right-0 w-[90vw] md:w-[380px] h-[550px] max-h-[75vh] flex flex-col bg-[#0a0a0a] rounded-[24px] border border-foreground/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
+            className="absolute bottom-16 right-0 w-[90vw] md:w-[380px] h-[550px] max-h-[75vh] flex flex-col bg-surface rounded-[24px] border border-foreground/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
           >
             <div className="p-5 bg-gradient-to-r from-primary/20 to-transparent border-b border-foreground/5 flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -205,7 +205,7 @@ export function ChatWidget() {
                   />
                 </div>
                 <div>
-                  <h3 className="text-white font-bold text-sm">Pie</h3>
+                  <h3 className="text-foreground font-bold text-sm">Pie</h3>
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-[10px] text-foreground/40 uppercase tracking-widest font-bold">
@@ -317,7 +317,7 @@ export function ChatWidget() {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Type your message..."
-                  className="flex-1 bg-transparent py-3 text-sm text-white focus:outline-none placeholder:text-foreground/20"
+                  className="flex-1 bg-transparent py-3 text-sm text-foreground focus:outline-none placeholder:text-foreground/20"
                 />
                 <button
                   type="submit"
@@ -347,7 +347,7 @@ export function ChatWidget() {
               exit={{ opacity: 0, x: 20, scale: 0.8 }}
               className="snake-border-container mb-2"
             >
-              <div className="snake-border-content px-4 py-2 text-white text-xs font-medium shadow-2xl">
+              <div className="snake-border-content px-4 py-2 text-foreground text-xs font-medium shadow-2xl">
                 Feels like need help?
               </div>
             </motion.div>
@@ -362,7 +362,7 @@ export function ChatWidget() {
           onClick={() => setIsOpen(!isOpen)}
           className={`group relative w-14 h-14 rounded-full flex items-center justify-center transition-all ${
             isOpen
-              ? "bg-foreground/10 text-white"
+              ? "bg-foreground/10 text-foreground"
               : "bg-primary text-white shadow-[0_10px_30px_rgba(168,85,247,0.4)]"
           }`}
         >

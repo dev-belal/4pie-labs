@@ -95,7 +95,7 @@ export function ROICalculator() {
               <Calculator className="w-5 h-5" />
               Marketing Budget Calculator
             </div>
-            <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 text-white">
+            <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 text-foreground">
               How much should you spend on marketing?
             </h2>
             <p className="text-foreground/60 mb-10">
@@ -140,8 +140,8 @@ export function ROICalculator() {
                       aria-pressed={industry === opt}
                       className={`px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
                         industry === opt
-                          ? "bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.15)]"
-                          : "glass-morphism text-foreground/50 hover:text-white hover:bg-foreground/5"
+                          ? "bg-primary text-white shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+                          : "glass-morphism text-foreground/50 hover:text-foreground hover:bg-foreground/5"
                       }`}
                     >
                       {opt}
@@ -164,8 +164,8 @@ export function ROICalculator() {
                       aria-pressed={goalLabel === g.label}
                       className={`px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
                         goalLabel === g.label
-                          ? "bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.15)]"
-                          : "glass-morphism text-foreground/50 hover:text-white hover:bg-foreground/5"
+                          ? "bg-primary text-white shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+                          : "glass-morphism text-foreground/50 hover:text-foreground hover:bg-foreground/5"
                       }`}
                     >
                       {g.label}
@@ -246,7 +246,7 @@ export function ROICalculator() {
               <button
                 type="button"
                 onClick={() => setModalOpen(true)}
-                className="group w-full font-bold py-4 rounded-full transition-all flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white shadow-[0_0_20px_rgba(139,92,246,0.3)]"
+                className="group w-full font-bold py-4 rounded-full transition-all flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-foreground shadow-[0_0_20px_rgba(139,92,246,0.3)]"
               >
                 Get the full breakdown
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -255,7 +255,7 @@ export function ROICalculator() {
 
             <Link
               href="/book"
-              className="group mt-5 inline-flex items-center justify-center gap-2 text-sm font-medium text-foreground/50 hover:text-white transition-colors text-center"
+              className="group mt-5 inline-flex items-center justify-center gap-2 text-sm font-medium text-foreground/50 hover:text-foreground transition-colors text-center"
             >
               Or skip the form — book a call and we&apos;ll build your plan live
               <ArrowRight className="w-3.5 h-3.5 shrink-0 group-hover:translate-x-1 transition-transform" />
@@ -318,7 +318,7 @@ function BudgetLeadModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
           />
 
           <motion.div
@@ -328,7 +328,7 @@ function BudgetLeadModal({
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-md bg-[#0A0A0A] border border-foreground/10 rounded-[32px] overflow-hidden shadow-2xl"
+            className="relative w-full max-w-md bg-surface border border-foreground/10 rounded-[32px] overflow-hidden shadow-2xl"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent pointer-events-none" />
 
@@ -336,7 +336,7 @@ function BudgetLeadModal({
               type="button"
               aria-label="Close"
               onClick={onClose}
-              className="absolute top-6 right-6 p-2 rounded-full bg-foreground/5 hover:bg-foreground/10 text-foreground/50 hover:text-white transition-all z-10"
+              className="absolute top-6 right-6 p-2 rounded-full bg-foreground/5 hover:bg-foreground/10 text-foreground/50 hover:text-foreground transition-all z-10"
             >
               <X className="w-5 h-5" />
             </button>
@@ -385,7 +385,7 @@ function BudgetLeadModal({
                         required
                         type="text"
                         placeholder="John Doe"
-                        className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
+                        className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                       />
                       {state.errors?.name && (
                         <p className="text-xs text-red-400 ml-1">
@@ -408,7 +408,7 @@ function BudgetLeadModal({
                         required
                         type="email"
                         placeholder="john@example.com"
-                        className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
+                        className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                       />
                       {state.errors?.email && (
                         <p className="text-xs text-red-400 ml-1">
@@ -431,7 +431,7 @@ function BudgetLeadModal({
                         required
                         type="text"
                         placeholder="Acme Painting Co."
-                        className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
+                        className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                       />
                       {state.errors?.businessName && (
                         <p className="text-xs text-red-400 ml-1">
@@ -454,7 +454,7 @@ function BudgetLeadModal({
                         type="number"
                         min={0}
                         defaultValue={monthlyRevenue}
-                        className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
+                        className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                       />
                       {state.errors?.monthlyRevenue && (
                         <p className="text-xs text-red-400 ml-1">
@@ -489,7 +489,7 @@ function BudgetLeadModal({
                     <button
                       type="submit"
                       disabled={pending}
-                      className="group w-full flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl text-base font-bold transition-all bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)] disabled:opacity-70 disabled:cursor-not-allowed"
+                      className="group w-full flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl text-base font-bold transition-all bg-primary text-white shadow-[0_0_20px_rgba(255,255,255,0.1)] disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                       {pending ? "Sending..." : "Email me the breakdown"}
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

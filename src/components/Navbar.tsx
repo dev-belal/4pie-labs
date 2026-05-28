@@ -72,7 +72,7 @@ export function Navbar() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-medium px-4 py-2 rounded-full transition-all duration-300 relative group text-foreground/50 hover:text-white"
+              className="text-sm font-medium px-4 py-2 rounded-full transition-all duration-300 relative group text-foreground/50 hover:text-foreground"
             >
               {item.label}
               <span className="absolute bottom-0 left-4 right-4 h-px bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
@@ -85,7 +85,7 @@ export function Navbar() {
             href="/book"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="hidden md:flex items-center gap-2 bg-white text-black px-6 py-2.5 rounded-full text-sm font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+            className="hidden md:flex items-center gap-2 bg-primary text-white px-6 py-2.5 rounded-full text-sm font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]"
           >
             Schedule Call
             <span className="relative w-4 h-4 overflow-hidden">
@@ -118,7 +118,7 @@ export function Navbar() {
           </Link>
           <button
             type="button"
-            className="md:hidden w-11 h-11 flex items-center justify-center rounded-full text-white hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
+            className="md:hidden w-11 h-11 flex items-center justify-center rounded-full text-foreground hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMobileMenuOpen}
             onClick={() => setIsMobileMenuOpen((v) => !v)}
@@ -135,7 +135,7 @@ export function Navbar() {
               key={item.href}
               href={item.href}
               onClick={closeMobileMenu}
-              className="text-lg font-medium text-foreground/70 hover:text-white transition-colors text-left"
+              className="text-lg font-medium text-foreground/70 hover:text-foreground transition-colors text-left"
             >
               {item.label}
             </Link>
@@ -143,7 +143,7 @@ export function Navbar() {
           <Link
             href="/book"
             onClick={closeMobileMenu}
-            className="flex items-center justify-center gap-2 bg-white text-black px-5 py-3 rounded-full text-base font-bold"
+            className="flex items-center justify-center gap-2 bg-primary text-white px-5 py-3 rounded-full text-base font-bold"
           >
             Schedule Call
           </Link>

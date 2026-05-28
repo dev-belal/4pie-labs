@@ -28,7 +28,7 @@ export function LoginForm({ next }: { next?: string }) {
             required
             placeholder="admin@4pielabs.com"
             autoComplete="email"
-            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-primary/50 transition-all placeholder:text-foreground/10"
+            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 pl-12 pr-4 text-foreground focus:outline-none focus:border-primary/50 transition-all placeholder:text-foreground/10"
           />
         </div>
       </div>
@@ -49,7 +49,7 @@ export function LoginForm({ next }: { next?: string }) {
             required
             placeholder="••••••••"
             autoComplete="current-password"
-            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-primary/50 transition-all placeholder:text-foreground/10"
+            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 pl-12 pr-4 text-foreground focus:outline-none focus:border-primary/50 transition-all placeholder:text-foreground/10"
           />
         </div>
       </div>
@@ -63,7 +63,7 @@ export function LoginForm({ next }: { next?: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="w-full bg-white text-black py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
+        className="w-full bg-primary text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
       >
         {pending ? "Authenticating..." : "Access Portal"}
         {!pending && <ArrowRight className="w-4 h-4" />}

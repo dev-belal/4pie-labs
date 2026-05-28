@@ -61,7 +61,7 @@ export function CustomDropdown({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white flex items-center justify-between transition-all hover:bg-foreground/[0.08] focus:outline-none focus:border-primary/50",
+          "w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground flex items-center justify-between transition-all hover:bg-foreground/[0.08] focus:outline-none focus:border-primary/50",
           isOpen && "border-primary/50 bg-foreground/[0.08]",
         )}
       >
@@ -83,7 +83,7 @@ export function CustomDropdown({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute z-50 w-full mt-2 bg-[#0A0A0A]/90 backdrop-blur-xl border border-foreground/10 rounded-2xl overflow-hidden shadow-2xl py-2"
+            className="absolute z-50 w-full mt-2 bg-surface/90 backdrop-blur-xl border border-foreground/10 rounded-2xl overflow-hidden shadow-2xl py-2"
           >
             <div className="max-h-60 overflow-y-auto">
               {options.map((option) => (

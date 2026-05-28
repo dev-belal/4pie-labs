@@ -57,7 +57,7 @@ export function CustomRequestModal({ isOpen, onClose }: CustomRequestModalProps)
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
           />
 
           <motion.div
@@ -67,7 +67,7 @@ export function CustomRequestModal({ isOpen, onClose }: CustomRequestModalProps)
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-md bg-[#0A0A0A] border border-foreground/10 rounded-[32px] overflow-hidden shadow-2xl"
+            className="relative w-full max-w-md bg-surface border border-foreground/10 rounded-[32px] overflow-hidden shadow-2xl"
           >
             <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-primary/20 to-transparent pointer-events-none" />
 
@@ -75,7 +75,7 @@ export function CustomRequestModal({ isOpen, onClose }: CustomRequestModalProps)
               type="button"
               aria-label="Close"
               onClick={onClose}
-              className="absolute top-6 right-6 p-2 rounded-full bg-foreground/5 hover:bg-foreground/10 text-foreground/50 hover:text-white transition-all z-10"
+              className="absolute top-6 right-6 p-2 rounded-full bg-foreground/5 hover:bg-foreground/10 text-foreground/50 hover:text-foreground transition-all z-10"
             >
               <X className="w-5 h-5" />
             </button>
@@ -112,7 +112,7 @@ export function CustomRequestModal({ isOpen, onClose }: CustomRequestModalProps)
                     required
                     type="text"
                     placeholder="Your Name"
-                    className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
+                    className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                   />
                   {state.errors?.name && (
                     <p className="text-xs text-red-400 ml-1">
@@ -136,7 +136,7 @@ export function CustomRequestModal({ isOpen, onClose }: CustomRequestModalProps)
                       required
                       type="email"
                       placeholder="Work Email"
-                      className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
+                      className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                     />
                     {state.errors?.email && (
                       <p className="text-xs text-red-400 ml-1">
@@ -166,7 +166,7 @@ export function CustomRequestModal({ isOpen, onClose }: CustomRequestModalProps)
                       required
                       type="tel"
                       placeholder="Phone"
-                      className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
+                      className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                     />
                     {state.errors?.phone && (
                       <p className="text-xs text-red-400 ml-1">
@@ -213,7 +213,7 @@ export function CustomRequestModal({ isOpen, onClose }: CustomRequestModalProps)
                     rows={3}
                     required
                     placeholder="Explain your specific requirements in detail..."
-                    className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all resize-none"
+                    className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all resize-none"
                   />
                   {state.errors?.details && (
                     <p className="text-xs text-red-400 ml-1">
@@ -239,12 +239,12 @@ export function CustomRequestModal({ isOpen, onClose }: CustomRequestModalProps)
                   className={cn(
                     "w-full flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-lg font-bold transition-all duration-300",
                     state.status === "success"
-                      ? "bg-emerald-500 text-white"
+                      ? "bg-emerald-500 text-foreground"
                       : state.status === "error"
-                        ? "bg-red-500 text-white"
+                        ? "bg-red-500 text-foreground"
                         : isHovered
-                          ? "bg-accent text-white shadow-[0_0_30px_rgba(59,130,246,0.3)]"
-                          : "bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)]",
+                          ? "bg-accent text-foreground shadow-[0_0_30px_rgba(59,130,246,0.3)]"
+                          : "bg-primary text-white shadow-[0_0_20px_rgba(255,255,255,0.1)]",
                     (pending || state.status === "success") &&
                       "opacity-80 cursor-not-allowed",
                   )}

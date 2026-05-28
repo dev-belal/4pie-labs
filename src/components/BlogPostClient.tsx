@@ -90,7 +90,7 @@ export function ShareActions() {
         className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center border border-foreground/10 hover:bg-primary transition-all group"
       >
         <LinkIcon
-          className={`w-4 h-4 ${copied ? "text-emerald-400" : "text-foreground/40 group-hover:text-white"}`}
+          className={`w-4 h-4 ${copied ? "text-emerald-400" : "text-foreground/40 group-hover:text-foreground"}`}
         />
       </button>
       <button
@@ -98,21 +98,21 @@ export function ShareActions() {
         aria-label="Share on Facebook"
         className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center border border-foreground/10 hover:bg-[#1877F2] transition-all group"
       >
-        <FacebookIcon className="w-4 h-4 text-foreground/40 group-hover:text-white" />
+        <FacebookIcon className="w-4 h-4 text-foreground/40 group-hover:text-foreground" />
       </button>
       <button
         type="button"
         aria-label="Share on Twitter"
         className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center border border-foreground/10 hover:bg-[#1DA1F2] transition-all group"
       >
-        <TwitterIcon className="w-4 h-4 text-foreground/40 group-hover:text-white" />
+        <TwitterIcon className="w-4 h-4 text-foreground/40 group-hover:text-foreground" />
       </button>
       <button
         type="button"
         aria-label="Share on LinkedIn"
         className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center border border-foreground/10 hover:bg-[#0077B5] transition-all group"
       >
-        <LinkedinIcon className="w-4 h-4 text-foreground/40 group-hover:text-white" />
+        <LinkedinIcon className="w-4 h-4 text-foreground/40 group-hover:text-foreground" />
       </button>
     </div>
   );

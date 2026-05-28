@@ -26,7 +26,7 @@ export function AboutCTA() {
         <button
           type="button"
           onClick={openContact}
-          className="relative z-10 flex items-center gap-3 mx-auto bg-white text-black px-10 py-5 rounded-full text-lg font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.15)]"
+          className="relative z-10 flex items-center gap-3 mx-auto bg-primary text-white px-10 py-5 rounded-full text-lg font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.15)]"
         >
           Start Your Automation
           <ArrowRight className="w-5 h-5" />

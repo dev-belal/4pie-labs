@@ -33,7 +33,7 @@ export function ServiceDetailModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            className="absolute inset-0 bg-background/80 backdrop-blur-md"
           />
 
           <motion.div
@@ -74,7 +74,7 @@ export function ServiceDetailModal({
                     </span>
                     <h2
                       id="service-detail-title"
-                      className="text-2xl font-display font-bold text-white tracking-tight leading-tight"
+                      className="text-2xl font-display font-bold text-foreground tracking-tight leading-tight"
                     >
                       {service.title}
                     </h2>
@@ -86,7 +86,7 @@ export function ServiceDetailModal({
                 </p>
 
                 <div className="space-y-3 mb-2">
-                  <h4 className="text-[11px] font-bold text-white uppercase tracking-wider mb-2 opacity-50">
+                  <h4 className="text-[11px] font-bold text-foreground uppercase tracking-wider mb-2 opacity-50">
                     Key Deliverables
                   </h4>
                   <div className="space-y-2.5">
@@ -118,7 +118,7 @@ export function ServiceDetailModal({
                   onClose();
                   onContactClick();
                 }}
-                className="w-full sm:w-auto px-6 py-3 bg-white text-black rounded-full font-bold text-sm flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl"
+                className="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl"
               >
                 Get Started
                 <Zap className="w-4 h-4 fill-current" />
@@ -137,7 +137,7 @@ export function ServiceDetailModal({
               <Link
                 href="/book"
                 onClick={onClose}
-                className="sm:hidden w-full px-6 py-3 bg-foreground/5 text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 border border-foreground/10 hover:bg-foreground/10 transition-all"
+                className="sm:hidden w-full px-6 py-3 bg-foreground/5 text-foreground rounded-full font-bold text-sm flex items-center justify-center gap-2 border border-foreground/10 hover:bg-foreground/10 transition-all"
               >
                 Book Strategy Session
               </Link>

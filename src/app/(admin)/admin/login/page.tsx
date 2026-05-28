@@ -26,7 +26,7 @@ export default async function AdminLoginPage({ searchParams }: Props) {
         </div>
 
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold text-white mb-2">
+          <h1 className="text-3xl font-display font-bold text-foreground mb-2">
             Admin Portal
           </h1>
           <p className="text-foreground/40 text-sm">

@@ -109,7 +109,7 @@ export function ConversationsPanel({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 bg-background/70 backdrop-blur-sm flex items-center justify-center p-4"
             onClick={() => setOpenId(null)}
           >
             <motion.div
@@ -117,11 +117,11 @@ export function ConversationsPanel({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.98 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-2xl max-h-[85vh] bg-[#0a0a0a] border border-foreground/10 rounded-3xl shadow-2xl flex flex-col"
+              className="w-full max-w-2xl max-h-[85vh] bg-surface border border-foreground/10 rounded-3xl shadow-2xl flex flex-col"
             >
               <header className="flex items-center justify-between p-5 border-b border-foreground/5">
                 <div className="min-w-0">
-                  <h3 className="text-white font-bold">Chat transcript</h3>
+                  <h3 className="text-foreground font-bold">Chat transcript</h3>
                   <p className="text-[11px] text-foreground/40 font-mono truncate">
                     {open.session_id}
                   </p>
@@ -130,7 +130,7 @@ export function ConversationsPanel({
                   type="button"
                   aria-label="Close transcript"
                   onClick={() => setOpenId(null)}
-                  className="p-2 rounded-full text-foreground/40 hover:bg-foreground/5 hover:text-white"
+                  className="p-2 rounded-full text-foreground/40 hover:bg-foreground/5 hover:text-foreground"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -164,7 +164,7 @@ export function ConversationsPanel({
                       <div
                         className={`p-3 rounded-2xl text-sm leading-relaxed max-w-[80%] whitespace-pre-wrap ${
                           m.role === "user"
-                            ? "bg-primary/20 text-white rounded-tr-none"
+                            ? "bg-primary/20 text-foreground rounded-tr-none"
                             : "bg-foreground/5 text-foreground/80 rounded-tl-none border border-foreground/5"
                         }`}
                       >
