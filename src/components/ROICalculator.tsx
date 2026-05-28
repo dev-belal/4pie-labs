@@ -140,8 +140,8 @@ export function ROICalculator() {
                       aria-pressed={industry === opt}
                       className={`px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
                         industry === opt
-                          ? "bg-primary text-white shadow-[0_0_15px_rgba(255,255,255,0.15)]"
-                          : "glass-morphism text-foreground/50 hover:text-foreground hover:bg-foreground/5"
+                          ? "bg-primary text-on-primary shadow-[var(--shadow-cta)]"
+                          : "glass-morphism text-foreground/60 hover:text-foreground hover:bg-foreground/5"
                       }`}
                     >
                       {opt}
@@ -164,8 +164,8 @@ export function ROICalculator() {
                       aria-pressed={goalLabel === g.label}
                       className={`px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
                         goalLabel === g.label
-                          ? "bg-primary text-white shadow-[0_0_15px_rgba(255,255,255,0.15)]"
-                          : "glass-morphism text-foreground/50 hover:text-foreground hover:bg-foreground/5"
+                          ? "bg-primary text-on-primary shadow-[var(--shadow-cta)]"
+                          : "glass-morphism text-foreground/60 hover:text-foreground hover:bg-foreground/5"
                       }`}
                     >
                       {g.label}
@@ -203,7 +203,7 @@ export function ROICalculator() {
 
           {/* ---- Right column: output card ---- */}
           <div className="flex flex-col justify-center">
-            <div className="bg-surface rounded-2xl p-8 md:p-12 border border-primary-muted shadow-[0_1px_3px_rgba(26,26,26,0.05),0_4px_12px_rgba(26,26,26,0.04)]">
+            <div className="bg-surface rounded-2xl p-8 md:p-12 border border-primary-muted shadow-[var(--shadow-card-elevated)]">
               <div className="text-foreground/40 text-sm mb-2 uppercase tracking-widest">
                 Recommended monthly budget
               </div>
@@ -246,7 +246,7 @@ export function ROICalculator() {
               <button
                 type="button"
                 onClick={() => setModalOpen(true)}
-                className="group w-full font-medium py-3.5 rounded-lg transition-all flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white hover:shadow-[0_2px_4px_rgba(124,92,255,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="group w-full font-semibold py-3.5 rounded-lg transition-all flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-on-primary shadow-[var(--shadow-cta)] hover:shadow-[var(--shadow-cta-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 Get the full breakdown
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -489,7 +489,7 @@ function BudgetLeadModal({
                     <button
                       type="submit"
                       disabled={pending}
-                      className="group w-full flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl text-base font-bold transition-all bg-primary text-white shadow-[0_0_20px_rgba(255,255,255,0.1)] disabled:opacity-70 disabled:cursor-not-allowed"
+                      className="group w-full flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl text-base font-semibold transition-all bg-primary hover:bg-primary-hover text-on-primary shadow-[var(--shadow-cta)] hover:shadow-[var(--shadow-cta-strong)] disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                       {pending ? "Sending..." : "Email me the breakdown"}
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

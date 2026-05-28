@@ -306,7 +306,7 @@ export function BookingFlow() {
                 }
                 modifiersClassNames={{
                   available: "font-bold text-primary",
-                  selected: "bg-primary text-white",
+                  selected: "bg-primary text-on-primary",
                 }}
                 disabled={{ before: new Date() }}
                 classNames={{
@@ -378,7 +378,7 @@ export function BookingFlow() {
                     }}
                     className={`px-4 py-3 rounded-2xl text-sm font-bold transition-all border ${
                       isSelected
-                        ? "bg-primary text-white border-primary"
+                        ? "bg-primary text-on-primary border-primary"
                         : "bg-foreground/5 border-foreground/10 text-foreground/80 hover:border-primary/50 hover:bg-primary/5"
                     }`}
                   >
@@ -512,7 +512,7 @@ export function BookingFlow() {
           <button
             type="submit"
             disabled={pending || !submitUnlocked}
-            className="w-full flex items-center justify-center gap-3 bg-primary text-white px-7 py-3.5 rounded-2xl text-base font-bold hover:scale-[1.01] active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className="w-full flex items-center justify-center gap-3 bg-primary hover:bg-primary-hover text-on-primary px-7 py-3.5 rounded-2xl text-base font-semibold hover:scale-[1.01] active:scale-95 transition-all shadow-[var(--shadow-cta)] hover:shadow-[var(--shadow-cta-strong)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             {pending ? (
               <>

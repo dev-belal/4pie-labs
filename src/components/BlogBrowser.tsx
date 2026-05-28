@@ -52,7 +52,7 @@ export function BlogBrowser({ posts }: { posts: BlogPost[] }) {
             onClick={() => setActiveCategory(cat)}
             className={`px-6 py-2.5 rounded-full text-xs font-bold tracking-widest transition-all ${
               activeCategory === cat
-                ? "bg-primary text-white scale-105 shadow-xl"
+                ? "bg-primary text-on-primary scale-105 shadow-xl"
                 : "glass-morphism text-foreground/40 hover:text-foreground hover:bg-foreground/10"
             }`}
           >

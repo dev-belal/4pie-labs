@@ -204,7 +204,7 @@ export function TestimonialsCarousel({
                       ? undefined
                       : { y: -6, transition: { duration: 0.25 } }
                   }
-                  className="p-8 glass-morphism rounded-[40px] border-foreground/10 hover:border-primary/30 hover:bg-foreground/[0.07] hover:shadow-[0_20px_50px_-12px_rgba(139,92,246,0.25)] shadow-2xl flex flex-col justify-between h-full transform-gpu transition-colors"
+                  className="p-8 glass-morphism rounded-[40px] hover:border-primary/30 hover:bg-foreground/[0.04] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] flex flex-col justify-between h-full transform-gpu transition-all"
                 >
                   <div>
                     <div className="flex gap-1 mb-6">

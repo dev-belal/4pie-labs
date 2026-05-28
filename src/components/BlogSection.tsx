@@ -45,7 +45,7 @@ export async function BlogSection() {
           </div>
           <Link
             href="/blog"
-            className="flex items-center gap-2 text-sm font-bold bg-primary text-white px-6 py-3 rounded-full hover:scale-105 transition-transform"
+            className="flex items-center gap-2 text-sm font-bold bg-primary text-on-primary px-6 py-3 rounded-full hover:scale-105 transition-transform"
           >
             VIEW ALL ARTICLES
             <ArrowUpRight className="w-4 h-4" />

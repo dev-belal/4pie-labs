@@ -258,7 +258,7 @@ export function ChatWidget() {
                     <div
                       className={`p-4 rounded-2xl text-sm leading-relaxed ${
                         msg.sender === "user"
-                          ? "bg-primary text-white rounded-tr-none shadow-[0_10px_20px_rgba(168,85,247,0.2)]"
+                          ? "bg-primary text-on-primary rounded-tr-none shadow-[var(--shadow-cta)]"
                           : "bg-foreground/10 text-foreground/80 rounded-tl-none border border-foreground/5"
                       }`}
                     >
@@ -363,7 +363,7 @@ export function ChatWidget() {
           className={`group relative w-14 h-14 rounded-full flex items-center justify-center transition-all ${
             isOpen
               ? "bg-foreground/10 text-foreground"
-              : "bg-primary text-white shadow-[0_10px_30px_rgba(168,85,247,0.4)]"
+              : "bg-primary text-on-primary shadow-[var(--shadow-cta-strong)]"
           }`}
         >
           <div className="absolute inset-0 rounded-full bg-primary/20 group-hover:blur-xl transition-all pointer-events-none" />

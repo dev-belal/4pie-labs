@@ -31,7 +31,7 @@ export function AboutCTA() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/book"
-            className="group inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-7 py-3.5 rounded-lg text-base font-medium transition-all hover:shadow-[0_2px_4px_rgba(124,92,255,0.18)]"
+            className="group inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-on-primary px-7 py-3.5 rounded-lg text-base font-semibold transition-all shadow-[var(--shadow-cta)] hover:shadow-[var(--shadow-cta-strong)]"
           >
             Book a strategy call
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

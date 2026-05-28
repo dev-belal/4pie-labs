@@ -248,7 +248,7 @@ function TabButton({
       {icon}
       <span className="flex-1 text-left">{label}</span>
       {typeof badge === "number" && (
-        <span className="min-w-[20px] h-5 px-1.5 inline-flex items-center justify-center text-[10px] font-bold rounded-full bg-primary text-white">
+        <span className="min-w-[20px] h-5 px-1.5 inline-flex items-center justify-center text-[10px] font-bold rounded-full bg-primary text-on-primary">
           {badge}
         </span>
       )}

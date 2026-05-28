@@ -25,25 +25,32 @@ function Scene() {
   const particlesRef = useRef<THREE.Points>(null);
   const mainMatRef = useRef<THREE.MeshPhysicalMaterial>(null);
   const innerMatRef = useRef<THREE.MeshBasicMaterial>(null);
+  const ring1MatRef = useRef<THREE.MeshBasicMaterial>(null);
   const particleMatRef = useRef<THREE.PointsMaterial>(null);
   const mouseRef = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
   const reducedRef = useRef(false);
   const { camera, gl } = useThree();
 
   // Theme-aware tinting. Re-runs whenever <html data-theme> changes.
+  // Amber palette: light uses neutral glass + amber-600 core; dark goes pure
+  // amber crystal floating in off-black (the brand image).
   useEffect(() => {
     const apply = () => {
       const dark =
         document.documentElement.getAttribute("data-theme") === "dark";
       if (mainMatRef.current) {
-        mainMatRef.current.color.setHex(dark ? 0xb5a0ff : 0xffffff);
-        mainMatRef.current.iridescence = dark ? 1.0 : 0.7;
+        mainMatRef.current.color.setHex(dark ? 0xfbbf24 : 0xffffff);
+        mainMatRef.current.iridescence = dark ? 0.85 : 0.7;
       }
       if (innerMatRef.current) {
-        innerMatRef.current.color.setHex(dark ? 0x9c7eff : 0x7c5cff);
+        innerMatRef.current.color.setHex(dark ? 0xfde68a : 0xd97706);
+      }
+      if (ring1MatRef.current) {
+        ring1MatRef.current.color.setHex(dark ? 0xfbbf24 : 0xd97706);
+        ring1MatRef.current.opacity = dark ? 0.55 : 0.45;
       }
       if (particleMatRef.current) {
-        particleMatRef.current.color.setHex(dark ? 0xb5a0ff : 0x7c5cff);
+        particleMatRef.current.color.setHex(dark ? 0xfbbf24 : 0xd97706);
         particleMatRef.current.opacity = dark ? 0.7 : 0.55;
       }
     };
@@ -142,7 +149,7 @@ function Scene() {
       <directionalLight position={[2, 3, 4]} intensity={1.6} />
       <directionalLight
         position={[-3, -2, 2]}
-        color={0x9c7eff}
+        color={0xfbbf24}
         intensity={0.8}
       />
       <directionalLight
@@ -176,17 +183,24 @@ function Scene() {
         <sphereGeometry args={[0.55, 32, 32]} />
         <meshBasicMaterial
           ref={innerMatRef}
-          color={0x7c5cff}
+          color={0xd97706}
           transparent
           opacity={0.85}
         />
       </mesh>
 
+      {/* Orbit ring 1 — theme-aware amber core ring. */}
       <mesh ref={ring1Ref} rotation={[Math.PI / 3, 0, 0]}>
         <torusGeometry args={[2.0, 0.012, 8, 80]} />
-        <meshBasicMaterial color={0x7c5cff} transparent opacity={0.45} />
+        <meshBasicMaterial
+          ref={ring1MatRef}
+          color={0xd97706}
+          transparent
+          opacity={0.45}
+        />
       </mesh>
 
+      {/* Orbit ring 2 — warm peach, kept as a complementary contrast. */}
       <mesh
         ref={ring2Ref}
         rotation={[Math.PI / 4, 0, Math.PI / 3]}
@@ -198,7 +212,7 @@ function Scene() {
       <points ref={particlesRef} geometry={particleGeometry}>
         <pointsMaterial
           ref={particleMatRef}
-          color={0x7c5cff}
+          color={0xd97706}
           size={0.04}
           transparent
           opacity={0.6}

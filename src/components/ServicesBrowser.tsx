@@ -191,7 +191,7 @@ export function ServicesBrowser() {
                   <button
                     type="button"
                     onClick={openCustomRequest}
-                    className="flex items-center gap-3 bg-primary hover:bg-primary/90 text-foreground px-10 py-4 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(139,92,246,0.3)]"
+                    className="flex items-center gap-3 bg-primary hover:bg-primary-hover text-on-primary px-10 py-4 rounded-full font-semibold hover:scale-105 active:scale-95 transition-all shadow-[var(--shadow-cta)] hover:shadow-[var(--shadow-cta-strong)]"
                   >
                     Submit Custom Request
                     <ArrowRight className="w-5 h-5" />

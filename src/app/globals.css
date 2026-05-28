@@ -2,32 +2,27 @@
 @import "react-day-picker/style.css";
 
 /* =============================================================================
-   Phase 2 light-theme tokens. Existing token NAMES are kept so legacy
-   utility classes (bg-primary, bg-accent, bg-card, text-accent…) keep working
-   with their new light-theme values. New semantic tokens (foreground,
-   muted-foreground, surface, surface-2, border, primary-muted, warm-peach,
-   warm-yellow, success, error, warning) are added for the mass sed-replace
-   and the surgical JSX edits.
+   Phase 4 — black + amber brand. Both themes share the same accent family so
+   the toggle reads consistent; the dark theme is the brand's home (off-black
+   base, amber-400 primary, soft yellow glow shadows), and the light theme is
+   the cream-bg mirror with a deeper amber-600 primary for readable contrast.
 
-   Dark→light lineage:
-     background     #000000  → #FAF7F2  (warm cream)
-     foreground     #FFFFFF  → #1A1A1A  (near-black text)
-     primary        #8B5CF6  → #7C5CFF  (warmed violet)
-     primary-dark   #6D28D9  → #6845F0  (hover state)
-     accent         #3B82F6  → #7C5CFF  (collapsed onto primary)
-     accent-purple  #A78BFA  → #E89B7C  (repurposed as warm peach
-                                          for the text-gradient)
-     card           #0A0A0A  → #FFFFFF  (white raised surface)
-     card-hover     #121212  → #F2EDE5  (deeper cream)
+   Token NAMES are unchanged from earlier phases so every existing utility
+   (bg-primary, text-primary, border-primary-muted, …) re-themes from the
+   override without touching JSX.
+
+   Shadow personality:
+     light  → soft drop (0 2px 4px amber/18%)
+     dark   → yellow glow + 1px inset highlight ring (Linear-tier)
 ============================================================================= */
 
 @theme {
   /* Surfaces */
   --color-background: #faf7f2;
   --color-surface: #ffffff;
-  --color-surface-2: #f2ede5;
-  --color-card: #ffffff;          /* legacy alias */
-  --color-card-hover: #f2ede5;    /* legacy alias */
+  --color-surface-2: #f4ebda;
+  --color-card: #ffffff;           /* legacy alias */
+  --color-card-hover: #f4ebda;     /* legacy alias */
 
   /* Text */
   --color-foreground: #1a1a1a;
@@ -35,26 +30,52 @@
   --color-subtle-foreground: #8a8a8a;
 
   /* Borders */
-  --color-border: #e8e2d8;
-  --color-card-border: #ede7dd;
+  --color-border: #e8ddc4;
+  --color-card-border: #ede3cb;
 
-  /* Brand accent */
-  --color-primary: #7c5cff;
-  --color-primary-dark: #6845f0;      /* legacy alias — used as hover */
-  --color-primary-hover: #6845f0;
-  --color-primary-muted: #e7e1ff;
-  --color-primary-ink: #2a1e80;       /* darker violet for type on accent-muted */
-  --color-accent: #7c5cff;            /* collapsed onto primary */
-  --color-accent-purple: #e89b7c;     /* repurposed as warm peach */
+  /* Brand accent — amber on cream needs the deeper end of the scale to
+     stay legible on body type and on the cream background. */
+  --color-primary: #d97706;          /* amber-600 */
+  --color-primary-dark: #b45309;     /* legacy alias — used as hover */
+  --color-primary-hover: #b45309;    /* amber-700 */
+  --color-primary-muted: #fef3c7;    /* amber-100 — icon tile bg */
+  --color-primary-ink: #78350f;      /* amber-900 — text on primary-muted */
+  --color-on-primary: #1a1a1a;       /* near-black text on primary CTAs — passes WCAG AA against both amber-400 and amber-600, classic black-on-yellow */
+  --color-accent: #d97706;           /* collapsed onto primary */
+  --color-accent-purple: #e89b7c;    /* warm peach kept as secondary */
 
   /* Warm secondary */
   --color-warm-peach: #e89b7c;
-  --color-warm-yellow: #f4c95d;
+  --color-warm-yellow: #fbbf24;
 
   /* Status */
   --color-success: #2e8b57;
   --color-error: #c84b4b;
   --color-warning: #d9982f;
+
+  /* Shadow tokens — referenced from JSX as `shadow-[var(--shadow-cta)]` etc.
+     so a single override under [data-theme="dark"] swaps the entire system. */
+  --shadow-cta:
+    0 2px 4px rgba(217, 119, 6, 0.18);
+  --shadow-cta-strong:
+    0 6px 16px rgba(217, 119, 6, 0.22),
+    0 2px 4px rgba(217, 119, 6, 0.14);
+  --shadow-card:
+    0 1px 3px rgba(26, 26, 26, 0.05),
+    0 4px 12px rgba(26, 26, 26, 0.04);
+  --shadow-card-elevated:
+    0 4px 12px rgba(26, 26, 26, 0.08),
+    0 1px 3px rgba(26, 26, 26, 0.04);
+  --shadow-card-hover:
+    0 8px 24px rgba(26, 26, 26, 0.08),
+    0 2px 6px rgba(26, 26, 26, 0.04);
+  --shadow-pill:
+    0 1px 3px rgba(26, 26, 26, 0.05);
+  --shadow-dropdown:
+    0 16px 40px rgba(26, 26, 26, 0.12),
+    0 4px 12px rgba(26, 26, 26, 0.06);
+  --shadow-dot-glow:
+    0 0 8px rgba(217, 119, 6, 0.45);
 
   /* Type — Inter for body / display, Instrument Serif for italic accents */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -86,28 +107,71 @@
 }
 
 /* =============================================================================
-   Dark mode — runtime override via data-theme="dark".
-   Tailwind utilities reference --color-* via var(); overriding the same names
-   here makes every bg-*/text-*/border-* utility re-theme without a build step.
+   Dark mode — off-black base, amber-400 primary, yellow glow CTAs, inset
+   highlight rings on cards. This is the brand's home theme — light is the
+   mirror for users on bright screens.
 ============================================================================= */
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --color-background: #0e0e10;
-  --color-surface: #18181b;
-  --color-surface-2: #1f1f23;
-  --color-card: #18181b;
-  --color-card-hover: #1f1f23;
+  --color-background: #0a0a0a;        /* off-black, not pure */
+  --color-surface: #141414;
+  --color-surface-2: #1c1c1c;
+  --color-card: #141414;
+  --color-card-hover: #1c1c1c;
 
-  --color-foreground: #f5f2ea;
-  --color-muted-foreground: #b5b2aa;
-  --color-subtle-foreground: #8a867e;
+  --color-foreground: #f5f0e6;        /* warm cream, not pure white */
+  --color-muted-foreground: #a8a39a;
+  --color-subtle-foreground: #6b665e;
 
-  --color-border: #2c2c30;
-  --color-card-border: #28282c;
+  --color-border: #2a2620;
+  --color-card-border: #2a2620;
 
-  --color-primary-muted: #2a1e5a;
-  --color-primary-ink: #c7b8ff;
+  /* Amber-400 glows on black; amber-500 reads as the hover state. */
+  --color-primary: #fbbf24;
+  --color-primary-dark: #f59e0b;
+  --color-primary-hover: #f59e0b;
+  --color-primary-muted: #422a06;     /* deep amber for icon tiles */
+  --color-primary-ink: #fde68a;       /* amber-200 — text on primary-muted */
+  --color-accent: #fbbf24;
+  --color-accent-purple: #d97706;     /* warm secondary becomes amber-600 */
+
+  --color-warm-peach: #d97706;
+  --color-warm-yellow: #fbbf24;
+
+  --color-success: #4ade80;           /* lift status colors for contrast */
+  --color-error: #f87171;
+  --color-warning: #fbbf24;
+
+  /* Shadow personality flips: drop → glow + inset highlight ring on cards. */
+  --shadow-cta:
+    0 0 24px rgba(251, 191, 36, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-cta-strong:
+    0 0 36px rgba(251, 191, 36, 0.28),
+    0 0 12px rgba(251, 191, 36, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  --shadow-card:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-card-elevated:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 12px 32px rgba(0, 0, 0, 0.5);
+  --shadow-card-hover:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 0 1px rgba(251, 191, 36, 0.15),
+    0 12px 32px rgba(0, 0, 0, 0.5);
+  --shadow-pill:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+  --shadow-dropdown:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 20px 50px rgba(0, 0, 0, 0.7);
+  --shadow-dot-glow:
+    0 0 12px rgba(251, 191, 36, 0.7);
 }
 
 body {
@@ -117,16 +181,16 @@ body {
   padding-top: 88px;
   transition: background 200ms ease, color 200ms ease;
   background-image:
-    radial-gradient(ellipse 1200px 600px at 12% -10%, rgba(124, 92, 255, 0.10), transparent 55%),
+    radial-gradient(ellipse 1200px 600px at 12% -10%, rgba(217, 119, 6, 0.09), transparent 55%),
     radial-gradient(ellipse 900px 500px at 95% 8%, rgba(232, 155, 124, 0.07), transparent 60%),
-    radial-gradient(ellipse 700px 400px at 50% 100%, rgba(244, 201, 93, 0.05), transparent 60%);
+    radial-gradient(ellipse 700px 400px at 50% 100%, rgba(251, 191, 36, 0.05), transparent 60%);
   background-attachment: fixed;
 }
 :root[data-theme="dark"] body {
   background-image:
-    radial-gradient(ellipse 1200px 600px at 12% -10%, rgba(124, 92, 255, 0.18), transparent 55%),
-    radial-gradient(ellipse 900px 500px at 95% 8%, rgba(232, 155, 124, 0.08), transparent 60%),
-    radial-gradient(ellipse 700px 400px at 50% 100%, rgba(124, 92, 255, 0.10), transparent 60%);
+    radial-gradient(ellipse 1200px 600px at 12% -10%, rgba(251, 191, 36, 0.12), transparent 55%),
+    radial-gradient(ellipse 900px 500px at 95% 8%, rgba(217, 119, 6, 0.10), transparent 60%),
+    radial-gradient(ellipse 700px 400px at 50% 100%, rgba(245, 158, 11, 0.08), transparent 60%);
 }
 
 @media (max-width: 920px) {
@@ -148,30 +212,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* =============================================================================
-   Legacy custom utilities — repurposed for light theme.
-   These class names are still used throughout the codebase; redefining their
-   CSS lets them re-theme without touching ~43 .glass-morphism + other usages
-   in JSX.
+   Legacy custom utilities — repurposed for the amber system.
 ============================================================================= */
 
-/* Was a dark gradient + heavy shadow. Now a clean light card. */
+/* Was a dark gradient + heavy shadow. Now a clean themed surface card. */
 .glass-morphism {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  box-shadow:
-    0 1px 3px rgba(26, 26, 26, 0.05),
-    0 4px 12px rgba(26, 26, 26, 0.04);
+  box-shadow: var(--shadow-card);
 }
 
-/* Used by the headline accents. Subtle accent → warm-peach. */
+/* Used by the headline accents. Subtle accent → warm-peach (amber → peach). */
 .text-gradient {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-warm-peach;
 }
 
-/* The hero orb is gone in Phase 2 — type-only hero per the design brief.
-   Zeroing the class instead of editing every <div className="hero-glow" />
-   call site. (Note: option (b)/(c) soft mesh / dot grid can be re-introduced
-   here later if the hero feels too empty in testing.) */
+/* The hero orb is gone — type-only hero per the design brief. */
 .hero-glow,
 .glow-secondary {
   display: none;
@@ -202,7 +258,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--color-subtle-foreground);
 }
 
-/* Chat-widget snake border — accent on light. */
+/* Chat-widget snake border — amber sweep in both themes. */
 .snake-border-container {
   position: relative;
   padding: 1px;
@@ -219,12 +275,22 @@ h1, h2, h3, h4, h5, h6 {
   height: 200%;
   background: conic-gradient(
     transparent,
-    rgba(124, 92, 255, 0.35),
-    rgba(124, 92, 255, 0.7),
-    rgba(124, 92, 255, 0.35),
+    rgba(217, 119, 6, 0.35),
+    rgba(217, 119, 6, 0.7),
+    rgba(217, 119, 6, 0.35),
     transparent 30%
   );
   animation: snake-rotate 4s linear infinite;
+}
+
+:root[data-theme="dark"] .snake-border-container::before {
+  background: conic-gradient(
+    transparent,
+    rgba(251, 191, 36, 0.35),
+    rgba(251, 191, 36, 0.8),
+    rgba(251, 191, 36, 0.35),
+    transparent 30%
+  );
 }
 
 .snake-border-content {

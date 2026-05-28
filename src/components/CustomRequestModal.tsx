@@ -243,8 +243,8 @@ export function CustomRequestModal({ isOpen, onClose }: CustomRequestModalProps)
                       : state.status === "error"
                         ? "bg-red-500 text-foreground"
                         : isHovered
-                          ? "bg-accent text-foreground shadow-[0_0_30px_rgba(59,130,246,0.3)]"
-                          : "bg-primary text-white shadow-[0_0_20px_rgba(255,255,255,0.1)]",
+                          ? "bg-primary-hover text-on-primary shadow-[var(--shadow-cta-strong)]"
+                          : "bg-primary text-on-primary shadow-[var(--shadow-cta)]",
                     (pending || state.status === "success") &&
                       "opacity-80 cursor-not-allowed",
                   )}

@@ -213,7 +213,7 @@ export function Navbar() {
             </button>
             <Link
               href="/book"
-              className="hidden md:inline-flex items-center gap-1.5 h-[38px] px-4 rounded-full bg-primary hover:bg-primary-hover text-white text-sm font-medium transition-colors"
+              className="hidden md:inline-flex items-center gap-1.5 h-[38px] px-4 rounded-full bg-primary hover:bg-primary-hover text-on-primary text-sm font-medium transition-colors"
             >
               Schedule call
               <ArrowRight className="w-3.5 h-3.5" />
@@ -264,7 +264,7 @@ export function Navbar() {
           <Link
             href="/book"
             onClick={close}
-            className="block mt-3 text-center px-4 py-3.5 rounded-xl bg-primary text-white font-medium"
+            className="block mt-3 text-center px-4 py-3.5 rounded-xl bg-primary text-on-primary font-medium"
           >
             Schedule call →
           </Link>

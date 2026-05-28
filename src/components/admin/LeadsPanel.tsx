@@ -200,7 +200,7 @@ function FilterRow<T extends string>({
           onClick={() => onChange(opt.value)}
           className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
             value === opt.value
-              ? "bg-primary text-white"
+              ? "bg-primary text-on-primary"
               : "bg-foreground/5 text-foreground/50 hover:bg-foreground/10 hover:text-foreground"
           }`}
         >

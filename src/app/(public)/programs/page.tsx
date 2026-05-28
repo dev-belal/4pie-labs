@@ -254,7 +254,7 @@ export default function ProgramsPage() {
       <section className="max-w-3xl mx-auto text-center mt-20 mb-24">
         <Link
           href="/book"
-          className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-7 py-3.5 rounded-lg text-base font-medium transition-colors"
+          className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-on-primary px-7 py-3.5 rounded-lg text-base font-medium transition-colors"
         >
           Book a strategy call
           <ArrowRight className="w-4 h-4" />

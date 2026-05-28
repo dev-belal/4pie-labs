@@ -127,7 +127,7 @@ function TimelineCard({ step, index }: { step: Step; index: number }) {
         </motion.div>
       </div>
 
-      <div className="relative z-10 flex items-center justify-center w-12 h-12 rounded-full bg-background border-4 border-foreground/10 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+      <div className="relative z-10 flex items-center justify-center w-12 h-12 rounded-full bg-background border-4 border-primary/30 shadow-[var(--shadow-dot-glow)]">
         <Icon className="w-5 h-5 text-primary" />
       </div>
 

@@ -37,7 +37,7 @@ export function Hero() {
         className="absolute pointer-events-none -top-24 -left-32 w-[480px] h-[480px] rounded-full opacity-55 blur-[80px]"
         style={{
           background:
-            "radial-gradient(circle, rgba(124,92,255,0.45), transparent 60%)",
+            "radial-gradient(circle, rgba(251,191,36,0.42), transparent 60%)",
         }}
       />
       <span
@@ -45,7 +45,7 @@ export function Hero() {
         className="absolute pointer-events-none -bottom-20 -right-20 w-[380px] h-[380px] rounded-full opacity-55 blur-[80px]"
         style={{
           background:
-            "radial-gradient(circle, rgba(232,155,124,0.35), transparent 60%)",
+            "radial-gradient(circle, rgba(232,155,124,0.32), transparent 60%)",
         }}
       />
 
@@ -95,7 +95,7 @@ export function Hero() {
             >
               <Link
                 href="/book"
-                className="group inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-7 py-3.5 rounded-lg text-base font-medium transition-all hover:shadow-[0_2px_4px_rgba(124,92,255,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="group inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-on-primary px-7 py-3.5 rounded-lg text-base font-semibold transition-all hover:shadow-[var(--shadow-cta-strong)] shadow-[var(--shadow-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 Book a strategy call
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

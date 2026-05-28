@@ -244,7 +244,7 @@ export default async function BlogPostPage({ params }: Props) {
 
           <Link
             href="/blog"
-            className="flex items-center gap-3 bg-primary text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-all text-sm"
+            className="flex items-center gap-3 bg-primary text-on-primary px-8 py-4 rounded-full font-bold hover:scale-105 transition-all text-sm"
           >
             Back to all articles
             <ChevronRight className="w-4 h-4" />
