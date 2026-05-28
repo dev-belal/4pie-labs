@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Instrument_Serif } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { JsonLd } from "@/components/JsonLd";
@@ -11,6 +11,20 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
+
+// Instrument Serif — italic accent on hero headlines only ("finds first.").
+// Single italic display weight is enough; we never set it as the body font.
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  weight: "400",
+  style: ["italic", "normal"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// Inline theme-boot — runs before paint so the user's saved choice paints
+// without a flash of the wrong theme. Mirrors what the v2 mock did inline.
+const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:theme')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -81,8 +95,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${inter.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
+      <head>
+        {/* Set data-theme="dark|light" before paint to avoid the FOUC on
+            navigation. Reads the same localStorage key the toggle writes. */}
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+      </head>
       <body className="min-h-full flex flex-col">
         <JsonLd data={organization} />
         <JsonLd data={website} />

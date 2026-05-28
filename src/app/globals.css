@@ -43,6 +43,7 @@
   --color-primary-dark: #6845f0;      /* legacy alias — used as hover */
   --color-primary-hover: #6845f0;
   --color-primary-muted: #e7e1ff;
+  --color-primary-ink: #2a1e80;       /* darker violet for type on accent-muted */
   --color-accent: #7c5cff;            /* collapsed onto primary */
   --color-accent-purple: #e89b7c;     /* repurposed as warm peach */
 
@@ -55,12 +56,19 @@
   --color-error: #c84b4b;
   --color-warning: #d9982f;
 
-  /* Type — single family, Inter for everything */
+  /* Type — Inter for body / display, Instrument Serif for italic accents */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
 
   --animate-fade-in: fadeIn 0.5s ease-out forwards;
   --animate-slide-up: slideUp 0.6s ease-out forwards;
+  --animate-reveal: reveal 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
   @keyframes fadeIn {
     from { opacity: 0; }
@@ -77,11 +85,52 @@
   color-scheme: light;
 }
 
+/* =============================================================================
+   Dark mode — runtime override via data-theme="dark".
+   Tailwind utilities reference --color-* via var(); overriding the same names
+   here makes every bg-*/text-*/border-* utility re-theme without a build step.
+============================================================================= */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-background: #0e0e10;
+  --color-surface: #18181b;
+  --color-surface-2: #1f1f23;
+  --color-card: #18181b;
+  --color-card-hover: #1f1f23;
+
+  --color-foreground: #f5f2ea;
+  --color-muted-foreground: #b5b2aa;
+  --color-subtle-foreground: #8a867e;
+
+  --color-border: #2c2c30;
+  --color-card-border: #28282c;
+
+  --color-primary-muted: #2a1e5a;
+  --color-primary-ink: #c7b8ff;
+}
+
 body {
   @apply bg-background text-foreground font-sans selection:bg-primary/30;
   -webkit-font-smoothing: antialiased;
-  /* Slight negative tracking on headlines is set per-element via h1-h6 below;
-     body stays default per the design spec. */
+  /* Push content below the fixed floating pill nav (84px tall + breathing room) */
+  padding-top: 88px;
+  transition: background 200ms ease, color 200ms ease;
+  background-image:
+    radial-gradient(ellipse 1200px 600px at 12% -10%, rgba(124, 92, 255, 0.10), transparent 55%),
+    radial-gradient(ellipse 900px 500px at 95% 8%, rgba(232, 155, 124, 0.07), transparent 60%),
+    radial-gradient(ellipse 700px 400px at 50% 100%, rgba(244, 201, 93, 0.05), transparent 60%);
+  background-attachment: fixed;
+}
+:root[data-theme="dark"] body {
+  background-image:
+    radial-gradient(ellipse 1200px 600px at 12% -10%, rgba(124, 92, 255, 0.18), transparent 55%),
+    radial-gradient(ellipse 900px 500px at 95% 8%, rgba(232, 155, 124, 0.08), transparent 60%),
+    radial-gradient(ellipse 700px 400px at 50% 100%, rgba(124, 92, 255, 0.10), transparent 60%);
+}
+
+@media (max-width: 920px) {
+  body { padding-top: 80px; }
 }
 
 button,
