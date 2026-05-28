@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/Hero";
+import { LogosRow } from "@/components/LogosRow";
+import { AEOCallout } from "@/components/AEOCallout";
 import { ROICalculator } from "@/components/ROICalculator";
 import { Services } from "@/components/Services";
+import { IndustryGrid } from "@/components/IndustryGrid";
+import { ProgramsGridHome } from "@/components/ProgramsGridHome";
 import { Timeline } from "@/components/Timeline";
 import { Testimonials } from "@/components/Testimonials";
 import { BookingCTA } from "@/components/BookingCTA";
@@ -56,8 +60,12 @@ export default function HomePage() {
     <>
       <JsonLd data={faqSchema} />
       <Hero />
-      <ROICalculator />
+      <LogosRow />
+      <AEOCallout />
       <Services />
+      <IndustryGrid />
+      <ProgramsGridHome />
+      <ROICalculator />
       <Timeline />
       <Testimonials />
       <BookingCTA />
