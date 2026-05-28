@@ -15,9 +15,14 @@ const SERVICES: { label: string; href: string }[] = [
   { label: "Custom AI Systems", href: "/services" },
 ];
 
+/**
+ * The footer is *deliberately* kept dark in Phase 2. The Mailchimp / Webflow /
+ * Linear marketing pattern is a dark footer punctuating an otherwise light
+ * page — it separates "site content" from "site meta" without a hard edge.
+ */
 export function Footer() {
   return (
-    <footer className="pt-24 pb-12 px-4 border-t border-white/5 bg-[#050505] glass-morphism">
+    <footer className="pt-24 pb-12 px-4 bg-foreground text-background">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12 items-center md:items-start">
         <div className="text-center md:text-left md:ml-5 flex flex-col items-center md:items-start">
           <Link href="/" className="mb-4 inline-flex items-center gap-3">
@@ -29,7 +34,7 @@ export function Footer() {
               className="h-8 w-auto brightness-0 invert"
             />
           </Link>
-          <p className="text-white/30 max-w-xs mb-6 px-4 md:px-0">
+          <p className="text-background/60 max-w-xs mb-6 px-4 md:px-0 text-sm">
             Building the AI-first marketing systems that make local businesses
             unmissable.
           </p>
@@ -38,7 +43,7 @@ export function Footer() {
               href="https://www.linkedin.com/company/4-pie-labs/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white/40 transition-all duration-300 hover:text-[#0A66C2] hover:drop-shadow-[0_0_8px_rgba(10,102,194,0.8)]"
+              className="text-background/60 transition-colors hover:text-primary"
               aria-label="LinkedIn"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -47,7 +52,7 @@ export function Footer() {
             </a>
             <a
               href="mailto:team@fourpielabs.com"
-              className="text-white/40 transition-all duration-300 hover:text-[#EA4335] hover:drop-shadow-[0_0_8px_rgba(234,67,53,0.8)]"
+              className="text-background/60 transition-colors hover:text-primary"
               aria-label="Email"
             >
               <svg
@@ -66,13 +71,16 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row gap-8 md:gap-16 text-center md:text-left items-center md:items-start">
           <div>
-            <h4 className="text-white font-semibold text-sm uppercase tracking-widest mb-4">
+            <h4 className="text-background font-semibold text-xs uppercase tracking-widest mb-4">
               Quick Links
             </h4>
-            <ul className="space-y-3 text-white/40 text-sm">
+            <ul className="space-y-3 text-background/60 text-sm">
               {QUICK_LINKS.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="hover:text-white transition-colors">
+                  <Link
+                    href={l.href}
+                    className="hover:text-primary transition-colors"
+                  >
                     {l.label}
                   </Link>
                 </li>
@@ -80,15 +88,15 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-semibold text-sm uppercase tracking-widest mb-4">
+            <h4 className="text-background font-semibold text-xs uppercase tracking-widest mb-4">
               Services
             </h4>
-            <ul className="space-y-3 text-white/40 text-sm">
+            <ul className="space-y-3 text-background/60 text-sm">
               {SERVICES.map((s) => (
                 <li key={s.label}>
                   <Link
                     href={s.href}
-                    className="hover:text-white transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     {s.label}
                   </Link>
@@ -97,14 +105,14 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-semibold text-sm uppercase tracking-widest mb-4">
+            <h4 className="text-background font-semibold text-xs uppercase tracking-widest mb-4">
               Admin
             </h4>
-            <ul className="space-y-3 text-white/40 text-sm">
+            <ul className="space-y-3 text-background/60 text-sm">
               <li>
                 <Link
                   href="/admin/login"
-                  className="hover:text-white transition-colors"
+                  className="hover:text-primary transition-colors"
                 >
                   Internal Portal
                 </Link>
@@ -113,7 +121,7 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <div className="mt-12 pt-12 border-t border-white/5 text-center text-white/20 text-xs">
+      <div className="mt-12 pt-12 border-t border-background/10 text-center text-background/50 text-xs">
         © {new Date().getFullYear()} 4Pie Labs. All rights reserved.
       </div>
     </footer>

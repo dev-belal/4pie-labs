@@ -56,9 +56,9 @@ export function ConversationsPanel({
 
   if (conversations.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-16 text-center">
-        <MessageCircle className="w-10 h-10 mx-auto text-white/20 mb-4" />
-        <p className="text-white/40 text-sm">
+      <div className="rounded-2xl border border-foreground/5 bg-foreground/[0.02] p-16 text-center">
+        <MessageCircle className="w-10 h-10 mx-auto text-foreground/20 mb-4" />
+        <p className="text-foreground/40 text-sm">
           No chat sessions yet. Visitor conversations will appear here as they
           come in.
         </p>
@@ -74,27 +74,27 @@ export function ConversationsPanel({
             key={c.id}
             type="button"
             onClick={() => setOpenId(c.id)}
-            className="w-full text-left p-5 rounded-2xl border border-white/5 bg-white/[0.02] hover:border-white/15 hover:bg-white/[0.04] transition-all group"
+            className="w-full text-left p-5 rounded-2xl border border-foreground/5 bg-foreground/[0.02] hover:border-foreground/15 hover:bg-foreground/[0.04] transition-all group"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold">
+                  <span className="text-[10px] text-foreground/40 uppercase tracking-widest font-bold">
                     {c.lead_id ? "Lead captured" : "Anonymous"}
                   </span>
-                  <span className="text-white/20">·</span>
-                  <span className="text-[10px] text-white/40">
+                  <span className="text-foreground/20">·</span>
+                  <span className="text-[10px] text-foreground/40">
                     {c.message_count} msg
                   </span>
                 </div>
-                <p className="text-sm text-white/80 truncate">
+                <p className="text-sm text-foreground/80 truncate">
                   {c.preview ?? "(no user messages yet)"}
                 </p>
-                <p className="text-[11px] text-white/30 mt-1 font-mono truncate">
+                <p className="text-[11px] text-foreground/30 mt-1 font-mono truncate">
                   {c.session_id}
                 </p>
               </div>
-              <div className="text-[11px] text-white/40 shrink-0">
+              <div className="text-[11px] text-foreground/40 shrink-0">
                 {timeAgo(c.last_message_at)}
               </div>
             </div>
@@ -109,7 +109,7 @@ export function ConversationsPanel({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 bg-background/70 backdrop-blur-sm flex items-center justify-center p-4"
             onClick={() => setOpenId(null)}
           >
             <motion.div
@@ -117,12 +117,12 @@ export function ConversationsPanel({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.98 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-2xl max-h-[85vh] bg-[#0a0a0a] border border-white/10 rounded-3xl shadow-2xl flex flex-col"
+              className="w-full max-w-2xl max-h-[85vh] bg-surface border border-foreground/10 rounded-3xl shadow-2xl flex flex-col"
             >
-              <header className="flex items-center justify-between p-5 border-b border-white/5">
+              <header className="flex items-center justify-between p-5 border-b border-foreground/5">
                 <div className="min-w-0">
-                  <h3 className="text-white font-bold">Chat transcript</h3>
-                  <p className="text-[11px] text-white/40 font-mono truncate">
+                  <h3 className="text-foreground font-bold">Chat transcript</h3>
+                  <p className="text-[11px] text-foreground/40 font-mono truncate">
                     {open.session_id}
                   </p>
                 </div>
@@ -130,7 +130,7 @@ export function ConversationsPanel({
                   type="button"
                   aria-label="Close transcript"
                   onClick={() => setOpenId(null)}
-                  className="p-2 rounded-full text-white/40 hover:bg-white/5 hover:text-white"
+                  className="p-2 rounded-full text-foreground/40 hover:bg-foreground/5 hover:text-foreground"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -138,7 +138,7 @@ export function ConversationsPanel({
 
               <div className="flex-1 overflow-y-auto p-5 space-y-4">
                 {loading && (
-                  <p className="text-white/40 text-sm text-center py-8">
+                  <p className="text-foreground/40 text-sm text-center py-8">
                     Loading…
                   </p>
                 )}
@@ -152,20 +152,20 @@ export function ConversationsPanel({
                         className={`w-8 h-8 rounded-full shrink-0 flex items-center justify-center border ${
                           m.role === "user"
                             ? "bg-primary/10 border-primary/20"
-                            : "bg-white/5 border-white/10"
+                            : "bg-foreground/5 border-foreground/10"
                         }`}
                       >
                         {m.role === "user" ? (
                           <User className="w-4 h-4 text-primary" />
                         ) : (
-                          <MessageCircle className="w-4 h-4 text-white/60" />
+                          <MessageCircle className="w-4 h-4 text-foreground/60" />
                         )}
                       </div>
                       <div
                         className={`p-3 rounded-2xl text-sm leading-relaxed max-w-[80%] whitespace-pre-wrap ${
                           m.role === "user"
-                            ? "bg-primary/20 text-white rounded-tr-none"
-                            : "bg-white/5 text-white/80 rounded-tl-none border border-white/5"
+                            ? "bg-primary/20 text-foreground rounded-tr-none"
+                            : "bg-foreground/5 text-foreground/80 rounded-tl-none border border-foreground/5"
                         }`}
                       >
                         {m.content}
@@ -173,7 +173,7 @@ export function ConversationsPanel({
                     </div>
                   ))}
                 {!loading && thread?.length === 0 && (
-                  <p className="text-white/40 text-sm text-center py-8">
+                  <p className="text-foreground/40 text-sm text-center py-8">
                     No messages in this session.
                   </p>
                 )}

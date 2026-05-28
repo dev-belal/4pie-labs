@@ -45,13 +45,13 @@ export function TestimonialPublisher() {
       <form
         id="testimonial-form"
         action={formAction}
-        className="space-y-6 glass-morphism p-10 rounded-[40px] border-white/5"
+        className="space-y-6 glass-morphism p-10 rounded-[40px] border-foreground/5"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label
               htmlFor="t-name"
-              className="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1"
+              className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
             >
               Client Name
             </label>
@@ -60,7 +60,7 @@ export function TestimonialPublisher() {
               name="name"
               type="text"
               required
-              className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all"
+              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all"
               placeholder="John Doe"
             />
             {state.errors?.name && (
@@ -72,7 +72,7 @@ export function TestimonialPublisher() {
           <div className="space-y-2">
             <label
               htmlFor="t-role"
-              className="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1"
+              className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
             >
               Role / Company
             </label>
@@ -81,7 +81,7 @@ export function TestimonialPublisher() {
               name="role"
               type="text"
               required
-              className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all"
+              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all"
               placeholder="CEO, TechCo"
             />
             {state.errors?.role && (
@@ -94,7 +94,7 @@ export function TestimonialPublisher() {
         <div className="space-y-2">
           <label
             htmlFor="t-headline"
-            className="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1"
+            className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
           >
             Testimonial Headline
           </label>
@@ -103,7 +103,7 @@ export function TestimonialPublisher() {
             name="headline"
             type="text"
             required
-            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all"
+            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all"
             placeholder="Impactful title..."
           />
           {state.errors?.headline && (
@@ -115,7 +115,7 @@ export function TestimonialPublisher() {
         <div className="space-y-2">
           <label
             htmlFor="t-quote"
-            className="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1"
+            className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
           >
             Quote Content
           </label>
@@ -124,7 +124,7 @@ export function TestimonialPublisher() {
             name="quote"
             rows={4}
             required
-            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all resize-none"
+            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all resize-none"
             placeholder="Enter the client's words..."
           />
           {state.errors?.quote && (
@@ -134,7 +134,7 @@ export function TestimonialPublisher() {
           )}
         </div>
         <div className="space-y-2">
-          <div className="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1">
+          <div className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1">
             Rating
           </div>
           <div className="flex gap-2" role="radiogroup" aria-label="Rating">
@@ -149,7 +149,7 @@ export function TestimonialPublisher() {
                 className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-all ${
                   star <= rating
                     ? "bg-amber-400/20 text-amber-400"
-                    : "bg-white/5 text-white/20"
+                    : "bg-foreground/5 text-foreground/20"
                 }`}
               >
                 ★
@@ -162,7 +162,7 @@ export function TestimonialPublisher() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full bg-white text-black py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
+          className="w-full bg-primary text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
         >
           {pending ? (
             <>
@@ -184,8 +184,8 @@ export function TestimonialPublisher() {
             exit={{ opacity: 0, y: 50 }}
             className={`fixed bottom-12 right-12 z-50 px-8 py-4 rounded-3xl shadow-2xl flex items-center gap-4 ${
               notice.type === "success"
-                ? "bg-emerald-500 text-white"
-                : "bg-red-500 text-white"
+                ? "bg-emerald-500 text-foreground"
+                : "bg-red-500 text-foreground"
             }`}
           >
             {notice.type === "success" ? (
@@ -197,7 +197,7 @@ export function TestimonialPublisher() {
               <div className="font-bold">
                 {notice.type === "success" ? "Success!" : "Error"}
               </div>
-              <div className="text-white/80 text-[10px] uppercase font-bold tracking-widest">
+              <div className="text-foreground/80 text-[10px] uppercase font-bold tracking-widest">
                 {notice.message}
               </div>
             </div>

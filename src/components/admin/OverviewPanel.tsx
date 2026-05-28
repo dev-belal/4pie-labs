@@ -42,9 +42,9 @@ interface KpiCardProps {
 
 function KpiCard({ label, value, icon: Icon, color, bgColor }: KpiCardProps) {
   return (
-    <div className="p-6 glass-morphism rounded-[28px] border-white/5 group hover:border-white/10 transition-all">
+    <div className="p-6 glass-morphism rounded-[28px] border-foreground/5 group hover:border-foreground/10 transition-all">
       <div className="flex items-center justify-between mb-4">
-        <div className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">
+        <div className="text-[10px] font-bold text-foreground/30 uppercase tracking-[0.2em]">
           {label}
         </div>
         <div className={`w-9 h-9 rounded-xl ${bgColor} flex items-center justify-center`}>
@@ -95,7 +95,7 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
         />
       </div>
 
-      <div className="glass-morphism rounded-[32px] border-white/5 overflow-hidden">
+      <div className="glass-morphism rounded-[32px] border-foreground/5 overflow-hidden">
         <div className="p-8 pb-4 flex items-center gap-3">
           <BarChart3 className="w-5 h-5 text-primary" />
           <h3 className="text-lg font-display font-bold">
@@ -104,24 +104,24 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
         </div>
 
         {data.blogStats.length === 0 ? (
-          <div className="p-8 text-center text-white/30 text-sm">
+          <div className="p-8 text-center text-foreground/30 text-sm">
             No blog data yet. Publish your first article!
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/5">
-                  <th className="text-left text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] px-8 py-4">
+                <tr className="border-b border-foreground/5">
+                  <th className="text-left text-[10px] font-bold text-foreground/30 uppercase tracking-[0.2em] px-8 py-4">
                     Article
                   </th>
-                  <th className="text-left text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] px-4 py-4">
+                  <th className="text-left text-[10px] font-bold text-foreground/30 uppercase tracking-[0.2em] px-4 py-4">
                     Category
                   </th>
-                  <th className="text-right text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] px-4 py-4">
+                  <th className="text-right text-[10px] font-bold text-foreground/30 uppercase tracking-[0.2em] px-4 py-4">
                     Views
                   </th>
-                  <th className="text-right text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] px-8 py-4">
+                  <th className="text-right text-[10px] font-bold text-foreground/30 uppercase tracking-[0.2em] px-8 py-4">
                     Published
                   </th>
                 </tr>
@@ -130,7 +130,7 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
                 {data.blogStats.map((blog) => (
                   <tr
                     key={blog.id}
-                    className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors"
+                    className="border-b border-foreground/[0.03] hover:bg-foreground/[0.02] transition-colors"
                   >
                     <td className="px-8 py-5">
                       <div className="font-bold text-sm max-w-xs truncate">
@@ -138,19 +138,19 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
                       </div>
                     </td>
                     <td className="px-4 py-5">
-                      <span className="text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full bg-white/5 text-white/50">
+                      <span className="text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-full bg-foreground/5 text-foreground/50">
                         {blog.category}
                       </span>
                     </td>
                     <td className="px-4 py-5 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Eye className="w-3.5 h-3.5 text-white/20" />
+                        <Eye className="w-3.5 h-3.5 text-foreground/20" />
                         <span className="font-bold text-sm">
                           {(blog.views ?? 0).toLocaleString()}
                         </span>
                       </div>
                     </td>
-                    <td className="px-8 py-5 text-right text-white/40 text-xs">
+                    <td className="px-8 py-5 text-right text-foreground/40 text-xs">
                       {formatDate(blog.created_at)}
                     </td>
                   </tr>
@@ -161,17 +161,17 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
         )}
       </div>
 
-      <div className="glass-morphism rounded-[32px] border-white/5 p-8">
+      <div className="glass-morphism rounded-[32px] border-foreground/5 p-8">
         <div className="flex items-center gap-3 mb-6">
           <TrendingUp className="w-5 h-5 text-emerald-400" />
           <h3 className="text-lg font-display font-bold">Recent Activity</h3>
-          <span className="text-[10px] font-bold text-white/20 ml-auto uppercase tracking-widest">
+          <span className="text-[10px] font-bold text-foreground/20 ml-auto uppercase tracking-widest">
             Live Feed
           </span>
         </div>
 
         {data.recentEvents.length === 0 ? (
-          <div className="text-center text-white/30 text-sm py-4">
+          <div className="text-center text-foreground/30 text-sm py-4">
             No activity recorded yet. Views will appear here once visitors read
             your articles.
           </div>
@@ -180,7 +180,7 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
             {data.recentEvents.map((event) => (
               <div
                 key={event.id}
-                className="flex items-center gap-4 py-3 px-4 rounded-xl hover:bg-white/[0.02] transition-colors"
+                className="flex items-center gap-4 py-3 px-4 rounded-xl hover:bg-foreground/[0.02] transition-colors"
               >
                 <div className="w-8 h-8 rounded-lg bg-blue-400/10 flex items-center justify-center flex-shrink-0">
                   <Eye className="w-3.5 h-3.5 text-blue-400" />
@@ -189,7 +189,7 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
                   <div className="text-sm font-bold truncate">
                     {event.metadata?.title ?? event.page_path ?? "event"}
                   </div>
-                  <div className="text-[10px] text-white/30 font-bold uppercase tracking-widest">
+                  <div className="text-[10px] text-foreground/30 font-bold uppercase tracking-widest">
                     {event.event_type === "page_view"
                       ? "Article View"
                       : event.event_type}
@@ -197,7 +197,7 @@ export function OverviewPanel({ data }: { data: DashboardData }) {
                       ` · ${event.metadata.category}`}
                   </div>
                 </div>
-                <span className="text-xs text-white/20 font-bold flex-shrink-0">
+                <span className="text-xs text-foreground/20 font-bold flex-shrink-0">
                   {formatTimeAgo(event.created_at)}
                 </span>
               </div>

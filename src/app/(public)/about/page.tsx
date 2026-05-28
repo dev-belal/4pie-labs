@@ -65,15 +65,15 @@ export default function AboutPage() {
     <div className="min-h-screen bg-background pt-32 pb-20 px-4">
       <div className="max-w-7xl mx-auto mb-24">
         <div className="text-center">
-          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full glass-morphism text-xs font-bold uppercase tracking-widest text-white/50 mb-8">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full glass-morphism text-xs font-bold uppercase tracking-widest text-foreground/50 mb-8">
             <Rocket className="w-3.5 h-3.5 text-primary" />
             About 4Pie Labs
           </div>
           <h1 className="text-5xl md:text-7xl font-display font-bold mb-6">
             Built by builders. <br />
-            <span className="text-white/50">Powered by obsession.</span>
+            <span className="text-foreground/50">Powered by obsession.</span>
           </h1>
-          <p className="text-white/40 max-w-2xl mx-auto text-lg">
+          <p className="text-foreground/40 max-w-2xl mx-auto text-lg">
             We&apos;re not another agency that bolts AI onto old processes. We
             rethink the entire system from scratch.
           </p>
@@ -81,7 +81,7 @@ export default function AboutPage() {
       </div>
 
       <section className="max-w-7xl mx-auto mb-32">
-        <div className="relative glass-morphism rounded-[40px] border-white/10 overflow-hidden shadow-2xl">
+        <div className="relative glass-morphism rounded-[40px] border-foreground/10 overflow-hidden shadow-2xl">
           <div className="flex flex-col lg:flex-row">
             <div className="lg:w-[40%] relative">
               <div className="relative h-[400px] lg:h-full min-h-[500px] overflow-hidden">
@@ -101,7 +101,7 @@ export default function AboutPage() {
                     <h3 className="text-2xl font-display font-bold bg-gradient-to-r from-white via-white/80 to-white bg-clip-text text-transparent">
                       Syed Belal
                     </h3>
-                    <p className="text-white/50 text-sm font-medium">
+                    <p className="text-foreground/50 text-sm font-medium">
                       Founder &amp; CEO, 4Pie Labs
                     </p>
                   </div>
@@ -110,7 +110,7 @@ export default function AboutPage() {
                       href="https://www.instagram.com/devbelaal"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white transition-all duration-300 hover:text-[#E4405F] hover:drop-shadow-[0_0_8px_rgba(225,48,108,0.8)]"
+                      className="text-foreground transition-all duration-300 hover:text-[#E4405F] hover:drop-shadow-[0_0_8px_rgba(225,48,108,0.8)]"
                       aria-label="Instagram"
                     >
                       <svg
@@ -125,7 +125,7 @@ export default function AboutPage() {
                       href="https://www.linkedin.com/in/syedbilalraza"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white transition-all duration-300 hover:text-[#0A66C2] hover:drop-shadow-[0_0_8px_rgba(10,102,194,0.8)]"
+                      className="text-foreground transition-all duration-300 hover:text-[#0A66C2] hover:drop-shadow-[0_0_8px_rgba(10,102,194,0.8)]"
                       aria-label="LinkedIn"
                     >
                       <svg
@@ -140,7 +140,7 @@ export default function AboutPage() {
                       href="https://www.x.com/devbelaal"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white transition-all duration-300 hover:text-gray-400 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]"
+                      className="text-foreground transition-all duration-300 hover:text-gray-400 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]"
                       aria-label="X"
                     >
                       <svg
@@ -155,7 +155,7 @@ export default function AboutPage() {
                       href="https://www.youtube.com/@devbelaal"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white transition-all duration-300 hover:text-[#FF0000] hover:drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]"
+                      className="text-foreground transition-all duration-300 hover:text-[#FF0000] hover:drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]"
                       aria-label="YouTube"
                     >
                       <svg
@@ -180,21 +180,21 @@ export default function AboutPage() {
                 <div className="w-16 h-1 bg-gradient-to-r from-primary to-accent rounded-full" />
               </div>
 
-              <div className="space-y-5 text-white/60 leading-relaxed">
+              <div className="space-y-5 text-foreground/60 leading-relaxed">
                 <p>
                   My journey into the world of technology started over five
                   years ago as a{" "}
-                  <strong className="text-white/80">Front-End Developer</strong>
+                  <strong className="text-foreground/80">Front-End Developer</strong>
                   . For two years, I built interfaces, learned to think in
                   systems, and developed a deep appreciation for clean,
                   functional design.
                 </p>
                 <p>
                   Then everything changed. I discovered the world of{" "}
-                  <strong className="text-white/80">AI Automation</strong> —
+                  <strong className="text-foreground/80">AI Automation</strong> —
                   and more specifically, the work of people like{" "}
-                  <strong className="text-white/80">Liam Ottley</strong> and{" "}
-                  <strong className="text-white/80">Nate Herk</strong>, who
+                  <strong className="text-foreground/80">Liam Ottley</strong> and{" "}
+                  <strong className="text-foreground/80">Nate Herk</strong>, who
                   showed me what was truly possible when you combine AI with
                   agency operations. Their vision of building autonomous
                   systems that replace entire manual workflows became the north
@@ -205,20 +205,20 @@ export default function AboutPage() {
                   solutions for businesses, deploying autonomous agents, and
                   automating processes that used to take teams of people to
                   manage. That experience eventually led me to found{" "}
-                  <strong className="text-white/80">4Pie Labs</strong> as an AI
+                  <strong className="text-foreground/80">4Pie Labs</strong> as an AI
                   Automation and Design Agency.
                 </p>
                 <p>
                   As we grew, a natural evolution happened. Our clients
                   didn&apos;t just need automation and design — they needed
                   full-stack growth. So we expanded into{" "}
-                  <strong className="text-white/80">Digital Marketing</strong>,
+                  <strong className="text-foreground/80">Digital Marketing</strong>,
                   bringing the same systems-thinking and data-driven approach
                   to SEO, PPC, and social media. Today, 4Pie Labs is a fully
                   integrated agency where AI, design, and marketing work
                   together as one system.
                 </p>
-                <p className="text-white/80 font-medium italic">
+                <p className="text-foreground/80 font-medium italic">
                   We&apos;re just getting started.
                 </p>
               </div>
@@ -232,11 +232,11 @@ export default function AboutPage() {
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">
             The Journey
           </h2>
-          <p className="text-white/40">From code to company.</p>
+          <p className="text-foreground/40">From code to company.</p>
         </div>
 
         <div className="relative">
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/10 -translate-x-1/2" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-foreground/10 -translate-x-1/2" />
 
           <div className="space-y-0">
             {milestones.map((m, i) => (
@@ -248,7 +248,7 @@ export default function AboutPage() {
                   <div className="text-primary font-bold text-sm uppercase tracking-widest">
                     {m.year}
                   </div>
-                  <div className="text-white/70 font-medium">{m.label}</div>
+                  <div className="text-foreground/70 font-medium">{m.label}</div>
                 </div>
                 <div className="relative z-10 w-4 h-4 rounded-full bg-primary shadow-[0_0_15px_rgba(139,92,246,0.5)]" />
                 <div className="flex-1" />
@@ -262,9 +262,9 @@ export default function AboutPage() {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">
             Three pillars. <br />
-            <span className="text-white/50">One vision.</span>
+            <span className="text-foreground/50">One vision.</span>
           </h2>
-          <p className="text-white/40 max-w-2xl mx-auto text-lg">
+          <p className="text-foreground/40 max-w-2xl mx-auto text-lg">
             Everything we build is designed to make agencies autonomous,
             creative, and unstoppable.
           </p>
@@ -276,7 +276,7 @@ export default function AboutPage() {
             return (
               <div
                 key={pillar.title}
-                className="group glass-morphism p-10 rounded-[32px] border-white/10 hover:border-white/20 hover:bg-white/[0.07] transition-all shadow-2xl relative overflow-hidden"
+                className="group glass-morphism p-10 rounded-[32px] border-foreground/10 hover:border-foreground/20 hover:bg-foreground/[0.07] transition-all shadow-2xl relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div
@@ -289,7 +289,7 @@ export default function AboutPage() {
                 <h3 className="text-2xl font-display font-bold mb-4 relative z-10">
                   {pillar.title}
                 </h3>
-                <p className="text-white/50 leading-relaxed relative z-10">
+                <p className="text-foreground/50 leading-relaxed relative z-10">
                   {pillar.desc}
                 </p>
               </div>

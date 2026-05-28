@@ -76,8 +76,8 @@ export function AdminShell({
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex">
-      <aside className="w-72 border-r border-white/5 bg-black/40 backdrop-blur-xl p-8 flex-col hidden md:flex">
+    <div className="min-h-screen bg-background text-foreground flex">
+      <aside className="w-72 border-r border-foreground/5 bg-background/40 backdrop-blur-xl p-8 flex-col hidden md:flex">
         <div className="flex items-center gap-3 mb-12">
           <Image
             src="/logo.png"
@@ -126,7 +126,7 @@ export function AdminShell({
         </nav>
 
         <div className="mt-auto space-y-4">
-          <div className="text-[10px] text-white/30 uppercase tracking-widest font-bold truncate">
+          <div className="text-[10px] text-foreground/30 uppercase tracking-widest font-bold truncate">
             {userEmail}
           </div>
           <form action={signOut}>
@@ -147,7 +147,7 @@ export function AdminShell({
             <h2 className="text-3xl font-display font-bold">
               {headings[tab].title}
             </h2>
-            <p className="text-white/40 text-sm mt-1">{headings[tab].sub}</p>
+            <p className="text-foreground/40 text-sm mt-1">{headings[tab].sub}</p>
           </div>
           <div
             className={`px-4 py-2 rounded-full border text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 ${
@@ -241,8 +241,8 @@ function TabButton({
       onClick={onClick}
       className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${
         active
-          ? "bg-white/10 text-white shadow-lg"
-          : "text-white/40 hover:text-white hover:bg-white/5"
+          ? "bg-foreground/10 text-foreground shadow-lg"
+          : "text-foreground/40 hover:text-foreground hover:bg-foreground/5"
       }`}
     >
       {icon}

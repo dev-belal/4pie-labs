@@ -33,7 +33,7 @@ export function ServiceDetailModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            className="absolute inset-0 bg-background/80 backdrop-blur-md"
           />
 
           <motion.div
@@ -43,7 +43,7 @@ export function ServiceDetailModal({
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-lg glass-morphism rounded-[32px] border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[85vh] md:max-h-[90vh]"
+            className="relative w-full max-w-lg glass-morphism rounded-[32px] border-foreground/10 shadow-2xl overflow-hidden flex flex-col max-h-[85vh] md:max-h-[90vh]"
           >
             <div className="overflow-y-auto flex-1 relative">
               <div
@@ -54,7 +54,7 @@ export function ServiceDetailModal({
                 type="button"
                 aria-label="Close"
                 onClick={onClose}
-                className="absolute top-5 right-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/50 transition-colors z-20"
+                className="absolute top-5 right-5 p-2 rounded-full bg-foreground/5 hover:bg-foreground/10 text-foreground/50 transition-colors z-20"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -74,19 +74,19 @@ export function ServiceDetailModal({
                     </span>
                     <h2
                       id="service-detail-title"
-                      className="text-2xl font-display font-bold text-white tracking-tight leading-tight"
+                      className="text-2xl font-display font-bold text-foreground tracking-tight leading-tight"
                     >
                       {service.title}
                     </h2>
                   </div>
                 </div>
 
-                <p className="text-base text-white/70 leading-relaxed mb-6">
+                <p className="text-base text-foreground/70 leading-relaxed mb-6">
                   {service.seoDesc}
                 </p>
 
                 <div className="space-y-3 mb-2">
-                  <h4 className="text-[11px] font-bold text-white uppercase tracking-wider mb-2 opacity-50">
+                  <h4 className="text-[11px] font-bold text-foreground uppercase tracking-wider mb-2 opacity-50">
                     Key Deliverables
                   </h4>
                   <div className="space-y-2.5">
@@ -96,12 +96,12 @@ export function ServiceDetailModal({
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.05 }}
-                        className="flex items-start gap-3 group/item border-l border-white/5 pl-4 py-0.5 hover:border-primary/30 transition-colors"
+                        className="flex items-start gap-3 group/item border-l border-foreground/5 pl-4 py-0.5 hover:border-primary/30 transition-colors"
                       >
                         <div className="mt-1 flex-shrink-0">
                           <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(139,92,246,0.6)]" />
                         </div>
-                        <span className="text-sm text-white/50 group-hover/item:text-white/80 transition-colors leading-snug">
+                        <span className="text-sm text-foreground/50 group-hover/item:text-foreground/80 transition-colors leading-snug">
                           {point}
                         </span>
                       </motion.div>
@@ -111,14 +111,14 @@ export function ServiceDetailModal({
               </div>
             </div>
 
-            <div className="p-6 md:p-10 pt-4 flex flex-col sm:flex-row items-center gap-4 border-t border-white/5 bg-background/50 backdrop-blur-sm relative z-10">
+            <div className="p-6 md:p-10 pt-4 flex flex-col sm:flex-row items-center gap-4 border-t border-foreground/5 bg-background/50 backdrop-blur-sm relative z-10">
               <button
                 type="button"
                 onClick={() => {
                   onClose();
                   onContactClick();
                 }}
-                className="w-full sm:w-auto px-6 py-3 bg-white text-black rounded-full font-bold text-sm flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl"
+                className="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl"
               >
                 Get Started
                 <Zap className="w-4 h-4 fill-current" />
@@ -137,7 +137,7 @@ export function ServiceDetailModal({
               <Link
                 href="/book"
                 onClick={onClose}
-                className="sm:hidden w-full px-6 py-3 bg-white/5 text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 border border-white/10 hover:bg-white/10 transition-all"
+                className="sm:hidden w-full px-6 py-3 bg-foreground/5 text-foreground rounded-full font-bold text-sm flex items-center justify-center gap-2 border border-foreground/10 hover:bg-foreground/10 transition-all"
               >
                 Book Strategy Session
               </Link>

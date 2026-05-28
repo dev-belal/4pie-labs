@@ -73,19 +73,19 @@ export function ServicesBrowser() {
               <h1 className="text-4xl font-display font-bold mb-4">
                 Our Services
               </h1>
-              <p className="text-white/40 text-sm">
+              <p className="text-foreground/40 text-sm">
                 Explore every layer of the autonomous agency.
               </p>
             </div>
 
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
               <input
                 type="text"
                 placeholder="Find a service..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-3 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-colors"
               />
             </div>
 
@@ -98,8 +98,8 @@ export function ServicesBrowser() {
                   className={cn(
                     "w-full flex items-center justify-between px-6 py-4 rounded-2xl text-left font-bold transition-all",
                     activeCategory === cat
-                      ? "glass-morphism border-primary/20 text-white translate-x-1"
-                      : "text-white/30 hover:text-white/50",
+                      ? "glass-morphism border-primary/20 text-foreground translate-x-1"
+                      : "text-foreground/30 hover:text-foreground/50",
                   )}
                 >
                   {cat}
@@ -134,7 +134,7 @@ export function ServicesBrowser() {
                     type="button"
                     key={service.title}
                     onClick={() => setSelectedService(service)}
-                    className="group glass-morphism p-10 rounded-[40px] border-white/10 hover:border-white/20 transition-all flex flex-col gap-8 shadow-2xl relative overflow-hidden cursor-pointer text-left"
+                    className="group glass-morphism p-10 rounded-[40px] border-foreground/10 hover:border-foreground/20 transition-all flex flex-col gap-8 shadow-2xl relative overflow-hidden cursor-pointer text-left"
                   >
                     <div
                       className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} p-0.5 group-hover:scale-110 transition-transform`}
@@ -148,10 +148,10 @@ export function ServicesBrowser() {
                       <h3 className="text-2xl font-display font-bold mb-4">
                         {service.title}
                       </h3>
-                      <p className="text-white/60 leading-relaxed mb-6">
+                      <p className="text-foreground/60 leading-relaxed mb-6">
                         {service.desc}
                       </p>
-                      <div className="pt-6 border-t border-white/5 text-sm text-white/40 group-hover:text-white/60 transition-colors italic">
+                      <div className="pt-6 border-t border-foreground/5 text-sm text-foreground/40 group-hover:text-foreground/60 transition-colors italic">
                         {service.details}
                       </div>
                     </div>
@@ -161,7 +161,7 @@ export function ServicesBrowser() {
                       <ArrowRight className="w-4 h-4" />
                     </div>
 
-                    <div className="absolute top-10 right-10 text-white/5 font-display text-4xl font-black pointer-events-none">
+                    <div className="absolute top-10 right-10 text-foreground/5 font-display text-4xl font-black pointer-events-none">
                       {(idx + 1).toString().padStart(2, "0")}
                     </div>
                   </button>
@@ -182,7 +182,7 @@ export function ServicesBrowser() {
                     <h3 className="text-3xl font-display font-bold mb-4">
                       Didn&apos;t find what you need?
                     </h3>
-                    <p className="text-white/60 max-w-md mx-auto leading-relaxed">
+                    <p className="text-foreground/60 max-w-md mx-auto leading-relaxed">
                       We build custom AI operating systems for unique workflows.
                       Tell us what you&apos;re looking for and we&apos;ll build
                       it.
@@ -191,7 +191,7 @@ export function ServicesBrowser() {
                   <button
                     type="button"
                     onClick={openCustomRequest}
-                    className="flex items-center gap-3 bg-primary hover:bg-primary/90 text-white px-10 py-4 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(139,92,246,0.3)]"
+                    className="flex items-center gap-3 bg-primary hover:bg-primary/90 text-foreground px-10 py-4 rounded-full font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(139,92,246,0.3)]"
                   >
                     Submit Custom Request
                     <ArrowRight className="w-5 h-5" />

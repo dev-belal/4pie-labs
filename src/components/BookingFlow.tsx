@@ -259,14 +259,14 @@ export function BookingFlow() {
   return (
     <div className="max-w-4xl mx-auto px-4">
       <header className="text-center mb-12">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-morphism border-white/10 text-[10px] font-bold tracking-[0.3em] uppercase text-white/70 mb-6">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-morphism border-foreground/10 text-[10px] font-bold tracking-[0.3em] uppercase text-foreground/70 mb-6">
           <CalendarIcon className="w-3 h-3 text-primary" />
           30 Minute Discovery Call
         </div>
         <h1 className="text-4xl md:text-5xl font-display font-semibold mb-4 [text-wrap:balance]">
           Book a strategy session.
         </h1>
-        <p className="text-white/50 max-w-xl mx-auto">
+        <p className="text-foreground/50 max-w-xl mx-auto">
           Pick a date and time that works for you. We&apos;ll send the calendar
           invite + Google Meet link automatically.
         </p>
@@ -275,8 +275,8 @@ export function BookingFlow() {
       <Stepper step={step} />
 
       {step === "date" && (
-        <div className="glass-morphism rounded-[32px] border-white/10 p-6 md:p-10">
-          <div className="flex items-center gap-2 text-xs text-white/40 mb-6">
+        <div className="glass-morphism rounded-[32px] border-foreground/10 p-6 md:p-10">
+          <div className="flex items-center gap-2 text-xs text-foreground/40 mb-6">
             <Clock className="w-3.5 h-3.5" />
             All times shown in {timeZone}
           </div>
@@ -316,7 +316,7 @@ export function BookingFlow() {
             </div>
           )}
           {loading && (
-            <div className="flex items-center justify-center gap-2 text-white/40 text-xs mt-4">
+            <div className="flex items-center justify-center gap-2 text-foreground/40 text-xs mt-4">
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
               Loading availability…
             </div>
@@ -325,11 +325,11 @@ export function BookingFlow() {
       )}
 
       {step === "time" && selectedDay && (
-        <div className="glass-morphism rounded-[32px] border-white/10 p-6 md:p-10">
+        <div className="glass-morphism rounded-[32px] border-foreground/10 p-6 md:p-10">
           <button
             type="button"
             onClick={() => setStep("date")}
-            className="flex items-center gap-2 text-white/50 hover:text-white text-xs font-bold uppercase tracking-widest mb-6 transition-colors"
+            className="flex items-center gap-2 text-foreground/50 hover:text-foreground text-xs font-bold uppercase tracking-widest mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to calendar
@@ -337,7 +337,7 @@ export function BookingFlow() {
           <h2 className="text-2xl font-display font-semibold mb-1">
             {formatLongDate(selectedDay)}
           </h2>
-          <p className="text-xs text-white/40 mb-8">
+          <p className="text-xs text-foreground/40 mb-8">
             All times shown in {timeZone}
           </p>
 
@@ -353,7 +353,7 @@ export function BookingFlow() {
 
           {slotsForSelectedDay.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-white/50 mb-4">
+              <p className="text-foreground/50 mb-4">
                 No availability on this day. Pick another.
               </p>
               <button
@@ -379,7 +379,7 @@ export function BookingFlow() {
                     className={`px-4 py-3 rounded-2xl text-sm font-bold transition-all border ${
                       isSelected
                         ? "bg-primary text-white border-primary"
-                        : "bg-white/5 border-white/10 text-white/80 hover:border-primary/50 hover:bg-primary/5"
+                        : "bg-foreground/5 border-foreground/10 text-foreground/80 hover:border-primary/50 hover:bg-primary/5"
                     }`}
                   >
                     {formatTime(slot.start, timeZone)}
@@ -394,12 +394,12 @@ export function BookingFlow() {
       {step === "details" && selectedSlot && (
         <form
           action={formAction}
-          className="glass-morphism rounded-[32px] border-white/10 p-6 md:p-10 space-y-6"
+          className="glass-morphism rounded-[32px] border-foreground/10 p-6 md:p-10 space-y-6"
         >
           <button
             type="button"
             onClick={() => setStep("time")}
-            className="flex items-center gap-2 text-white/50 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors"
+            className="flex items-center gap-2 text-foreground/50 hover:text-foreground text-xs font-bold uppercase tracking-widest transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Change time
@@ -408,10 +408,10 @@ export function BookingFlow() {
           <div className="rounded-2xl bg-primary/10 border border-primary/20 px-5 py-4 flex items-center gap-3">
             <CalendarIcon className="w-5 h-5 text-primary flex-shrink-0" />
             <div className="text-sm">
-              <div className="font-bold text-white">
+              <div className="font-bold text-foreground">
                 {formatLongDateTime(selectedSlot, timeZone)}
               </div>
-              <div className="text-xs text-white/50 mt-0.5">
+              <div className="text-xs text-foreground/50 mt-0.5">
                 30 minutes · Google Meet · We&apos;ll email the invite
               </div>
             </div>
@@ -424,7 +424,7 @@ export function BookingFlow() {
           <div className="space-y-2">
             <label
               htmlFor="bk-name"
-              className="text-sm font-medium text-white/60 ml-1 flex items-center gap-2"
+              className="text-sm font-medium text-foreground/60 ml-1 flex items-center gap-2"
             >
               <User className="w-3.5 h-3.5 text-primary" />
               Full Name
@@ -435,7 +435,7 @@ export function BookingFlow() {
               type="text"
               required
               placeholder="John Doe"
-              className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all"
+              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
             />
             {state.status === "error" && state.errors?.name && (
               <p className="text-xs text-red-400 ml-1">{state.errors.name[0]}</p>
@@ -446,7 +446,7 @@ export function BookingFlow() {
             <div className="space-y-2">
               <label
                 htmlFor="bk-email"
-                className="text-sm font-medium text-white/60 ml-1 flex items-center gap-2"
+                className="text-sm font-medium text-foreground/60 ml-1 flex items-center gap-2"
               >
                 <Mail className="w-3.5 h-3.5 text-primary" />
                 Email
@@ -457,7 +457,7 @@ export function BookingFlow() {
                 type="email"
                 required
                 placeholder="john@example.com"
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all"
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
               />
               {state.status === "error" && state.errors?.email && (
                 <p className="text-xs text-red-400 ml-1">{state.errors.email[0]}</p>
@@ -467,17 +467,17 @@ export function BookingFlow() {
             <div className="space-y-2">
               <label
                 htmlFor="bk-phone"
-                className="text-sm font-medium text-white/60 ml-1 flex items-center gap-2"
+                className="text-sm font-medium text-foreground/60 ml-1 flex items-center gap-2"
               >
                 <Phone className="w-3.5 h-3.5 text-primary" />
-                Phone <span className="text-white/30">(optional)</span>
+                Phone <span className="text-foreground/30">(optional)</span>
               </label>
               <input
                 id="bk-phone"
                 name="phone"
                 type="tel"
                 placeholder="+1 (555) 000-0000"
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all"
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
               />
             </div>
           </div>
@@ -485,18 +485,18 @@ export function BookingFlow() {
           <div className="space-y-2">
             <label
               htmlFor="bk-notes"
-              className="text-sm font-medium text-white/60 ml-1 flex items-center gap-2"
+              className="text-sm font-medium text-foreground/60 ml-1 flex items-center gap-2"
             >
               <MessageSquare className="w-3.5 h-3.5 text-primary" />
               What do you want to discuss?{" "}
-              <span className="text-white/30">(optional)</span>
+              <span className="text-foreground/30">(optional)</span>
             </label>
             <textarea
               id="bk-notes"
               name="notes"
               rows={3}
               placeholder="Tell us a bit about your project so we come prepared…"
-              className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all resize-none"
+              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-foreground placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all resize-none"
             />
           </div>
 
@@ -512,7 +512,7 @@ export function BookingFlow() {
           <button
             type="submit"
             disabled={pending || !submitUnlocked}
-            className="w-full flex items-center justify-center gap-3 bg-white text-black px-7 py-3.5 rounded-2xl text-base font-bold hover:scale-[1.01] active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className="w-full flex items-center justify-center gap-3 bg-primary text-white px-7 py-3.5 rounded-2xl text-base font-bold hover:scale-[1.01] active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             {pending ? (
               <>
@@ -530,22 +530,22 @@ export function BookingFlow() {
       )}
 
       {step === "success" && state.status === "success" && (
-        <div className="glass-morphism rounded-[32px] border-white/10 p-10 md:p-16 text-center">
+        <div className="glass-morphism rounded-[32px] border-foreground/10 p-10 md:p-16 text-center">
           <div className="w-16 h-16 mx-auto mb-6 rounded-3xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
             <Check className="w-8 h-8 text-emerald-400" />
           </div>
           <h2 className="text-3xl md:text-4xl font-display font-semibold mb-3">
             You&apos;re booked.
           </h2>
-          <p className="text-white/60 mb-8 max-w-md mx-auto">
+          <p className="text-foreground/60 mb-8 max-w-md mx-auto">
             We&apos;ve sent a calendar invite + Google Meet link to your email.
             See you on{" "}
-            <span className="text-white font-bold">
+            <span className="text-foreground font-bold">
               {formatLongDateTime(state.booking.start, timeZone)}
             </span>
             .
           </p>
-          <div className="inline-flex items-center gap-2 text-xs text-white/40">
+          <div className="inline-flex items-center gap-2 text-xs text-foreground/40">
             <Video className="w-3.5 h-3.5" />
             Meeting link arrives via email
           </div>
@@ -576,8 +576,8 @@ function Stepper({ step }: { step: Step }) {
                 active
                   ? "text-primary"
                   : done
-                    ? "text-white/60"
-                    : "text-white/20"
+                    ? "text-foreground/60"
+                    : "text-foreground/20"
               }`}
             >
               <span
@@ -586,7 +586,7 @@ function Stepper({ step }: { step: Step }) {
                     ? "border-primary bg-primary/20"
                     : done
                       ? "border-emerald-500/50 bg-emerald-500/20 text-emerald-400"
-                      : "border-white/10"
+                      : "border-foreground/10"
                 }`}
               >
                 {done ? <Check className="w-3 h-3" /> : i + 1}
@@ -594,7 +594,7 @@ function Stepper({ step }: { step: Step }) {
               {s.label}
             </span>
             {i < steps.length - 1 && (
-              <span className="w-6 h-px bg-white/10" />
+              <span className="w-6 h-px bg-foreground/10" />
             )}
           </li>
         );

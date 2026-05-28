@@ -1,61 +1,87 @@
 @import "tailwindcss";
 @import "react-day-picker/style.css";
 
-@theme {
-  --color-background: #000000;
-  --color-foreground: #ffffff;
-  --color-primary: #8b5cf6;
-  --color-primary-dark: #6d28d9;
-  --color-accent: #3b82f6;
-  --color-accent-purple: #a78bfa;
-  --color-card: #0a0a0a;
-  --color-card-hover: #121212;
+/* =============================================================================
+   Phase 2 light-theme tokens. Existing token NAMES are kept so legacy
+   utility classes (bg-primary, bg-accent, bg-card, text-accent…) keep working
+   with their new light-theme values. New semantic tokens (foreground,
+   muted-foreground, surface, surface-2, border, primary-muted, warm-peach,
+   warm-yellow, success, error, warning) are added for the mass sed-replace
+   and the surgical JSX edits.
 
+   Dark→light lineage:
+     background     #000000  → #FAF7F2  (warm cream)
+     foreground     #FFFFFF  → #1A1A1A  (near-black text)
+     primary        #8B5CF6  → #7C5CFF  (warmed violet)
+     primary-dark   #6D28D9  → #6845F0  (hover state)
+     accent         #3B82F6  → #7C5CFF  (collapsed onto primary)
+     accent-purple  #A78BFA  → #E89B7C  (repurposed as warm peach
+                                          for the text-gradient)
+     card           #0A0A0A  → #FFFFFF  (white raised surface)
+     card-hover     #121212  → #F2EDE5  (deeper cream)
+============================================================================= */
+
+@theme {
+  /* Surfaces */
+  --color-background: #faf7f2;
+  --color-surface: #ffffff;
+  --color-surface-2: #f2ede5;
+  --color-card: #ffffff;          /* legacy alias */
+  --color-card-hover: #f2ede5;    /* legacy alias */
+
+  /* Text */
+  --color-foreground: #1a1a1a;
+  --color-muted-foreground: #5a5a5a;
+  --color-subtle-foreground: #8a8a8a;
+
+  /* Borders */
+  --color-border: #e8e2d8;
+  --color-card-border: #ede7dd;
+
+  /* Brand accent */
+  --color-primary: #7c5cff;
+  --color-primary-dark: #6845f0;      /* legacy alias — used as hover */
+  --color-primary-hover: #6845f0;
+  --color-primary-muted: #e7e1ff;
+  --color-accent: #7c5cff;            /* collapsed onto primary */
+  --color-accent-purple: #e89b7c;     /* repurposed as warm peach */
+
+  /* Warm secondary */
+  --color-warm-peach: #e89b7c;
+  --color-warm-yellow: #f4c95d;
+
+  /* Status */
+  --color-success: #2e8b57;
+  --color-error: #c84b4b;
+  --color-warning: #d9982f;
+
+  /* Type — single family, Inter for everything */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   --animate-fade-in: fadeIn 0.5s ease-out forwards;
   --animate-slide-up: slideUp 0.6s ease-out forwards;
-  --animate-glow: glow 2s ease-in-out infinite;
 
   @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   @keyframes slideUp {
-    from {
-      transform: translateY(20px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  @keyframes glow {
-    0%,
-    100% {
-      opacity: 0.5;
-    }
-    50% {
-      opacity: 1;
-    }
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
   }
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
   @apply bg-background text-foreground font-sans selection:bg-primary/30;
   -webkit-font-smoothing: antialiased;
+  /* Slight negative tracking on headlines is set per-element via h1-h6 below;
+     body stays default per the design spec. */
 }
 
 button,
@@ -67,33 +93,39 @@ input[type="reset"],
   cursor: pointer !important;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  @apply font-display tracking-tight;
+h1, h2, h3, h4, h5, h6 {
+  @apply font-display;
+  letter-spacing: -0.02em;
 }
 
+/* =============================================================================
+   Legacy custom utilities — repurposed for light theme.
+   These class names are still used throughout the codebase; redefining their
+   CSS lets them re-theme without touching ~43 .glass-morphism + other usages
+   in JSX.
+============================================================================= */
+
+/* Was a dark gradient + heavy shadow. Now a clean light card. */
 .glass-morphism {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(139, 92, 246, 0.05) 100%
-  );
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow:
+    0 1px 3px rgba(26, 26, 26, 0.05),
+    0 4px 12px rgba(26, 26, 26, 0.04);
 }
 
+/* Used by the headline accents. Subtle accent → warm-peach. */
 .text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-accent-purple;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-warm-peach;
 }
 
-.hero-glow {
-  @apply absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-primary/20 blur-[120px] rounded-full pointer-events-none;
+/* The hero orb is gone in Phase 2 — type-only hero per the design brief.
+   Zeroing the class instead of editing every <div className="hero-glow" />
+   call site. (Note: option (b)/(c) soft mesh / dot grid can be re-introduced
+   here later if the hero feels too empty in testing.) */
+.hero-glow,
+.glow-secondary {
+  display: none;
 }
 
 .noise-bg {
@@ -105,23 +137,23 @@ h6 {
   position: absolute;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.05;
+  opacity: 0.03;
   pointer-events: none;
   z-index: 1;
 }
 
-.glow-secondary {
-  @apply absolute w-[600px] h-[600px] bg-accent/10 blur-[100px] rounded-full pointer-events-none;
+/* Scrollbar uses the new page background. */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { @apply bg-background; }
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-subtle-foreground);
 }
 
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-background;
-}
-
+/* Chat-widget snake border — accent on light. */
 .snake-border-container {
   position: relative;
   padding: 1px;
@@ -138,9 +170,9 @@ h6 {
   height: 200%;
   background: conic-gradient(
     transparent,
-    rgba(168, 85, 247, 0.4),
-    rgba(168, 85, 247, 0.8),
-    rgba(168, 85, 247, 0.4),
+    rgba(124, 92, 255, 0.35),
+    rgba(124, 92, 255, 0.7),
+    rgba(124, 92, 255, 0.35),
     transparent 30%
   );
   animation: snake-rotate 4s linear infinite;
@@ -148,17 +180,13 @@ h6 {
 
 .snake-border-content {
   position: relative;
-  background: rgba(10, 10, 10, 0.9);
-  backdrop-filter: blur(10px);
+  background: var(--color-surface);
+  color: var(--color-foreground);
   border-radius: calc(1rem - 1px);
   z-index: 1;
 }
 
 @keyframes snake-rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
