@@ -89,6 +89,20 @@ export const trackViewSchema = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Invalid slug"),
 });
 
+// Free AI marketing audit form on /audit. Stored in the leads table under
+// type "contact" (closest existing enum value) with source "Free AI audit".
+export const auditLeadSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters").max(100),
+  email: z.string().email("Enter a valid email address").max(200),
+  businessName: z.string().min(1, "Enter your business name").max(200),
+  businessUrl: z.string().max(300).optional(),
+  industry: z
+    .enum(["Painting contractor", "Tour operator", "Other local service"])
+    .optional(),
+  monthlyBudget: z.string().max(80).optional(),
+  notes: z.string().max(2000).optional(),
+});
+
 export const bookingSchema = z.object({
   // Cal.com slot starts include tz offsets (e.g. "...-04:00"), not just "Z",
   // so allow offsets. `local` would also match naive strings; we want a
@@ -107,6 +121,7 @@ export type ContactInput = z.infer<typeof contactSchema>;
 export type CustomRequestInput = z.infer<typeof customRequestSchema>;
 export type RoiInput = z.infer<typeof roiSchema>;
 export type BudgetLeadInput = z.infer<typeof budgetLeadSchema>;
+export type AuditLeadInput = z.infer<typeof auditLeadSchema>;
 export type ChatInput = z.infer<typeof chatSchema>;
 export type BlogInsertInput = z.infer<typeof blogInsertSchema>;
 export type TestimonialInsertInput = z.infer<typeof testimonialInsertSchema>;

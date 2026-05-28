@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { rateLimit } from "@/lib/rate-limit";
 import {
+  auditLeadSchema,
   budgetLeadSchema,
   contactSchema,
   customRequestSchema,
@@ -285,5 +286,64 @@ export async function submitBudgetLead(
   return {
     status: "success",
     message: "Thanks — we'll email you the breakdown within 24 hours.",
+  };
+}
+
+export async function submitAuditLead(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const { allowed, ip } = await guardAndIp("audit");
+  if (!allowed) {
+    return {
+      status: "error",
+      message: "Too many requests. Please wait a minute and try again.",
+    };
+  }
+
+  const parsed = auditLeadSchema.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    businessName: formData.get("businessName"),
+    businessUrl: formData.get("businessUrl") || undefined,
+    industry: formData.get("industry") || undefined,
+    monthlyBudget: formData.get("monthlyBudget") || undefined,
+    notes: formData.get("notes") || undefined,
+  });
+
+  if (!parsed.success) {
+    return {
+      status: "error",
+      message: "Please check the fields and try again.",
+      errors: parsed.error.flatten().fieldErrors,
+    };
+  }
+
+  const ok = await insertLead({
+    type: "contact",
+    name: parsed.data.name,
+    email: parsed.data.email,
+    source: "Free AI audit",
+    payload: {
+      businessName: parsed.data.businessName,
+      businessUrl: parsed.data.businessUrl,
+      industry: parsed.data.industry,
+      monthlyBudget: parsed.data.monthlyBudget,
+      notes: parsed.data.notes,
+      ip,
+    },
+  });
+
+  if (!ok) {
+    return {
+      status: "error",
+      message: "We couldn't submit right now — please try again shortly.",
+    };
+  }
+
+  return {
+    status: "success",
+    message:
+      "Audit booked — your 12-point report lands in your inbox within 48 hours.",
   };
 }
