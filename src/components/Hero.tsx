@@ -1,8 +1,17 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Activity, ArrowRight } from "lucide-react";
+
+// three.js touches window at module-eval time, so HeroScene3D must never SSR.
+// Loading: nothing — the AEO card overlay carries the right column on its own
+// while the 3D chunk streams in.
+const HeroScene3D = dynamic(() => import("./HeroScene3D"), {
+  ssr: false,
+  loading: () => null,
+});
 
 // Phase 3 stats numbers from the v2 design (placeholder — replace before launch).
 const STATS = [
@@ -113,22 +122,30 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* Live AEO citations card (desktop only) */}
+          {/* 3D scene + Live AEO card overlay (desktop only) */}
           <motion.div
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="hidden md:flex flex-col gap-4 items-end"
+            className="hidden md:block relative min-h-[460px] lg:min-h-[520px]"
             aria-hidden
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-card-border text-xs font-medium text-foreground shadow-[0_1px_3px_rgba(26,26,26,0.05)]">
+            {/* R3F icosahedron + violet sphere + orbit rings + particles */}
+            <div className="absolute inset-0">
+              <HeroScene3D />
+            </div>
+
+            {/* Top-right "Live · AEO citations rising" pill */}
+            <div className="absolute top-2 right-0 z-10 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface/90 backdrop-blur border border-card-border text-xs font-medium text-foreground shadow-[0_1px_3px_rgba(26,26,26,0.05)]">
               <span className="relative w-2 h-2">
                 <span className="absolute inset-0 rounded-full bg-success animate-ping opacity-70" />
                 <span className="absolute inset-0 rounded-full bg-success" />
               </span>
               Live · AEO citations rising
             </div>
-            <div className="w-full bg-surface border border-card-border rounded-2xl p-5 shadow-[0_4px_12px_rgba(26,26,26,0.06),0_1px_3px_rgba(26,26,26,0.04)] flex items-center gap-4">
+
+            {/* Bottom card */}
+            <div className="absolute bottom-0 left-0 right-0 z-10 bg-surface/90 backdrop-blur border border-card-border rounded-2xl p-5 shadow-[0_4px_12px_rgba(26,26,26,0.06),0_1px_3px_rgba(26,26,26,0.04)] flex items-center gap-4">
               <span className="w-12 h-12 rounded-xl bg-primary-muted text-primary grid place-items-center shrink-0">
                 <Activity className="w-5 h-5" />
               </span>
