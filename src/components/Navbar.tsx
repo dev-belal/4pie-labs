@@ -4,53 +4,157 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, Menu, X } from "lucide-react";
+import {
+  Activity,
+  ArrowRight,
+  Box,
+  ChevronDown,
+  Cpu,
+  Layers,
+  Menu,
+  MessageCircle,
+  Moon,
+  Plus,
+  Search,
+  Sun,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/lib/use-theme";
 
-type NavItem = { label: string; href: string };
+/**
+ * Phase 3 floating-pill nav (v2 design from Claude Design bundle).
+ * Replaces the Phase 2 white-bar nav with a translucent backdrop-blurred pill
+ * holding the brand, Services + Programs dropdowns, a theme toggle, and the
+ * primary "Schedule call" CTA. Mobile collapses to a drawer.
+ */
 
-const NAV_ITEMS: NavItem[] = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Services", href: "/services" },
-  { label: "Results", href: "/#results" },
-  { label: "Blogs", href: "/blog" },
+type DropdownItem = {
+  title: string;
+  sub: string;
+  href: string;
+  Icon: LucideIcon;
+  tag?: string;
+  tagColor?: "primary";
+};
+
+const SERVICE_ITEMS: DropdownItem[] = [
+  {
+    title: "AI-First SEO + AEO",
+    sub: "Get cited by ChatGPT, Perplexity, Gemini.",
+    href: "/services#aeo",
+    Icon: MessageCircle,
+  },
+  {
+    title: "Performance Ads",
+    sub: "Paid that pays. Google, Meta, YouTube.",
+    href: "/services#ads",
+    Icon: Search,
+  },
+  {
+    title: "Custom AI Systems",
+    sub: "Agents, dashboards, CRM automation.",
+    href: "/services#ai",
+    Icon: Cpu,
+  },
+];
+
+const PROGRAM_ITEMS: DropdownItem[] = [
+  {
+    title: "Core",
+    sub: "Where most clients start.",
+    href: "/programs#core",
+    Icon: Layers,
+    tag: "Foundation",
+  },
+  {
+    title: "Pipeline",
+    sub: "Lead-gen machine — ads + landing pages + AI scoring.",
+    href: "/programs#pipeline",
+    Icon: Plus,
+    tag: "Most popular",
+    tagColor: "primary",
+  },
+  {
+    title: "Operating System",
+    sub: "Full-stack: AI agent + CRM + dashboards.",
+    href: "/programs#os",
+    Icon: Box,
+  },
+  {
+    title: "Pulse",
+    sub: "Social-first — Meta, YouTube, TikTok.",
+    href: "/programs#pulse",
+    Icon: Activity,
+  },
 ];
 
 export function Navbar() {
   const pathname = usePathname();
+  const { theme, toggle } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [open, setOpen] = useState<null | "services" | "programs">(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const h = () => setIsScrolled(window.scrollY > 20);
+    h();
+    window.addEventListener("scroll", h, { passive: true });
+    return () => window.removeEventListener("scroll", h);
   }, []);
 
-  // Close the mobile menu when the visitor taps a destination. (We do this in
-  // the link handlers rather than reacting to a pathname change in an effect.)
-  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+  // Close dropdowns / mobile menu on route change.
+  useEffect(() => {
+    setOpen(null);
+    setMobileOpen(false);
+  }, [pathname]);
+
+  // Close dropdowns on outside click.
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      const target = e.target;
+      if (!(target instanceof Element) || !target.closest("[data-nav-dd]")) {
+        setOpen(null);
+      }
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, [open]);
+
+  const close = () => {
+    setOpen(null);
+    setMobileOpen(false);
+  };
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <nav
+    <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-surface",
-        isScrolled
-          ? "border-b border-border shadow-[0_1px_3px_rgba(26,26,26,0.04)]"
-          : "border-b border-transparent",
+        "fixed top-0 left-0 right-0 z-50 transition-[padding] duration-300 px-4",
+        isScrolled ? "py-2.5" : "py-3.5",
       )}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-        <div className="flex items-center">
+      <div className="max-w-[1240px] mx-auto">
+        <div
+          className="flex items-center justify-between gap-4 h-[60px] pl-5 pr-2 rounded-full border backdrop-blur-xl"
+          style={{
+            background:
+              "color-mix(in oklab, var(--color-background) 78%, transparent)",
+            borderColor:
+              "color-mix(in oklab, var(--color-foreground) 8%, transparent)",
+            boxShadow:
+              "0 8px 32px rgba(26, 26, 26, 0.06), 0 2px 8px rgba(26, 26, 26, 0.04)",
+          }}
+        >
+          {/* Brand */}
           <Link
             href="/"
-            onClick={closeMobileMenu}
-            className="group inline-flex"
+            onClick={close}
+            className="inline-flex items-center shrink-0"
             aria-label="4Pie Labs home"
           >
             <Image
@@ -59,78 +163,242 @@ export function Navbar() {
               width={128}
               height={32}
               priority
-              className="h-7 md:h-8 w-auto group-hover:opacity-80 transition-opacity"
+              className="h-7 w-auto"
             />
           </Link>
-        </div>
 
-        <div className="hidden md:flex items-center gap-2">
-          {NAV_ITEMS.map((item) => {
-            const active = isActive(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "relative text-sm font-medium px-4 py-2 transition-colors",
-                  active
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {item.label}
-                {active && (
-                  <span
-                    aria-hidden
-                    className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary"
-                  />
-                )}
-              </Link>
-            );
-          })}
-        </div>
+          {/* Center links (desktop) */}
+          <nav
+            className="hidden md:flex items-center gap-0.5"
+            aria-label="Primary"
+          >
+            <NavLink href="/" active={isActive("/")} label="Home" />
+            <NavDropdown
+              label="Services"
+              isOpen={open === "services"}
+              onToggle={() =>
+                setOpen(open === "services" ? null : "services")
+              }
+              items={SERVICE_ITEMS}
+            />
+            <NavDropdown
+              label="Programs"
+              isOpen={open === "programs"}
+              onToggle={() =>
+                setOpen(open === "programs" ? null : "programs")
+              }
+              items={PROGRAM_ITEMS}
+            />
+            <NavLink href="/about" active={isActive("/about")} label="About" />
+            <NavLink
+              href="/audit"
+              active={isActive("/audit")}
+              label="Free audit"
+            />
+          </nav>
 
-        <div className="flex items-center justify-end gap-2">
-          <Link
-            href="/book"
-            className="group hidden md:inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-all hover:shadow-[0_2px_4px_rgba(124,92,255,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
-          >
-            Schedule Call
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-          <button
-            type="button"
-            className="md:hidden w-11 h-11 flex items-center justify-center rounded-lg text-foreground hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface transition-colors"
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isMobileMenuOpen}
-            onClick={() => setIsMobileMenuOpen((v) => !v)}
-          >
-            {isMobileMenuOpen ? <X /> : <Menu />}
-          </button>
+          {/* End controls */}
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={toggle}
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+              className="grid place-items-center w-[38px] h-[38px] rounded-full text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors"
+            >
+              {theme === "dark" ? (
+                <Sun className="w-[18px] h-[18px]" />
+              ) : (
+                <Moon className="w-[18px] h-[18px]" />
+              )}
+            </button>
+            <Link
+              href="/book"
+              className="hidden md:inline-flex items-center gap-1.5 h-[38px] px-4 rounded-full bg-primary hover:bg-primary-hover text-white text-sm font-medium transition-colors"
+            >
+              Schedule call
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            <button
+              type="button"
+              className="md:hidden grid place-items-center w-[38px] h-[38px] rounded-full text-foreground hover:bg-foreground/5"
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen((o) => !o)}
+            >
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 mt-1 mx-4 p-6 bg-surface border border-border rounded-2xl flex flex-col gap-2 shadow-[0_4px_8px_rgba(26,26,26,0.08),0_12px_24px_rgba(26,26,26,0.06)] animate-fade-in">
-          {NAV_ITEMS.filter((i) => i.href !== "/").map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={closeMobileMenu}
-              className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
-            >
-              {item.label}
-            </Link>
+      {/* Mobile drawer */}
+      {mobileOpen && (
+        <div className="md:hidden absolute top-full left-4 right-4 mt-1 p-4 bg-surface border border-border rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] max-h-[calc(100vh-100px)] overflow-y-auto">
+          <MobileLink href="/" onClose={close}>
+            Home
+          </MobileLink>
+          <MobileSection label="Services" />
+          {SERVICE_ITEMS.map((i) => (
+            <MobileLink key={i.href} href={i.href} onClose={close}>
+              {i.title}
+            </MobileLink>
           ))}
+          <MobileSection label="Programs" />
+          {PROGRAM_ITEMS.map((i) => (
+            <MobileLink key={i.href} href={i.href} onClose={close}>
+              {i.title}
+              {i.tag && (
+                <span className="ml-2 text-xs text-muted-foreground font-normal">
+                  · {i.tag}
+                </span>
+              )}
+            </MobileLink>
+          ))}
+          <MobileSection label="Company" />
+          <MobileLink href="/about" onClose={close}>
+            About
+          </MobileLink>
+          <MobileLink href="/audit" onClose={close}>
+            Free audit
+          </MobileLink>
           <Link
             href="/book"
-            onClick={closeMobileMenu}
-            className="mt-2 flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white px-5 py-3 rounded-lg text-base font-medium transition-colors"
+            onClick={close}
+            className="block mt-3 text-center px-4 py-3.5 rounded-xl bg-primary text-white font-medium"
           >
-            Schedule Call
+            Schedule call →
           </Link>
         </div>
       )}
-    </nav>
+    </header>
+  );
+}
+
+function NavLink({
+  href,
+  active,
+  label,
+}: {
+  href: string;
+  active: boolean;
+  label: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "relative inline-flex items-center px-3.5 py-2 rounded-full text-sm font-medium transition-colors",
+        active
+          ? "text-foreground"
+          : "text-muted-foreground hover:text-foreground hover:bg-foreground/5",
+      )}
+    >
+      {label}
+      {active && (
+        <span
+          aria-hidden
+          className="absolute left-1/2 -translate-x-1/2 bottom-1 w-1 h-1 rounded-full bg-primary"
+        />
+      )}
+    </Link>
+  );
+}
+
+function NavDropdown({
+  label,
+  items,
+  isOpen,
+  onToggle,
+}: {
+  label: string;
+  items: DropdownItem[];
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div className="relative" data-nav-dd>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggle();
+        }}
+        className={cn(
+          "inline-flex items-center gap-1 px-3.5 py-2 rounded-full text-sm font-medium transition-colors",
+          isOpen
+            ? "text-foreground bg-foreground/5"
+            : "text-muted-foreground hover:text-foreground hover:bg-foreground/5",
+        )}
+        aria-expanded={isOpen}
+      >
+        {label}
+        <ChevronDown
+          className={cn("w-3 h-3 transition-transform", isOpen && "rotate-180")}
+        />
+      </button>
+      {isOpen && (
+        <div className="absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2 min-w-[320px] bg-surface border border-card-border rounded-2xl p-2.5 shadow-[0_16px_40px_rgba(26,26,26,0.12),0_4px_12px_rgba(26,26,26,0.06)] z-10">
+          {items.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="grid grid-cols-[36px_1fr] gap-3 p-2.5 rounded-xl items-start text-left hover:bg-surface-2 transition-colors"
+            >
+              <span className="w-9 h-9 rounded-lg bg-primary-muted text-primary grid place-items-center">
+                <item.Icon className="w-4 h-4" />
+              </span>
+              <span>
+                <span className="block text-sm font-semibold text-foreground tracking-tight">
+                  {item.title}
+                  {item.tag && (
+                    <span
+                      className={cn(
+                        "ml-2 text-xs font-normal",
+                        item.tagColor === "primary"
+                          ? "text-primary font-medium"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      · {item.tag}
+                    </span>
+                  )}
+                </span>
+                <span className="block text-xs text-muted-foreground mt-0.5 leading-snug">
+                  {item.sub}
+                </span>
+              </span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileSection({ label }: { label: string }) {
+  return (
+    <div className="px-4 pt-4 pb-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+      {label}
+    </div>
+  );
+}
+
+function MobileLink({
+  href,
+  children,
+  onClose,
+}: {
+  href: string;
+  children: React.ReactNode;
+  onClose: () => void;
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onClose}
+      className="block px-4 py-3.5 text-base font-medium text-foreground hover:bg-surface-2 rounded-xl"
+    >
+      {children}
+    </Link>
   );
 }

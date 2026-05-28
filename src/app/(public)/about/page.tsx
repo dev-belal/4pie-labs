@@ -1,116 +1,120 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import {
-  Bot,
-  Megaphone,
-  Palette,
-  Quote,
-  Rocket,
-  type LucideIcon,
-} from "lucide-react";
+import { Quote, Search, Sparkles, Map } from "lucide-react";
 import { AboutCTA } from "@/components/AboutCTA";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Built by builders, powered by obsession. Meet the team behind 4Pie Labs — AI automation, design, and digital marketing for modern agencies.",
+    "We help painting contractors, tour operators, and local service businesses dominate Google, Maps, and AI answer engines. Meet the team behind 4Pie Labs.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "About 4Pie Labs",
     description:
-      "Built by builders, powered by obsession. Meet the team behind 4Pie Labs.",
+      "AI-first marketing for local service businesses. Meet the team behind 4Pie Labs.",
     url: "/about",
     type: "website",
   },
 };
 
-interface Pillar {
-  title: string;
-  desc: string;
-  icon: LucideIcon;
-  color: string;
-}
-
-const pillars: Pillar[] = [
+// v2 pillars — realigned around local search + AEO + accountable growth.
+const PILLARS = [
   {
-    title: "AI Automation",
-    desc: "We build intelligent systems that automate repetitive workflows, deploy autonomous agents, and integrate AI into every layer of your operations — so your team can focus on what humans do best.",
-    icon: Bot,
-    color: "from-blue-500 to-cyan-400",
+    title: "Local search, not vanity rankings",
+    desc: "Maps pack, Google Business Profile, NAP consistency, citation depth — the dials that actually decide who gets called. We don't chase city-wide #1s when the buyer search is three miles wide.",
+    icon: Map,
   },
   {
-    title: "Design Creatives",
-    desc: "From brand identity to high-converting ad creatives, our design team produces premium visual assets at scale — powered by AI-enhanced workflows and a relentless eye for detail.",
-    icon: Palette,
-    color: "from-pink-500 to-rose-400",
+    title: "AEO as a first-class channel",
+    desc: "ChatGPT, Perplexity, Gemini, and Google AI Overviews already shape the first answer a buyer sees. We engineer your site to be the source those engines cite, not the link they skip.",
+    icon: Sparkles,
   },
   {
-    title: "Digital Marketing",
-    desc: "Data-driven growth strategies across SEO, PPC, social media, and email marketing. We don't just run campaigns — we engineer predictable, scalable customer acquisition systems.",
-    icon: Megaphone,
-    color: "from-purple-500 to-indigo-400",
+    title: "One funnel, accountable",
+    desc: "Search, ads, content, and conversion path — wired into the same dashboard with call tracking and lead attribution. You always know which channel made you money this month.",
+    icon: Search,
   },
 ];
 
-const milestones = [
-  { year: "2021", label: "Started as a Front-End Developer" },
-  { year: "2023", label: "Transitioned to AI Automation" },
+const MILESTONES = [
+  { year: "2021", label: "Started as a front-end developer" },
+  { year: "2023", label: "Went deep on AI automation" },
   { year: "2024", label: "Founded 4Pie Labs" },
-  { year: "2025", label: "Expanded into Digital Marketing" },
-  { year: "Now", label: "Full-service AI & Design Agency" },
+  { year: "2025", label: "Pivoted to local-service marketing + AEO" },
+  { year: "Now", label: "Full-stack local growth partner" },
 ];
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background pt-32 pb-20 px-4">
-      <div className="max-w-7xl mx-auto mb-24">
-        <div className="text-center">
-          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full glass-morphism text-xs font-bold uppercase tracking-widest text-foreground/50 mb-8">
-            <Rocket className="w-3.5 h-3.5 text-primary" />
-            About 4Pie Labs
-          </div>
-          <h1 className="text-5xl md:text-7xl font-display font-bold mb-6">
-            Built by builders. <br />
-            <span className="text-foreground/50">Powered by obsession.</span>
-          </h1>
-          <p className="text-foreground/40 max-w-2xl mx-auto text-lg">
-            We&apos;re not another agency that bolts AI onto old processes. We
-            rethink the entire system from scratch.
-          </p>
-        </div>
-      </div>
+    <main className="relative pt-12 md:pt-20 pb-32 px-4 overflow-hidden">
+      {/* Local depth blobs */}
+      <span
+        aria-hidden
+        className="absolute pointer-events-none -top-32 -left-32 w-[480px] h-[480px] rounded-full opacity-50 blur-[80px]"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(124,92,255,0.40), transparent 60%)",
+        }}
+      />
+      <span
+        aria-hidden
+        className="absolute pointer-events-none top-[40%] -right-24 w-[420px] h-[420px] rounded-full opacity-50 blur-[80px]"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(232,155,124,0.32), transparent 60%)",
+        }}
+      />
 
-      <section className="max-w-7xl mx-auto mb-32">
-        <div className="relative glass-morphism rounded-[40px] border-foreground/10 overflow-hidden shadow-2xl">
+      {/* Hero */}
+      <section className="relative z-10 max-w-3xl mx-auto text-center pb-16 md:pb-20">
+        <span className="inline-block text-xs font-medium text-primary tracking-widest uppercase mb-5">
+          About 4Pie Labs
+        </span>
+        <h1 className="text-[clamp(40px,6vw,60px)] font-semibold leading-[1.05] tracking-tight text-foreground [text-wrap:balance]">
+          Built around how local search{" "}
+          <span className="font-serif italic font-normal text-primary">
+            actually works
+          </span>{" "}
+          now.
+        </h1>
+        <p className="text-lg text-muted-foreground mt-6 max-w-2xl mx-auto leading-relaxed">
+          We&apos;re not a generalist agency that bolted AI onto old playbooks.
+          We rebuilt the entire local-marketing system for the era of answer
+          engines, AI Overviews, and a Maps pack that turns over weekly.
+        </p>
+      </section>
+
+      {/* Founder card */}
+      <section className="relative z-10 max-w-[1100px] mx-auto mb-28 md:mb-32">
+        <div className="bg-surface border border-card-border rounded-2xl overflow-hidden shadow-[0_4px_12px_rgba(26,26,26,0.06),0_1px_3px_rgba(26,26,26,0.04)]">
           <div className="flex flex-col lg:flex-row">
-            <div className="lg:w-[40%] relative">
-              <div className="relative h-[400px] lg:h-full min-h-[500px] overflow-hidden">
+            <div className="lg:w-[42%] relative">
+              <div className="relative h-[420px] lg:h-full min-h-[520px] overflow-hidden">
                 <Image
                   src="/founder.jpg"
                   alt="Syed Belal — Founder of 4Pie Labs"
                   fill
-                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  sizes="(max-width: 1024px) 100vw, 42vw"
                   className="object-cover object-top"
                   priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-background hidden lg:block" />
-                <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-black via-black/70 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 h-[35%] bg-gradient-to-t from-black via-black/60 to-transparent" />
 
                 <div className="absolute bottom-6 left-6 right-6 lg:bottom-8 lg:left-8 lg:right-8 flex items-end justify-between gap-4">
                   <div>
-                    <h3 className="text-2xl font-display font-bold bg-gradient-to-r from-white via-white/80 to-white bg-clip-text text-transparent">
+                    <h3 className="text-2xl font-semibold tracking-tight text-white">
                       Syed Belal
                     </h3>
-                    <p className="text-foreground/50 text-sm font-medium">
+                    <p className="text-white/75 text-sm font-medium">
                       Founder &amp; CEO, 4Pie Labs
                     </p>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 text-white/85">
                     <a
                       href="https://www.instagram.com/devbelaal"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-foreground transition-all duration-300 hover:text-[#E4405F] hover:drop-shadow-[0_0_8px_rgba(225,48,108,0.8)]"
+                      className="transition-all duration-300 hover:text-[#E4405F]"
                       aria-label="Instagram"
                     >
                       <svg
@@ -125,7 +129,7 @@ export default function AboutPage() {
                       href="https://www.linkedin.com/in/syedbilalraza"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-foreground transition-all duration-300 hover:text-[#0A66C2] hover:drop-shadow-[0_0_8px_rgba(10,102,194,0.8)]"
+                      className="transition-all duration-300 hover:text-[#0A66C2]"
                       aria-label="LinkedIn"
                     >
                       <svg
@@ -140,7 +144,7 @@ export default function AboutPage() {
                       href="https://www.x.com/devbelaal"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-foreground transition-all duration-300 hover:text-gray-400 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]"
+                      className="transition-all duration-300 hover:text-white"
                       aria-label="X"
                     >
                       <svg
@@ -155,7 +159,7 @@ export default function AboutPage() {
                       href="https://www.youtube.com/@devbelaal"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-foreground transition-all duration-300 hover:text-[#FF0000] hover:drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]"
+                      className="transition-all duration-300 hover:text-[#FF0000]"
                       aria-label="YouTube"
                     >
                       <svg
@@ -171,54 +175,49 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="lg:w-[60%] p-10 lg:p-16 flex flex-col justify-center">
-              <div className="mb-8">
-                <Quote className="w-10 h-10 text-primary/30 mb-4" />
-                <h2 className="text-3xl md:text-4xl font-display font-bold mb-2">
-                  Founder&apos;s Message
+            <div className="lg:w-[58%] p-8 lg:p-14 flex flex-col justify-center">
+              <div className="mb-7">
+                <Quote className="w-9 h-9 text-primary/40 mb-3" />
+                <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
+                  Founder&apos;s note
                 </h2>
-                <div className="w-16 h-1 bg-gradient-to-r from-primary to-accent rounded-full" />
+                <div className="w-12 h-0.5 bg-primary/60 rounded-full mt-3" />
               </div>
 
-              <div className="space-y-5 text-foreground/60 leading-relaxed">
+              <div className="space-y-4 text-muted-foreground leading-relaxed text-[15px]">
                 <p>
-                  My journey into the world of technology started over five
-                  years ago as a{" "}
-                  <strong className="text-foreground/80">Front-End Developer</strong>
-                  . For two years, I built interfaces, learned to think in
-                  systems, and developed a deep appreciation for clean,
-                  functional design.
+                  I started out as a front-end developer in 2021 — five years
+                  building interfaces, learning to think in systems, and
+                  developing a taste for clean, functional design.
                 </p>
                 <p>
-                  Then everything changed. I discovered the world of{" "}
-                  <strong className="text-foreground/80">AI Automation</strong> —
-                  and more specifically, the work of people like{" "}
-                  <strong className="text-foreground/80">Liam Ottley</strong> and{" "}
-                  <strong className="text-foreground/80">Nate Herk</strong>, who
-                  showed me what was truly possible when you combine AI with
-                  agency operations. Their vision of building autonomous
-                  systems that replace entire manual workflows became the north
-                  star of my career.
+                  Then AI happened. I went deep on autonomous agents and
+                  agency-grade automation — the kind of work{" "}
+                  <strong className="text-foreground">Liam Ottley</strong> and{" "}
+                  <strong className="text-foreground">Nate Herk</strong> were
+                  pioneering — and founded 4Pie Labs in 2024 as an AI
+                  automation studio.
                 </p>
                 <p>
-                  Over the next three years, I went deep — building AI-powered
-                  solutions for businesses, deploying autonomous agents, and
-                  automating processes that used to take teams of people to
-                  manage. That experience eventually led me to found{" "}
-                  <strong className="text-foreground/80">4Pie Labs</strong> as an AI
-                  Automation and Design Agency.
+                  Working with painting contractors and tour operators changed
+                  the company. Their problem wasn&apos;t &ldquo;more
+                  automation.&rdquo; It was{" "}
+                  <em className="text-foreground not-italic font-medium">
+                    visibility
+                  </em>{" "}
+                  — being the business the next customer in their area finds
+                  first, on Google, Maps, and now ChatGPT and Perplexity. The
+                  AI tooling we&apos;d built turned into a real edge:
+                  schema-first sites, AEO-grade content, Maps pack monitoring,
+                  attribution wired end-to-end.
                 </p>
                 <p>
-                  As we grew, a natural evolution happened. Our clients
-                  didn&apos;t just need automation and design — they needed
-                  full-stack growth. So we expanded into{" "}
-                  <strong className="text-foreground/80">Digital Marketing</strong>,
-                  bringing the same systems-thinking and data-driven approach
-                  to SEO, PPC, and social media. Today, 4Pie Labs is a fully
-                  integrated agency where AI, design, and marketing work
-                  together as one system.
+                  So we rebuilt 4Pie Labs around that. One funnel — search,
+                  ads, AEO, conversion — accountable to revenue. Same
+                  systems-thinking, applied to a problem local service
+                  businesses actually wake up worrying about.
                 </p>
-                <p className="text-foreground/80 font-medium italic">
+                <p className="text-foreground font-medium italic">
                   We&apos;re just getting started.
                 </p>
               </div>
@@ -227,70 +226,74 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="max-w-4xl mx-auto mb-32">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">
-            The Journey
+      {/* Timeline */}
+      <section className="relative z-10 max-w-3xl mx-auto mb-28 md:mb-32">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground [text-wrap:balance]">
+            From code to{" "}
+            <span className="font-serif italic font-normal text-primary">
+              local growth partner.
+            </span>
           </h2>
-          <p className="text-foreground/40">From code to company.</p>
         </div>
 
         <div className="relative">
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-foreground/10 -translate-x-1/2" />
+          <div className="absolute left-1/2 top-2 bottom-2 w-px bg-border -translate-x-1/2" />
 
-          <div className="space-y-0">
-            {milestones.map((m, i) => (
-              <div
+          <ul className="space-y-8">
+            {MILESTONES.map((m, i) => (
+              <li
                 key={m.label}
                 className={`flex items-center gap-6 ${i % 2 === 0 ? "flex-row" : "flex-row-reverse"}`}
               >
-                <div className={`flex-1 ${i % 2 === 0 ? "text-right" : "text-left"}`}>
-                  <div className="text-primary font-bold text-sm uppercase tracking-widest">
+                <div
+                  className={`flex-1 ${i % 2 === 0 ? "text-right" : "text-left"}`}
+                >
+                  <div className="text-primary text-xs font-semibold uppercase tracking-widest mb-1">
                     {m.year}
                   </div>
-                  <div className="text-foreground/70 font-medium">{m.label}</div>
+                  <div className="text-foreground font-medium">{m.label}</div>
                 </div>
-                <div className="relative z-10 w-4 h-4 rounded-full bg-primary shadow-[0_0_15px_rgba(139,92,246,0.5)]" />
+                <span className="relative z-10 w-3 h-3 rounded-full bg-primary shrink-0 ring-4 ring-background" />
                 <div className="flex-1" />
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto mb-20">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">
-            Three pillars. <br />
-            <span className="text-foreground/50">One vision.</span>
+      {/* Pillars */}
+      <section className="relative z-10 max-w-[1100px] mx-auto mb-24">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground [text-wrap:balance]">
+            Three pillars.{" "}
+            <span className="font-serif italic font-normal text-primary">
+              One funnel.
+            </span>
           </h2>
-          <p className="text-foreground/40 max-w-2xl mx-auto text-lg">
-            Everything we build is designed to make agencies autonomous,
-            creative, and unstoppable.
+          <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
+            Everything we build is designed to make local service businesses
+            the first call in their market — and the cited answer in every AI
+            engine that matters.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {pillars.map((pillar) => {
-            const Icon = pillar.icon;
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          {PILLARS.map((p) => {
+            const Icon = p.icon;
             return (
               <div
-                key={pillar.title}
-                className="group glass-morphism p-10 rounded-[32px] border-foreground/10 hover:border-foreground/20 hover:bg-foreground/[0.07] transition-all shadow-2xl relative overflow-hidden"
+                key={p.title}
+                className="bg-surface border border-card-border rounded-2xl p-7 lg:p-8 shadow-[0_1px_3px_rgba(26,26,26,0.04)] hover:shadow-[0_4px_12px_rgba(26,26,26,0.06),0_1px_3px_rgba(26,26,26,0.04)] transition-shadow"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div
-                  className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${pillar.color} p-0.5 mb-8 group-hover:scale-110 transition-transform`}
-                >
-                  <div className="w-full h-full bg-background rounded-[14px] flex items-center justify-center">
-                    <Icon className="w-7 h-7" />
-                  </div>
-                </div>
-                <h3 className="text-2xl font-display font-bold mb-4 relative z-10">
-                  {pillar.title}
+                <span className="w-12 h-12 rounded-xl bg-primary-muted text-primary grid place-items-center mb-5">
+                  <Icon className="w-5 h-5" />
+                </span>
+                <h3 className="text-lg font-semibold tracking-tight mb-2">
+                  {p.title}
                 </h3>
-                <p className="text-foreground/50 leading-relaxed relative z-10">
-                  {pillar.desc}
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {p.desc}
                 </p>
               </div>
             );
@@ -299,6 +302,6 @@ export default function AboutPage() {
       </section>
 
       <AboutCTA />
-    </div>
+    </main>
   );
 }
