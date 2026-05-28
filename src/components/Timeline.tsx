@@ -114,20 +114,20 @@ function TimelineCard({ step, index }: { step: Step; index: number }) {
           initial={{ opacity: 0, x: index % 2 === 0 ? 30 : -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="group relative p-8 glass-morphism rounded-[32px] border-white/10 hover:border-white/20 hover:bg-white/[0.07] transition-colors shadow-2xl cursor-default transform-gpu"
+          className="group relative p-8 glass-morphism rounded-[32px] border-foreground/10 hover:border-foreground/20 hover:bg-foreground/[0.07] transition-colors shadow-2xl cursor-default transform-gpu"
         >
           <div style={{ transform: "translateZ(50px)" }} className="relative z-10">
             <div className="text-primary font-bold mb-2 tracking-widest uppercase text-xs">
               {step.week}
             </div>
             <h3 className="text-2xl font-display font-bold mb-4">{step.title}</h3>
-            <p className="text-white/50 leading-relaxed text-sm">{step.desc}</p>
+            <p className="text-foreground/50 leading-relaxed text-sm">{step.desc}</p>
           </div>
           <div className="absolute inset-0 rounded-[32px] bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         </motion.div>
       </div>
 
-      <div className="relative z-10 flex items-center justify-center w-12 h-12 rounded-full bg-background border-4 border-white/10 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+      <div className="relative z-10 flex items-center justify-center w-12 h-12 rounded-full bg-background border-4 border-foreground/10 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
         <Icon className="w-5 h-5 text-primary" />
       </div>
 
@@ -138,25 +138,25 @@ function TimelineCard({ step, index }: { step: Step; index: number }) {
 
 export function Timeline() {
   return (
-    <section className="py-24 px-4 bg-background border-t border-white/5 relative overflow-hidden">
+    <section className="py-24 px-4 bg-background border-t border-foreground/5 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 blur-[130px] rounded-full -translate-y-1/3 translate-x-1/3 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative">
         <div className="text-center mb-20">
-          <div className="text-xs font-bold text-white/30 uppercase tracking-[0.2em] mb-4">
+          <div className="text-xs font-bold text-foreground/30 uppercase tracking-[0.2em] mb-4">
             Ready to rank?
           </div>
           <h2 className="text-4xl md:text-6xl font-display font-bold mb-6">
             From signed to ranked <br />
-            <span className="text-white/50">— in 90 days.</span>
+            <span className="text-foreground/50">— in 90 days.</span>
           </h2>
-          <p className="text-white/40 max-w-2xl mx-auto text-lg">
+          <p className="text-foreground/40 max-w-2xl mx-auto text-lg">
             A structured rollout designed to compound from week one.
           </p>
         </div>
 
         <div className="relative">
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/10 -translate-x-1/2 hidden md:block" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-foreground/10 -translate-x-1/2 hidden md:block" />
 
           <div className="space-y-12 md:space-y-0">
             {steps.map((step, i) => (

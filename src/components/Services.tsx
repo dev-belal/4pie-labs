@@ -160,9 +160,9 @@ export function Services() {
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-6xl font-display font-bold mb-6">
             The services that build <br />
-            <span className="text-white/50">your local dominance.</span>
+            <span className="text-foreground/50">your local dominance.</span>
           </h2>
-          <p className="text-white/40 max-w-2xl mx-auto text-lg mb-12">
+          <p className="text-foreground/40 max-w-2xl mx-auto text-lg mb-12">
             Three pillars, twelve services, one system designed to make your
             business the obvious choice.
           </p>
@@ -177,7 +177,7 @@ export function Services() {
                 className={`px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 ${
                   activeIndex === i
                     ? "bg-white text-black scale-105 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-                    : "glass-morphism text-white/50 hover:text-white hover:bg-white/5"
+                    : "glass-morphism text-foreground/50 hover:text-white hover:bg-foreground/5"
                 }`}
               >
                 {pillar.label}
@@ -185,7 +185,7 @@ export function Services() {
             ))}
           </div>
 
-          <p className="text-white/50 max-w-2xl mx-auto text-base mb-16">
+          <p className="text-foreground/50 max-w-2xl mx-auto text-base mb-16">
             {active.subtitle}
           </p>
         </div>
@@ -212,7 +212,7 @@ export function Services() {
                 >
                   <Link
                     href={`/services#${service.slug}`}
-                    className="group relative p-8 glass-morphism rounded-[32px] border-white/10 hover:border-white/20 hover:bg-white/[0.07] transition-all cursor-pointer overflow-hidden shadow-2xl text-left flex flex-col h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className="group relative p-8 glass-morphism rounded-[32px] border-foreground/10 hover:border-foreground/20 hover:bg-foreground/[0.07] transition-all cursor-pointer overflow-hidden shadow-2xl text-left flex flex-col h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
@@ -227,11 +227,11 @@ export function Services() {
                     <h3 className="text-xl font-display font-bold mb-4">
                       {service.title}
                     </h3>
-                    <p className="text-white/50 text-sm leading-relaxed mb-6 flex-1">
+                    <p className="text-foreground/50 text-sm leading-relaxed mb-6 flex-1">
                       {service.desc}
                     </p>
 
-                    <div className="flex items-center gap-2 text-xs font-bold text-white/30 group-hover:text-white transition-colors">
+                    <div className="flex items-center gap-2 text-xs font-bold text-foreground/30 group-hover:text-white transition-colors">
                       LEARN MORE
                       <Zap className="w-3 h-3" />
                     </div>
@@ -245,7 +245,7 @@ export function Services() {
         <div className="mt-16 text-center">
           <Link
             href="/services"
-            className="group inline-flex items-center gap-3 mx-auto bg-white/5 hover:bg-white/10 text-white px-10 py-5 rounded-full text-lg font-bold transition-all border border-white/10 hover:border-white/20 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="group inline-flex items-center gap-3 mx-auto bg-foreground/5 hover:bg-foreground/10 text-white px-10 py-5 rounded-full text-lg font-bold transition-all border border-foreground/10 hover:border-foreground/20 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             See all Services
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

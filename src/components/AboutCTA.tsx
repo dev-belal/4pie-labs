@@ -13,13 +13,13 @@ export function AboutCTA() {
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
-        className="glass-morphism rounded-[40px] p-16 border-white/10 relative overflow-hidden"
+        className="glass-morphism rounded-[40px] p-16 border-foreground/10 relative overflow-hidden"
       >
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
         <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 relative z-10">
           Ready to build the future?
         </h2>
-        <p className="text-white/50 mb-8 relative z-10">
+        <p className="text-foreground/50 mb-8 relative z-10">
           Let&apos;s talk about how 4Pie Labs can transform your agency
           operations.
         </p>

@@ -163,9 +163,9 @@ export function TestimonialsCarousel({
             aria-label="Previous testimonial"
             onClick={() => paginate(-1)}
             disabled={isAtStart}
-            className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-white/10 disabled:hover:bg-transparent"
+            className="p-4 rounded-full glass-morphism border-foreground/10 hover:border-primary/50 hover:bg-foreground/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-foreground/10 disabled:hover:bg-transparent"
           >
-            <ChevronLeft className="w-6 h-6 text-white/50 group-hover/btn:text-primary transition-colors" />
+            <ChevronLeft className="w-6 h-6 text-foreground/50 group-hover/btn:text-primary transition-colors" />
           </button>
         </div>
         <div className="absolute top-1/2 -translate-y-1/2 right-0 z-20 hidden md:block">
@@ -174,9 +174,9 @@ export function TestimonialsCarousel({
             aria-label="Next testimonial"
             onClick={() => paginate(1)}
             disabled={isAtEnd}
-            className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-white/10 disabled:hover:bg-transparent"
+            className="p-4 rounded-full glass-morphism border-foreground/10 hover:border-primary/50 hover:bg-foreground/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-foreground/10 disabled:hover:bg-transparent"
           >
-            <ChevronRight className="w-6 h-6 text-white/50 group-hover/btn:text-primary transition-colors" />
+            <ChevronRight className="w-6 h-6 text-foreground/50 group-hover/btn:text-primary transition-colors" />
           </button>
         </div>
 
@@ -204,7 +204,7 @@ export function TestimonialsCarousel({
                       ? undefined
                       : { y: -6, transition: { duration: 0.25 } }
                   }
-                  className="p-8 glass-morphism rounded-[40px] border-white/10 hover:border-primary/30 hover:bg-white/[0.07] hover:shadow-[0_20px_50px_-12px_rgba(139,92,246,0.25)] shadow-2xl flex flex-col justify-between h-full transform-gpu transition-colors"
+                  className="p-8 glass-morphism rounded-[40px] border-foreground/10 hover:border-primary/30 hover:bg-foreground/[0.07] hover:shadow-[0_20px_50px_-12px_rgba(139,92,246,0.25)] shadow-2xl flex flex-col justify-between h-full transform-gpu transition-colors"
                 >
                   <div>
                     <div className="flex gap-1 mb-6">
@@ -218,12 +218,12 @@ export function TestimonialsCarousel({
                     <h3 className="text-xl font-bold mb-4 text-white leading-tight min-h-[3.5rem]">
                       {t.headline}
                     </h3>
-                    <p className="text-sm text-white/50 leading-relaxed mb-8 italic">
+                    <p className="text-sm text-foreground/50 leading-relaxed mb-8 italic">
                       &ldquo;{t.quote}&rdquo;
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-4 border-t border-white/5 pt-6 mt-auto">
+                  <div className="flex items-center gap-4 border-t border-foreground/5 pt-6 mt-auto">
                     <div className="relative group/avatar w-12 h-12">
                       <div className="absolute inset-0 bg-primary/20 blur-md rounded-full pointer-events-none opacity-0 group-hover/avatar:opacity-100 transition-opacity" />
                       <Image
@@ -231,14 +231,14 @@ export function TestimonialsCarousel({
                         alt={t.name}
                         fill
                         sizes="48px"
-                        className="rounded-full object-cover relative border border-white/10 grayscale hover:grayscale-0 transition-all duration-500"
+                        className="rounded-full object-cover relative border border-foreground/10 grayscale hover:grayscale-0 transition-all duration-500"
                       />
                     </div>
                     <div>
                       <div className="font-bold text-sm text-white">
                         {t.name}
                       </div>
-                      <div className="text-[10px] text-white/30 uppercase tracking-wider font-semibold">
+                      <div className="text-[10px] text-foreground/30 uppercase tracking-wider font-semibold">
                         {t.role}
                       </div>
                     </div>
@@ -257,7 +257,7 @@ export function TestimonialsCarousel({
           aria-label="Previous testimonial"
           onClick={() => paginate(-1)}
           disabled={isAtStart}
-          className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-white/50 disabled:opacity-30 disabled:cursor-not-allowed"
+          className="p-4 rounded-full glass-morphism border-foreground/10 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-foreground/50 disabled:opacity-30 disabled:cursor-not-allowed"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -266,7 +266,7 @@ export function TestimonialsCarousel({
           aria-label="Next testimonial"
           onClick={() => paginate(1)}
           disabled={isAtEnd}
-          className="p-4 rounded-full glass-morphism border-white/10 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-white/50 disabled:opacity-30 disabled:cursor-not-allowed"
+          className="p-4 rounded-full glass-morphism border-foreground/10 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-foreground/50 disabled:opacity-30 disabled:cursor-not-allowed"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
@@ -283,7 +283,7 @@ export function TestimonialsCarousel({
             className={`h-1.5 rounded-full transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
               i === currentIndex
                 ? "bg-primary w-8"
-                : "bg-white/10 w-2 hover:bg-white/20"
+                : "bg-foreground/10 w-2 hover:bg-foreground/20"
             }`}
           />
         ))}

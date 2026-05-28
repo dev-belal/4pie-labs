@@ -84,7 +84,7 @@ export function ROICalculator() {
 
   return (
     <section id="budget-calculator" className="py-24 px-4 relative">
-      <div className="max-w-5xl mx-auto glass-morphism rounded-[40px] p-8 md:p-16 border-white/10 relative overflow-hidden group">
+      <div className="max-w-5xl mx-auto glass-morphism rounded-[40px] p-8 md:p-16 border-foreground/10 relative overflow-hidden group">
         <div className="absolute top-0 right-0 -m-20 w-80 h-80 bg-primary/10 blur-[80px] rounded-full group-hover:bg-primary/20 transition-colors duration-700" />
         <div className="absolute bottom-0 left-0 -m-20 w-80 h-80 bg-accent/10 blur-[80px] rounded-full group-hover:bg-accent/20 transition-colors duration-700" />
 
@@ -98,7 +98,7 @@ export function ROICalculator() {
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-6 text-white">
               How much should you spend on marketing?
             </h2>
-            <p className="text-white/60 mb-10">
+            <p className="text-foreground/60 mb-10">
               Get a recommended monthly budget based on your industry and growth
               goals — instant, no email required.
             </p>
@@ -107,7 +107,7 @@ export function ROICalculator() {
               {/* Monthly revenue */}
               <div>
                 <div className="flex justify-between mb-4">
-                  <span className="text-sm font-medium text-white/80">
+                  <span className="text-sm font-medium text-foreground/80">
                     Monthly revenue
                   </span>
                   <span className="text-primary font-bold">
@@ -122,13 +122,13 @@ export function ROICalculator() {
                   value={monthlyRevenue}
                   onChange={(e) => setMonthlyRevenue(Number(e.target.value))}
                   aria-label="Monthly revenue"
-                  className="w-full accent-primary bg-white/5 h-2 rounded-lg appearance-none cursor-pointer"
+                  className="w-full accent-primary bg-foreground/5 h-2 rounded-lg appearance-none cursor-pointer"
                 />
               </div>
 
               {/* Industry */}
               <div>
-                <span className="block text-sm font-medium text-white/80 mb-4">
+                <span className="block text-sm font-medium text-foreground/80 mb-4">
                   Industry
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -141,7 +141,7 @@ export function ROICalculator() {
                       className={`px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
                         industry === opt
                           ? "bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.15)]"
-                          : "glass-morphism text-white/50 hover:text-white hover:bg-white/5"
+                          : "glass-morphism text-foreground/50 hover:text-white hover:bg-foreground/5"
                       }`}
                     >
                       {opt}
@@ -152,7 +152,7 @@ export function ROICalculator() {
 
               {/* Growth goal */}
               <div>
-                <span className="block text-sm font-medium text-white/80 mb-4">
+                <span className="block text-sm font-medium text-foreground/80 mb-4">
                   Growth goal
                 </span>
                 <div className="grid grid-cols-2 gap-2">
@@ -165,14 +165,14 @@ export function ROICalculator() {
                       className={`px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
                         goalLabel === g.label
                           ? "bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.15)]"
-                          : "glass-morphism text-white/50 hover:text-white hover:bg-white/5"
+                          : "glass-morphism text-foreground/50 hover:text-white hover:bg-foreground/5"
                       }`}
                     >
                       {g.label}
                     </button>
                   ))}
                 </div>
-                <p className="text-xs text-white/30 mt-3">
+                <p className="text-xs text-foreground/30 mt-3">
                   {goalLabel} · {goal.lo}–{goal.hi}% of revenue
                 </p>
               </div>
@@ -180,7 +180,7 @@ export function ROICalculator() {
               {/* Current marketing spend */}
               <div>
                 <div className="flex justify-between mb-4">
-                  <span className="text-sm font-medium text-white/80">
+                  <span className="text-sm font-medium text-foreground/80">
                     Current marketing spend
                   </span>
                   <span className="text-primary font-bold">
@@ -195,7 +195,7 @@ export function ROICalculator() {
                   value={currentSpend}
                   onChange={(e) => setCurrentSpend(Number(e.target.value))}
                   aria-label="Current marketing spend"
-                  className="w-full accent-primary bg-white/5 h-2 rounded-lg appearance-none cursor-pointer"
+                  className="w-full accent-primary bg-foreground/5 h-2 rounded-lg appearance-none cursor-pointer"
                 />
               </div>
             </div>
@@ -203,8 +203,8 @@ export function ROICalculator() {
 
           {/* ---- Right column: output card ---- */}
           <div className="flex flex-col justify-center">
-            <div className="bg-white/5 rounded-[32px] p-8 md:p-12 border border-white/5 backdrop-blur-sm">
-              <div className="text-white/40 text-sm mb-2 uppercase tracking-widest">
+            <div className="bg-foreground/5 rounded-[32px] p-8 md:p-12 border border-foreground/5 backdrop-blur-sm">
+              <div className="text-foreground/40 text-sm mb-2 uppercase tracking-widest">
                 Recommended monthly budget
               </div>
               <motion.div
@@ -218,25 +218,25 @@ export function ROICalculator() {
 
               <ul className="space-y-5 mb-8">
                 <li>
-                  <div className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-1">
+                  <div className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest mb-1">
                     Gap from your current spend
                   </div>
-                  <div className="text-sm text-white/80 font-medium">
+                  <div className="text-sm text-foreground/80 font-medium">
                     {gapLine}
                   </div>
                 </li>
                 <li>
-                  <div className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-2">
+                  <div className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest mb-2">
                     Recommended channel mix
                   </div>
                   <div className="space-y-1.5">
                     {mix.map((c) => (
                       <div
                         key={c.label}
-                        className="flex items-center justify-between text-sm text-white/70"
+                        className="flex items-center justify-between text-sm text-foreground/70"
                       >
                         <span>{c.label}</span>
-                        <span className="text-white/40 font-mono">{c.pct}%</span>
+                        <span className="text-foreground/40 font-mono">{c.pct}%</span>
                       </div>
                     ))}
                   </div>
@@ -255,7 +255,7 @@ export function ROICalculator() {
 
             <Link
               href="/book"
-              className="group mt-5 inline-flex items-center justify-center gap-2 text-sm font-medium text-white/50 hover:text-white transition-colors text-center"
+              className="group mt-5 inline-flex items-center justify-center gap-2 text-sm font-medium text-foreground/50 hover:text-white transition-colors text-center"
             >
               Or skip the form — book a call and we&apos;ll build your plan live
               <ArrowRight className="w-3.5 h-3.5 shrink-0 group-hover:translate-x-1 transition-transform" />
@@ -328,7 +328,7 @@ function BudgetLeadModal({
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-md bg-[#0A0A0A] border border-white/10 rounded-[32px] overflow-hidden shadow-2xl"
+            className="relative w-full max-w-md bg-[#0A0A0A] border border-foreground/10 rounded-[32px] overflow-hidden shadow-2xl"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent pointer-events-none" />
 
@@ -336,7 +336,7 @@ function BudgetLeadModal({
               type="button"
               aria-label="Close"
               onClick={onClose}
-              className="absolute top-6 right-6 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all z-10"
+              className="absolute top-6 right-6 p-2 rounded-full bg-foreground/5 hover:bg-foreground/10 text-foreground/50 hover:text-white transition-all z-10"
             >
               <X className="w-5 h-5" />
             </button>
@@ -353,7 +353,7 @@ function BudgetLeadModal({
                   >
                     You&apos;re all set
                   </h2>
-                  <p className="text-white/50 text-sm">{state.message}</p>
+                  <p className="text-foreground/50 text-sm">{state.message}</p>
                 </div>
               ) : (
                 <>
@@ -364,7 +364,7 @@ function BudgetLeadModal({
                     >
                       Get the full breakdown
                     </h2>
-                    <p className="text-white/40 text-sm">
+                    <p className="text-foreground/40 text-sm">
                       We&apos;ll email you a tailored plan for your{" "}
                       {usd(recommendedBudget)}/mo budget.
                     </p>
@@ -374,7 +374,7 @@ function BudgetLeadModal({
                     <div className="space-y-2">
                       <label
                         htmlFor="budget-name"
-                        className="text-sm font-medium text-white/60 ml-1 flex items-center gap-2"
+                        className="text-sm font-medium text-foreground/60 ml-1 flex items-center gap-2"
                       >
                         <User className="w-3.5 h-3.5 text-primary" />
                         Full Name
@@ -385,7 +385,7 @@ function BudgetLeadModal({
                         required
                         type="text"
                         placeholder="John Doe"
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all"
+                        className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                       />
                       {state.errors?.name && (
                         <p className="text-xs text-red-400 ml-1">
@@ -397,7 +397,7 @@ function BudgetLeadModal({
                     <div className="space-y-2">
                       <label
                         htmlFor="budget-email"
-                        className="text-sm font-medium text-white/60 ml-1 flex items-center gap-2"
+                        className="text-sm font-medium text-foreground/60 ml-1 flex items-center gap-2"
                       >
                         <Mail className="w-3.5 h-3.5 text-primary" />
                         Email
@@ -408,7 +408,7 @@ function BudgetLeadModal({
                         required
                         type="email"
                         placeholder="john@example.com"
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all"
+                        className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                       />
                       {state.errors?.email && (
                         <p className="text-xs text-red-400 ml-1">
@@ -420,7 +420,7 @@ function BudgetLeadModal({
                     <div className="space-y-2">
                       <label
                         htmlFor="budget-business"
-                        className="text-sm font-medium text-white/60 ml-1 flex items-center gap-2"
+                        className="text-sm font-medium text-foreground/60 ml-1 flex items-center gap-2"
                       >
                         <Building2 className="w-3.5 h-3.5 text-primary" />
                         Business Name
@@ -431,7 +431,7 @@ function BudgetLeadModal({
                         required
                         type="text"
                         placeholder="Acme Painting Co."
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all"
+                        className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                       />
                       {state.errors?.businessName && (
                         <p className="text-xs text-red-400 ml-1">
@@ -443,7 +443,7 @@ function BudgetLeadModal({
                     <div className="space-y-2">
                       <label
                         htmlFor="budget-revenue"
-                        className="text-sm font-medium text-white/60 ml-1"
+                        className="text-sm font-medium text-foreground/60 ml-1"
                       >
                         Monthly revenue (USD)
                       </label>
@@ -454,7 +454,7 @@ function BudgetLeadModal({
                         type="number"
                         min={0}
                         defaultValue={monthlyRevenue}
-                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all"
+                        className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                       />
                       {state.errors?.monthlyRevenue && (
                         <p className="text-xs text-red-400 ml-1">

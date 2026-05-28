@@ -76,7 +76,7 @@ export async function Testimonials() {
   return (
     <section
       id="results"
-      className="py-24 px-4 bg-[#050505] overflow-hidden relative border-t border-white/5"
+      className="py-24 px-4 bg-[#050505] overflow-hidden relative border-t border-foreground/5"
     >
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full -translate-y-1/2 pointer-events-none" />
 

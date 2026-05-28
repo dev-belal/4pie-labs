@@ -29,16 +29,16 @@ export async function BlogSection() {
   return (
     <section
       id="blog"
-      className="py-24 px-4 border-t border-white/5 bg-[#080808] relative overflow-hidden"
+      className="py-24 px-4 border-t border-foreground/5 bg-[#080808] relative overflow-hidden"
     >
-      <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-white/5 blur-[120px] rounded-full -translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-foreground/5 blur-[120px] rounded-full -translate-y-1/2 -translate-x-1/2 pointer-events-none" />
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 text-white">
           <div>
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
               Articles &amp; Insights.
             </h2>
-            <p className="text-white/40 text-lg">
+            <p className="text-foreground/40 text-lg">
               Insights on AI-first marketing, local SEO, and answer engine
               optimization for service businesses.
             </p>
@@ -62,7 +62,7 @@ export async function BlogSection() {
                 i === 2 && "hidden md:block",
               )}
             >
-              <div className="relative aspect-[16/10] rounded-[32px] overflow-hidden mb-6 border border-white/5">
+              <div className="relative aspect-[16/10] rounded-[32px] overflow-hidden mb-6 border border-foreground/5">
                 <Image
                   src={post.image}
                   alt={post.title}
@@ -70,11 +70,11 @@ export async function BlogSection() {
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover group-hover:scale-110 transition-transform duration-500"
                 />
-                <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-white/80">
+                <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-foreground/80">
                   {post.category}
                 </div>
               </div>
-              <div className="flex items-center gap-3 text-white/30 text-xs font-bold mb-3 uppercase tracking-widest">
+              <div className="flex items-center gap-3 text-foreground/30 text-xs font-bold mb-3 uppercase tracking-widest">
                 {post.date}
               </div>
               <h3 className="text-xl font-display font-bold leading-tight group-hover:text-primary transition-colors text-white">

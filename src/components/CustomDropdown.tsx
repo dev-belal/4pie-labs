@@ -51,7 +51,7 @@ export function CustomDropdown({
   return (
     <div className="space-y-1.5 relative" ref={dropdownRef}>
       {label && (
-        <label className="text-xs font-semibold text-white/40 ml-1 uppercase tracking-wider flex items-center gap-2">
+        <label className="text-xs font-semibold text-foreground/40 ml-1 uppercase tracking-wider flex items-center gap-2">
           {icon}
           {label}
         </label>
@@ -61,16 +61,16 @@ export function CustomDropdown({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white flex items-center justify-between transition-all hover:bg-white/[0.08] focus:outline-none focus:border-primary/50",
-          isOpen && "border-primary/50 bg-white/[0.08]",
+          "w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white flex items-center justify-between transition-all hover:bg-foreground/[0.08] focus:outline-none focus:border-primary/50",
+          isOpen && "border-primary/50 bg-foreground/[0.08]",
         )}
       >
-        <span className={cn("truncate", !activeOption && "text-white/20")}>
+        <span className={cn("truncate", !activeOption && "text-foreground/20")}>
           {activeOption ? activeOption.label : placeholder}
         </span>
         <ChevronDown
           className={cn(
-            "w-4 h-4 text-white/30 transition-transform duration-300",
+            "w-4 h-4 text-foreground/30 transition-transform duration-300",
             isOpen && "rotate-180",
           )}
         />
@@ -83,7 +83,7 @@ export function CustomDropdown({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute z-50 w-full mt-2 bg-[#0A0A0A]/90 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl py-2"
+            className="absolute z-50 w-full mt-2 bg-[#0A0A0A]/90 backdrop-blur-xl border border-foreground/10 rounded-2xl overflow-hidden shadow-2xl py-2"
           >
             <div className="max-h-60 overflow-y-auto">
               {options.map((option) => (
@@ -95,10 +95,10 @@ export function CustomDropdown({
                     setIsOpen(false);
                   }}
                   className={cn(
-                    "w-full flex items-center justify-between px-5 py-2.5 text-sm transition-colors hover:bg-white/10 text-left",
+                    "w-full flex items-center justify-between px-5 py-2.5 text-sm transition-colors hover:bg-foreground/10 text-left",
                     option.value === value
                       ? "text-primary font-bold bg-primary/5"
-                      : "text-white/60",
+                      : "text-foreground/60",
                   )}
                 >
                   {option.label}

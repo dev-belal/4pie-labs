@@ -30,19 +30,19 @@ export default function BookError({
           </h1>
         </div>
 
-        <p className="text-white/60 mb-6 text-sm">
+        <p className="text-foreground/60 mb-6 text-sm">
           This page had a runtime error. The details below will help us fix it.
         </p>
 
-        <div className="bg-black/40 border border-white/10 rounded-2xl p-4 mb-6 font-mono text-xs leading-relaxed overflow-x-auto">
+        <div className="bg-black/40 border border-foreground/10 rounded-2xl p-4 mb-6 font-mono text-xs leading-relaxed overflow-x-auto">
           <div className="text-red-300 font-bold mb-2">
             {error.name}: {error.message}
           </div>
           {error.digest && (
-            <div className="text-white/40 mb-2">digest: {error.digest}</div>
+            <div className="text-foreground/40 mb-2">digest: {error.digest}</div>
           )}
           {error.stack && (
-            <pre className="text-white/50 whitespace-pre-wrap">
+            <pre className="text-foreground/50 whitespace-pre-wrap">
               {error.stack}
             </pre>
           )}

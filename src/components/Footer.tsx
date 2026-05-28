@@ -17,7 +17,7 @@ const SERVICES: { label: string; href: string }[] = [
 
 export function Footer() {
   return (
-    <footer className="pt-24 pb-12 px-4 border-t border-white/5 bg-[#050505] glass-morphism">
+    <footer className="pt-24 pb-12 px-4 border-t border-foreground/5 bg-[#050505] glass-morphism">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12 items-center md:items-start">
         <div className="text-center md:text-left md:ml-5 flex flex-col items-center md:items-start">
           <Link href="/" className="mb-4 inline-flex items-center gap-3">
@@ -29,7 +29,7 @@ export function Footer() {
               className="h-8 w-auto brightness-0 invert"
             />
           </Link>
-          <p className="text-white/30 max-w-xs mb-6 px-4 md:px-0">
+          <p className="text-foreground/30 max-w-xs mb-6 px-4 md:px-0">
             Building the AI-first marketing systems that make local businesses
             unmissable.
           </p>
@@ -38,7 +38,7 @@ export function Footer() {
               href="https://www.linkedin.com/company/4-pie-labs/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white/40 transition-all duration-300 hover:text-[#0A66C2] hover:drop-shadow-[0_0_8px_rgba(10,102,194,0.8)]"
+              className="text-foreground/40 transition-all duration-300 hover:text-[#0A66C2] hover:drop-shadow-[0_0_8px_rgba(10,102,194,0.8)]"
               aria-label="LinkedIn"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -47,7 +47,7 @@ export function Footer() {
             </a>
             <a
               href="mailto:team@fourpielabs.com"
-              className="text-white/40 transition-all duration-300 hover:text-[#EA4335] hover:drop-shadow-[0_0_8px_rgba(234,67,53,0.8)]"
+              className="text-foreground/40 transition-all duration-300 hover:text-[#EA4335] hover:drop-shadow-[0_0_8px_rgba(234,67,53,0.8)]"
               aria-label="Email"
             >
               <svg
@@ -69,7 +69,7 @@ export function Footer() {
             <h4 className="text-white font-semibold text-sm uppercase tracking-widest mb-4">
               Quick Links
             </h4>
-            <ul className="space-y-3 text-white/40 text-sm">
+            <ul className="space-y-3 text-foreground/40 text-sm">
               {QUICK_LINKS.map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="hover:text-white transition-colors">
@@ -83,7 +83,7 @@ export function Footer() {
             <h4 className="text-white font-semibold text-sm uppercase tracking-widest mb-4">
               Services
             </h4>
-            <ul className="space-y-3 text-white/40 text-sm">
+            <ul className="space-y-3 text-foreground/40 text-sm">
               {SERVICES.map((s) => (
                 <li key={s.label}>
                   <Link
@@ -100,7 +100,7 @@ export function Footer() {
             <h4 className="text-white font-semibold text-sm uppercase tracking-widest mb-4">
               Admin
             </h4>
-            <ul className="space-y-3 text-white/40 text-sm">
+            <ul className="space-y-3 text-foreground/40 text-sm">
               <li>
                 <Link
                   href="/admin/login"
@@ -113,7 +113,7 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <div className="mt-12 pt-12 border-t border-white/5 text-center text-white/20 text-xs">
+      <div className="mt-12 pt-12 border-t border-foreground/5 text-center text-foreground/20 text-xs">
         © {new Date().getFullYear()} 4Pie Labs. All rights reserved.
       </div>
     </footer>

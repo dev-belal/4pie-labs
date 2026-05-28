@@ -76,7 +76,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="max-w-2xl text-base md:text-lg text-white/60 mb-10 mx-auto leading-relaxed"
+          className="max-w-2xl text-base md:text-lg text-foreground/60 mb-10 mx-auto leading-relaxed"
         >
           4Pie Labs helps painting contractors, tour operators, and local
           service businesses dominate Google, Maps, and AI answer engines — so
@@ -100,7 +100,7 @@ export function Hero() {
           {/* TODO: replace with /audit landing page in Phase 1F */}
           <Link
             href="/book?source=audit"
-            className="group inline-flex items-center gap-2 text-sm font-bold text-white/60 hover:text-white transition-colors"
+            className="group inline-flex items-center gap-2 text-sm font-bold text-foreground/60 hover:text-white transition-colors"
           >
             Get a free AI marketing audit
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
@@ -121,7 +121,7 @@ export function Hero() {
             <div className="text-2xl md:text-3xl font-display font-bold mb-1.5">
               {stat.val}
             </div>
-            <div className="text-xs text-white/40 uppercase tracking-wider">
+            <div className="text-xs text-foreground/40 uppercase tracking-wider">
               {stat.label}
             </div>
           </div>

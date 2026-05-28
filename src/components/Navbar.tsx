@@ -43,10 +43,10 @@ export function Navbar() {
       <div
         className={cn(
           "max-w-7xl mx-auto flex md:grid md:grid-cols-3 items-center justify-between px-6 py-3 rounded-full transition-all duration-300 relative",
-          "glass-morphism border-white/5",
+          "glass-morphism border-foreground/5",
           isScrolled
-            ? "bg-background/40 backdrop-blur-xl border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
-            : "bg-white/5 backdrop-blur-md",
+            ? "bg-background/40 backdrop-blur-xl border-foreground/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+            : "bg-foreground/5 backdrop-blur-md",
         )}
       >
         <div className="flex items-center justify-start md:ml-5">
@@ -72,7 +72,7 @@ export function Navbar() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-medium px-4 py-2 rounded-full transition-all duration-300 relative group text-white/50 hover:text-white"
+              className="text-sm font-medium px-4 py-2 rounded-full transition-all duration-300 relative group text-foreground/50 hover:text-white"
             >
               {item.label}
               <span className="absolute bottom-0 left-4 right-4 h-px bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
@@ -118,7 +118,7 @@ export function Navbar() {
           </Link>
           <button
             type="button"
-            className="md:hidden w-11 h-11 flex items-center justify-center rounded-full text-white hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
+            className="md:hidden w-11 h-11 flex items-center justify-center rounded-full text-white hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMobileMenuOpen}
             onClick={() => setIsMobileMenuOpen((v) => !v)}
@@ -135,7 +135,7 @@ export function Navbar() {
               key={item.href}
               href={item.href}
               onClick={closeMobileMenu}
-              className="text-lg font-medium text-white/70 hover:text-white transition-colors text-left"
+              className="text-lg font-medium text-foreground/70 hover:text-white transition-colors text-left"
             >
               {item.label}
             </Link>

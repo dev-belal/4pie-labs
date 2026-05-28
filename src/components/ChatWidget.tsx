@@ -191,9 +191,9 @@ export function ChatWidget() {
             initial={{ opacity: 0, y: 20, scale: 0.95, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, y: 20, scale: 0.95, filter: "blur(10px)" }}
-            className="absolute bottom-16 right-0 w-[90vw] md:w-[380px] h-[550px] max-h-[75vh] flex flex-col bg-[#0a0a0a] rounded-[24px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
+            className="absolute bottom-16 right-0 w-[90vw] md:w-[380px] h-[550px] max-h-[75vh] flex flex-col bg-[#0a0a0a] rounded-[24px] border border-foreground/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
           >
-            <div className="p-5 bg-gradient-to-r from-primary/20 to-transparent border-b border-white/5 flex items-center justify-between">
+            <div className="p-5 bg-gradient-to-r from-primary/20 to-transparent border-b border-foreground/5 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30 overflow-hidden relative">
                   <Image
@@ -208,7 +208,7 @@ export function ChatWidget() {
                   <h3 className="text-white font-bold text-sm">Pie</h3>
                   <div className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold">
+                    <span className="text-[10px] text-foreground/40 uppercase tracking-widest font-bold">
                       Online
                     </span>
                   </div>
@@ -218,7 +218,7 @@ export function ChatWidget() {
                 type="button"
                 aria-label="Close chat"
                 onClick={() => setIsOpen(false)}
-                className="p-2 hover:bg-white/5 rounded-full text-white/40 transition-colors"
+                className="p-2 hover:bg-foreground/5 rounded-full text-foreground/40 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -240,7 +240,7 @@ export function ChatWidget() {
                       className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center border overflow-hidden relative ${
                         msg.sender === "user"
                           ? "bg-primary/10 border-primary/20"
-                          : "bg-white/5 border-white/10"
+                          : "bg-foreground/5 border-foreground/10"
                       }`}
                     >
                       {msg.sender === "user" ? (
@@ -259,7 +259,7 @@ export function ChatWidget() {
                       className={`p-4 rounded-2xl text-sm leading-relaxed ${
                         msg.sender === "user"
                           ? "bg-primary text-white rounded-tr-none shadow-[0_10px_20px_rgba(168,85,247,0.2)]"
-                          : "bg-white/10 text-white/80 rounded-tl-none border border-white/5"
+                          : "bg-foreground/10 text-foreground/80 rounded-tl-none border border-foreground/5"
                       }`}
                     >
                       <RenderMessage text={msg.text} />
@@ -270,7 +270,7 @@ export function ChatWidget() {
               {isTyping && (
                 <div className="flex justify-start">
                   <div className="flex gap-3 max-w-[85%]">
-                    <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden relative">
+                    <div className="w-8 h-8 rounded-full bg-foreground/5 border border-foreground/10 flex items-center justify-center overflow-hidden relative">
                       <Image
                         src={ASSISTANT_AVATAR}
                         alt="Bot"
@@ -279,17 +279,17 @@ export function ChatWidget() {
                         className="object-cover"
                       />
                     </div>
-                    <div className="p-4 rounded-2xl bg-white/5 border border-white/5 rounded-tl-none flex gap-1">
-                      <span className="w-1.5 h-1.5 bg-white/20 rounded-full animate-bounce" />
-                      <span className="w-1.5 h-1.5 bg-white/20 rounded-full animate-bounce [animation-delay:0.2s]" />
-                      <span className="w-1.5 h-1.5 bg-white/20 rounded-full animate-bounce [animation-delay:0.4s]" />
+                    <div className="p-4 rounded-2xl bg-foreground/5 border border-foreground/5 rounded-tl-none flex gap-1">
+                      <span className="w-1.5 h-1.5 bg-foreground/20 rounded-full animate-bounce" />
+                      <span className="w-1.5 h-1.5 bg-foreground/20 rounded-full animate-bounce [animation-delay:0.2s]" />
+                      <span className="w-1.5 h-1.5 bg-foreground/20 rounded-full animate-bounce [animation-delay:0.4s]" />
                     </div>
                   </div>
                 </div>
               )}
             </div>
 
-            <div className="p-5 border-t border-white/5 space-y-4">
+            <div className="p-5 border-t border-foreground/5 space-y-4">
               {messages.length === 1 && (
                 <div className="flex flex-wrap gap-2">
                   {SUGGESTIONS.map((suggestion) => (
@@ -297,7 +297,7 @@ export function ChatWidget() {
                       type="button"
                       key={suggestion}
                       onClick={() => handleSendMessage(suggestion)}
-                      className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] text-white/60 hover:border-primary/50 hover:text-primary transition-all"
+                      className="px-3 py-1.5 rounded-full bg-foreground/5 border border-foreground/10 text-[11px] text-foreground/60 hover:border-primary/50 hover:text-primary transition-all"
                     >
                       {suggestion}
                     </button>
@@ -310,14 +310,14 @@ export function ChatWidget() {
                   e.preventDefault();
                   handleSendMessage(inputValue);
                 }}
-                className="relative flex items-center bg-white/5 border border-white/10 rounded-2xl overflow-hidden focus-within:border-primary/50 transition-all px-4"
+                className="relative flex items-center bg-foreground/5 border border-foreground/10 rounded-2xl overflow-hidden focus-within:border-primary/50 transition-all px-4"
               >
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Type your message..."
-                  className="flex-1 bg-transparent py-3 text-sm text-white focus:outline-none placeholder:text-white/20"
+                  className="flex-1 bg-transparent py-3 text-sm text-white focus:outline-none placeholder:text-foreground/20"
                 />
                 <button
                   type="submit"
@@ -329,7 +329,7 @@ export function ChatWidget() {
                 </button>
               </form>
               <div className="flex flex-col items-center pt-2">
-                <p className="text-[9px] text-center text-white/20 uppercase tracking-[0.2em] font-bold">
+                <p className="text-[9px] text-center text-foreground/20 uppercase tracking-[0.2em] font-bold">
                   Powered by 4Pie Labs
                 </p>
               </div>
@@ -362,7 +362,7 @@ export function ChatWidget() {
           onClick={() => setIsOpen(!isOpen)}
           className={`group relative w-14 h-14 rounded-full flex items-center justify-center transition-all ${
             isOpen
-              ? "bg-white/10 text-white"
+              ? "bg-foreground/10 text-white"
               : "bg-primary text-white shadow-[0_10px_30px_rgba(168,85,247,0.4)]"
           }`}
         >

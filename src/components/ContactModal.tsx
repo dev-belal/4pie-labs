@@ -66,7 +66,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-md bg-[#0A0A0A] border border-white/10 rounded-[32px] overflow-hidden shadow-2xl"
+            className="relative w-full max-w-md bg-[#0A0A0A] border border-foreground/10 rounded-[32px] overflow-hidden shadow-2xl"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent pointer-events-none" />
 
@@ -74,7 +74,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
               type="button"
               aria-label="Close"
               onClick={onClose}
-              className="absolute top-6 right-6 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all z-10"
+              className="absolute top-6 right-6 p-2 rounded-full bg-foreground/5 hover:bg-foreground/10 text-foreground/50 hover:text-white transition-all z-10"
             >
               <X className="w-5 h-5" />
             </button>
@@ -87,7 +87,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 >
                   Get Started
                 </h2>
-                <p className="text-white/40 text-sm">
+                <p className="text-foreground/40 text-sm">
                   Tell us about your project and let&apos;s build something
                   great.
                 </p>
@@ -97,7 +97,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <div className="space-y-2">
                   <label
                     htmlFor="contact-name"
-                    className="text-sm font-medium text-white/60 ml-1 flex items-center gap-2"
+                    className="text-sm font-medium text-foreground/60 ml-1 flex items-center gap-2"
                   >
                     <User className="w-3.5 h-3.5 text-primary" />
                     Full Name
@@ -108,7 +108,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     required
                     type="text"
                     placeholder="John Doe"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all"
+                    className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                   />
                   {state.errors?.name && (
                     <p className="text-xs text-red-400 ml-1">
@@ -121,7 +121,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   <div className="space-y-2">
                     <label
                       htmlFor="contact-email"
-                      className="text-sm font-medium text-white/60 ml-1 flex items-center gap-2"
+                      className="text-sm font-medium text-foreground/60 ml-1 flex items-center gap-2"
                     >
                       <Mail className="w-3.5 h-3.5 text-primary" />
                       Email
@@ -132,7 +132,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       required
                       type="email"
                       placeholder="john@example.com"
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all"
+                      className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                     />
                     {state.errors?.email && (
                       <p className="text-xs text-red-400 ml-1">
@@ -144,7 +144,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   <div className="space-y-2">
                     <label
                       htmlFor="contact-phone"
-                      className="text-sm font-medium text-white/60 ml-1 flex items-center gap-2"
+                      className="text-sm font-medium text-foreground/60 ml-1 flex items-center gap-2"
                     >
                       <span className="bg-emerald-500/20 p-0.5 rounded-sm inline-flex">
                         <svg
@@ -162,7 +162,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       required
                       type="tel"
                       placeholder="+1 (555) 000-0000"
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all"
+                      className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all"
                     />
                     {state.errors?.phone && (
                       <p className="text-xs text-red-400 ml-1">
@@ -188,7 +188,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <div className="space-y-2">
                   <label
                     htmlFor="contact-description"
-                    className="text-sm font-medium text-white/60 ml-1 flex items-center gap-2"
+                    className="text-sm font-medium text-foreground/60 ml-1 flex items-center gap-2"
                   >
                     <MessageSquare className="w-3.5 h-3.5 text-primary" />
                     Project Brief
@@ -199,7 +199,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     rows={2}
                     required
                     placeholder="Explain your needs in 1-2 lines..."
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all resize-none"
+                    className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl px-5 py-3 text-white placeholder:text-foreground/20 focus:outline-none focus:border-primary/50 focus:bg-foreground/[0.08] transition-all resize-none"
                   />
                   {state.errors?.description && (
                     <p className="text-xs text-red-400 ml-1">

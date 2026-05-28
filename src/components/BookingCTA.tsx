@@ -13,7 +13,7 @@ export function BookingCTA() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-5xl mx-auto relative z-10">
-        <div className="glass-morphism rounded-[48px] p-12 md:p-20 text-center border-white/10 overflow-hidden relative group">
+        <div className="glass-morphism rounded-[48px] p-12 md:p-20 text-center border-foreground/10 overflow-hidden relative group">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
           <motion.div
@@ -22,7 +22,7 @@ export function BookingCTA() {
             viewport={{ once: true }}
             className="relative z-10"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-primary text-xs font-bold tracking-widest uppercase mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-foreground/5 border border-foreground/10 text-primary text-xs font-bold tracking-widest uppercase mb-8">
               <Sparkles className="w-4 h-4" />
               Ready to grow?
             </div>
@@ -32,7 +32,7 @@ export function BookingCTA() {
               <span className="text-gradient">in your market.</span>
             </h2>
 
-            <p className="text-white/50 text-xl max-w-2xl mx-auto mb-12">
+            <p className="text-foreground/50 text-xl max-w-2xl mx-auto mb-12">
               Stop watching competitors outrank you. Book a free 30-minute
               strategy session and we&apos;ll show you exactly what&apos;s
               holding your business back — and what we&apos;d do about it.
@@ -76,7 +76,7 @@ export function BookingCTA() {
                 </span>
               </Link>
 
-              <p className="text-sm text-white/40 font-medium max-w-xs sm:text-left text-center">
+              <p className="text-sm text-foreground/40 font-medium max-w-xs sm:text-left text-center">
                 No pitch, no pressure. Just a real conversation about your
                 market.
               </p>

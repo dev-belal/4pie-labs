@@ -14,7 +14,7 @@ export function FAQ() {
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
             Frequently asked <br />
-            <span className="text-white/50">questions.</span>
+            <span className="text-foreground/50">questions.</span>
           </h2>
         </div>
 
@@ -26,7 +26,7 @@ export function FAQ() {
             return (
               <div
                 key={faq.q}
-                className="glass-morphism rounded-[32px] overflow-hidden border-white/5"
+                className="glass-morphism rounded-[32px] overflow-hidden border-foreground/5"
               >
                 <button
                   type="button"
@@ -34,13 +34,13 @@ export function FAQ() {
                   aria-expanded={isOpen}
                   aria-controls={panelId}
                   onClick={() => setOpenIndex(isOpen ? null : i)}
-                  className="w-full p-6 text-left flex items-center justify-between hover:bg-white/5 focus-visible:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-inset transition-colors"
+                  className="w-full p-6 text-left flex items-center justify-between hover:bg-foreground/5 focus-visible:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-inset transition-colors"
                 >
                   <span className="text-lg font-bold">{faq.q}</span>
                   {isOpen ? (
                     <Minus className="w-5 h-5 text-primary" />
                   ) : (
-                    <Plus className="w-5 h-5 text-white/20" />
+                    <Plus className="w-5 h-5 text-foreground/20" />
                   )}
                 </button>
                 <AnimatePresence>
@@ -54,7 +54,7 @@ export function FAQ() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.15, ease: "easeOut" }}
                     >
-                      <div className="px-6 pb-6 text-white/50 leading-relaxed">
+                      <div className="px-6 pb-6 text-foreground/50 leading-relaxed">
                         {faq.a}
                       </div>
                     </motion.div>

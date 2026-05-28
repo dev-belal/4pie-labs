@@ -155,7 +155,7 @@ export default async function BlogPostPage({ params }: Props) {
       <div className="max-w-4xl mx-auto px-4 py-20 relative">
         <Link
           href="/blog"
-          className="flex items-center gap-2 text-white/50 hover:text-primary mb-12 transition-colors group w-fit"
+          className="flex items-center gap-2 text-foreground/50 hover:text-primary mb-12 transition-colors group w-fit"
         >
           <ChevronRight className="w-4 h-4 rotate-180 group-hover:-translate-x-1 transition-transform" />
           Back to Insights
@@ -164,7 +164,7 @@ export default async function BlogPostPage({ params }: Props) {
         <header className="mb-16">
           <div className="flex items-center gap-4 text-xs font-bold text-primary uppercase tracking-[0.2em] mb-6">
             <span>{post.category}</span>
-            <span className="w-1 h-1 rounded-full bg-white/20" />
+            <span className="w-1 h-1 rounded-full bg-foreground/20" />
             <span>{post.date}</span>
           </div>
 
@@ -172,13 +172,13 @@ export default async function BlogPostPage({ params }: Props) {
             {post.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-8 py-8 border-y border-white/5">
+          <div className="flex flex-wrap items-center gap-8 py-8 border-y border-foreground/5">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary/20">
                 <User className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <div className="text-[10px] font-bold text-white/30 uppercase tracking-widest">
+                <div className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest">
                   Written By
                 </div>
                 <div className="text-white font-bold">{post.author}</div>
@@ -186,11 +186,11 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-                <Clock className="w-5 h-5 text-white/40" />
+              <div className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center border border-foreground/10">
+                <Clock className="w-5 h-5 text-foreground/40" />
               </div>
               <div>
-                <div className="text-[10px] font-bold text-white/30 uppercase tracking-widest">
+                <div className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest">
                   Reading Time
                 </div>
                 <div className="text-white font-bold">{post.readTime}</div>
@@ -214,14 +214,14 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
 
         <article className="prose prose-invert prose-lg max-w-none">
-          <div className="text-white/70 leading-[1.8] space-y-8 font-light text-lg">
+          <div className="text-foreground/70 leading-[1.8] space-y-8 font-light text-lg">
             {renderContent(post.content)}
           </div>
         </article>
 
-        <div className="mt-32 pt-16 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="mt-32 pt-16 border-t border-foreground/5 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="text-center md:text-left">
-            <div className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-2">
+            <div className="text-[10px] font-bold text-foreground/30 uppercase tracking-[0.2em] mb-2">
               Share this insight
             </div>
             <div className="flex items-center gap-4">

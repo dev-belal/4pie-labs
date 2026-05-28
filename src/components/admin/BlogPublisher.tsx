@@ -68,14 +68,14 @@ export function BlogPublisher() {
       <form
         id="blog-form"
         action={formAction}
-        className="space-y-8 glass-morphism p-10 rounded-[40px] border-white/5"
+        className="space-y-8 glass-morphism p-10 rounded-[40px] border-foreground/5"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-4">
             <div className="space-y-2">
               <label
                 htmlFor="blog-title"
-                className="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1"
+                className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
               >
                 Article Title
               </label>
@@ -86,7 +86,7 @@ export function BlogPublisher() {
                 required
                 value={title}
                 onChange={(e) => handleTitleChange(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all font-display text-xl"
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all font-display text-xl"
                 placeholder="The Future of AI..."
               />
               {state.errors?.title && (
@@ -99,13 +99,13 @@ export function BlogPublisher() {
             <div className="space-y-2">
               <label
                 htmlFor="blog-slug"
-                className="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1 flex items-center gap-2"
+                className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1 flex items-center gap-2"
               >
                 <Link2 className="w-3 h-3" />
                 URL Slug
               </label>
               <div className="relative">
-                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-white/20 text-sm font-mono">
+                <span className="absolute left-6 top-1/2 -translate-y-1/2 text-foreground/20 text-sm font-mono">
                   /blog/
                 </span>
                 <input
@@ -115,12 +115,12 @@ export function BlogPublisher() {
                   required
                   value={slug}
                   onChange={(e) => handleSlugChange(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-[5.5rem] pr-6 text-white focus:outline-none focus:border-primary/50 transition-all font-mono text-sm"
+                  className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 pl-[5.5rem] pr-6 text-white focus:outline-none focus:border-primary/50 transition-all font-mono text-sm"
                   placeholder="the-future-of-ai"
                 />
               </div>
               {slug && (
-                <p className="text-[10px] text-white/20 ml-1 font-mono">
+                <p className="text-[10px] text-foreground/20 ml-1 font-mono">
                   fourpielabs.com/blog/{slug}
                 </p>
               )}
@@ -135,7 +135,7 @@ export function BlogPublisher() {
               <div className="space-y-2">
                 <label
                   htmlFor="blog-category"
-                  className="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1"
+                  className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
                 >
                   Category
                 </label>
@@ -143,7 +143,7 @@ export function BlogPublisher() {
                   id="blog-category"
                   name="category"
                   defaultValue="GUIDE"
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all appearance-none cursor-pointer"
+                  className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all appearance-none cursor-pointer"
                 >
                   <option>GUIDE</option>
                   <option>STRATEGY</option>
@@ -154,7 +154,7 @@ export function BlogPublisher() {
               <div className="space-y-2">
                 <label
                   htmlFor="blog-read-time"
-                  className="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1"
+                  className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
                 >
                   Read Time
                 </label>
@@ -162,7 +162,7 @@ export function BlogPublisher() {
                   id="blog-read-time"
                   name="readTime"
                   type="text"
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all"
+                  className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all"
                   placeholder="5 min read"
                 />
               </div>
@@ -171,7 +171,7 @@ export function BlogPublisher() {
             <div className="space-y-2">
               <label
                 htmlFor="blog-author"
-                className="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1"
+                className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
               >
                 Author
               </label>
@@ -181,7 +181,7 @@ export function BlogPublisher() {
                 type="text"
                 defaultValue="Syed Belal"
                 required
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all"
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all"
                 placeholder="Author name"
               />
             </div>
@@ -190,12 +190,12 @@ export function BlogPublisher() {
           <div className="space-y-2">
             <label
               htmlFor="blog-image"
-              className="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1"
+              className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
             >
               Header Image URL
             </label>
             {image ? (
-              <div className="relative aspect-video rounded-3xl overflow-hidden border border-white/10">
+              <div className="relative aspect-video rounded-3xl overflow-hidden border border-foreground/10">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={image}
@@ -205,21 +205,21 @@ export function BlogPublisher() {
                 <button
                   type="button"
                   onClick={() => setImage("")}
-                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white/60 hover:text-white transition-colors text-sm font-bold"
+                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-foreground/60 hover:text-white transition-colors text-sm font-bold"
                 >
                   ✕
                 </button>
               </div>
             ) : (
-              <div className="aspect-video rounded-3xl bg-white/5 border border-white/10 flex flex-col items-center justify-center gap-4 border-dashed">
-                <BarChart3 className="w-8 h-8 text-white/20" />
+              <div className="aspect-video rounded-3xl bg-foreground/5 border border-foreground/10 flex flex-col items-center justify-center gap-4 border-dashed">
+                <BarChart3 className="w-8 h-8 text-foreground/20" />
                 <input
                   id="blog-image"
                   name="image"
                   type="text"
                   value={image}
                   onChange={(e) => setImage(e.target.value)}
-                  className="w-3/4 bg-white/5 border border-white/10 rounded-xl py-2 px-4 text-white/60 text-xs focus:outline-none focus:border-primary/50 transition-all text-center"
+                  className="w-3/4 bg-foreground/5 border border-foreground/10 rounded-xl py-2 px-4 text-foreground/60 text-xs focus:outline-none focus:border-primary/50 transition-all text-center"
                   placeholder="Paste image URL here..."
                 />
               </div>
@@ -231,7 +231,7 @@ export function BlogPublisher() {
         <div className="space-y-2">
           <label
             htmlFor="blog-excerpt"
-            className="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1"
+            className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
           >
             Excerpt (Short Summary)
           </label>
@@ -240,7 +240,7 @@ export function BlogPublisher() {
             name="excerpt"
             rows={2}
             required
-            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all resize-none"
+            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-white focus:outline-none focus:border-primary/50 transition-all resize-none"
             placeholder="Catchy hook for the listing card..."
           />
           {state.errors?.excerpt && (
@@ -253,7 +253,7 @@ export function BlogPublisher() {
         <div className="space-y-2">
           <label
             htmlFor="blog-content"
-            className="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1"
+            className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
           >
             Full Content (Markdown Supported)
           </label>
@@ -262,7 +262,7 @@ export function BlogPublisher() {
             name="content"
             rows={12}
             required
-            className="w-full bg-white/10 border border-white/10 rounded-[32px] py-8 px-8 text-white focus:outline-none focus:border-primary/50 transition-all resize-none font-mono text-sm leading-relaxed"
+            className="w-full bg-foreground/10 border border-foreground/10 rounded-[32px] py-8 px-8 text-white focus:outline-none focus:border-primary/50 transition-all resize-none font-mono text-sm leading-relaxed"
             placeholder={`# Start writing your masterpiece...\n\nUse standard markdown for formatting.`}
           />
           {state.errors?.content && (
@@ -310,7 +310,7 @@ export function BlogPublisher() {
               <div className="font-bold">
                 {notice.type === "success" ? "Success!" : "Error"}
               </div>
-              <div className="text-white/80 text-[10px] uppercase font-bold tracking-widest">
+              <div className="text-foreground/80 text-[10px] uppercase font-bold tracking-widest">
                 {notice.message}
               </div>
             </div>
