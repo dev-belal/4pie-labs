@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Menu, Phone, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { ArrowRight, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type NavItem = { label: string; href: string };
@@ -18,8 +18,8 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export function Navbar() {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -33,23 +33,20 @@ export function Navbar() {
   // the link handlers rather than reacting to a pathname change in an effect.)
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
+
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4",
-        isScrolled ? "py-4" : "py-6",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-surface",
+        isScrolled
+          ? "border-b border-border shadow-[0_1px_3px_rgba(26,26,26,0.04)]"
+          : "border-b border-transparent",
       )}
     >
-      <div
-        className={cn(
-          "max-w-7xl mx-auto flex md:grid md:grid-cols-3 items-center justify-between px-6 py-3 rounded-full transition-all duration-300 relative",
-          "glass-morphism border-foreground/5",
-          isScrolled
-            ? "bg-background/40 backdrop-blur-xl border-foreground/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
-            : "bg-foreground/5 backdrop-blur-md",
-        )}
-      >
-        <div className="flex items-center justify-start md:ml-5">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+        <div className="flex items-center">
           <Link
             href="/"
             onClick={closeMobileMenu}
@@ -62,63 +59,48 @@ export function Navbar() {
               width={128}
               height={32}
               priority
-              className="h-7 md:h-8 w-auto brightness-0 invert group-hover:scale-110 transition-transform"
+              className="h-7 md:h-8 w-auto group-hover:opacity-80 transition-opacity"
             />
           </Link>
         </div>
 
-        <div className="hidden md:flex items-center gap-1 justify-center">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium px-4 py-2 rounded-full transition-all duration-300 relative group text-foreground/50 hover:text-foreground"
-            >
-              {item.label}
-              <span className="absolute bottom-0 left-4 right-4 h-px bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
-            </Link>
-          ))}
+        <div className="hidden md:flex items-center gap-2">
+          {NAV_ITEMS.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "relative text-sm font-medium px-4 py-2 transition-colors",
+                  active
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {item.label}
+                {active && (
+                  <span
+                    aria-hidden
+                    className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary"
+                  />
+                )}
+              </Link>
+            );
+          })}
         </div>
 
-        <div className="flex items-center justify-end gap-4">
+        <div className="flex items-center justify-end gap-2">
           <Link
             href="/book"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            className="hidden md:flex items-center gap-2 bg-primary text-white px-6 py-2.5 rounded-full text-sm font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+            className="group hidden md:inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-all hover:shadow-[0_2px_4px_rgba(124,92,255,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
           >
             Schedule Call
-            <span className="relative w-4 h-4 overflow-hidden">
-              <AnimatePresence mode="wait">
-                {isHovered ? (
-                  <motion.span
-                    key="phone"
-                    initial={{ y: 15, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -15, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute inset-0"
-                  >
-                    <Phone className="w-4 h-4 text-primary" />
-                  </motion.span>
-                ) : (
-                  <motion.span
-                    key="arrow"
-                    initial={{ y: 15, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -15, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute inset-0"
-                  >
-                    <ArrowRight className="w-4 h-4" />
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
           <button
             type="button"
-            className="md:hidden w-11 h-11 flex items-center justify-center rounded-full text-foreground hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors"
+            className="md:hidden w-11 h-11 flex items-center justify-center rounded-lg text-foreground hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface transition-colors"
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMobileMenuOpen}
             onClick={() => setIsMobileMenuOpen((v) => !v)}
@@ -129,13 +111,13 @@ export function Navbar() {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 mt-2 mx-4 p-6 glass-morphism rounded-2xl flex flex-col gap-4 animate-fade-in">
+        <div className="md:hidden absolute top-full left-0 right-0 mt-1 mx-4 p-6 bg-surface border border-border rounded-2xl flex flex-col gap-2 shadow-[0_4px_8px_rgba(26,26,26,0.08),0_12px_24px_rgba(26,26,26,0.06)] animate-fade-in">
           {NAV_ITEMS.filter((i) => i.href !== "/").map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={closeMobileMenu}
-              className="text-lg font-medium text-foreground/70 hover:text-foreground transition-colors text-left"
+              className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
             >
               {item.label}
             </Link>
@@ -143,7 +125,7 @@ export function Navbar() {
           <Link
             href="/book"
             onClick={closeMobileMenu}
-            className="flex items-center justify-center gap-2 bg-primary text-white px-5 py-3 rounded-full text-base font-bold"
+            className="mt-2 flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white px-5 py-3 rounded-lg text-base font-medium transition-colors"
           >
             Schedule Call
           </Link>

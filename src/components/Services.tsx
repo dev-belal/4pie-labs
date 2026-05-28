@@ -167,17 +167,17 @@ export function Services() {
             business the obvious choice.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-4 mb-8">
+          <div className="flex flex-wrap justify-center gap-8 mb-8">
             {PILLARS.map((pillar, i) => (
               <button
                 type="button"
                 key={pillar.label}
                 onClick={() => setActiveIndex(i)}
                 aria-pressed={activeIndex === i}
-                className={`px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 ${
+                className={`pb-2 text-sm font-medium transition-colors border-b-2 ${
                   activeIndex === i
-                    ? "bg-primary text-white scale-105 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-                    : "glass-morphism text-foreground/50 hover:text-foreground hover:bg-foreground/5"
+                    ? "text-foreground border-primary"
+                    : "text-subtle-foreground hover:text-muted-foreground border-transparent"
                 }`}
               >
                 {pillar.label}

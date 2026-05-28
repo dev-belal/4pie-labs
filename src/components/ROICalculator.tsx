@@ -203,7 +203,7 @@ export function ROICalculator() {
 
           {/* ---- Right column: output card ---- */}
           <div className="flex flex-col justify-center">
-            <div className="bg-foreground/5 rounded-[32px] p-8 md:p-12 border border-foreground/5 backdrop-blur-sm">
+            <div className="bg-surface rounded-2xl p-8 md:p-12 border border-primary-muted shadow-[0_1px_3px_rgba(26,26,26,0.05),0_4px_12px_rgba(26,26,26,0.04)]">
               <div className="text-foreground/40 text-sm mb-2 uppercase tracking-widest">
                 Recommended monthly budget
               </div>
@@ -246,7 +246,7 @@ export function ROICalculator() {
               <button
                 type="button"
                 onClick={() => setModalOpen(true)}
-                className="group w-full font-bold py-4 rounded-full transition-all flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-foreground shadow-[0_0_20px_rgba(139,92,246,0.3)]"
+                className="group w-full font-medium py-3.5 rounded-lg transition-all flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white hover:shadow-[0_2px_4px_rgba(124,92,255,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 Get the full breakdown
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
