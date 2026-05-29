@@ -12,7 +12,7 @@ const inter = Inter({
   display: "swap",
 });
 
-// Instrument Serif — italic accent on hero headlines only ("finds first.").
+// Instrument Serif - italic accent on hero headlines only ("finds first.").
 // Single italic display weight is enough; we never set it as the body font.
 const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
@@ -22,11 +22,12 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-// Inline theme-boot — runs before paint so the user's saved choice paints
-// without a flash of the wrong theme. Storage key is versioned (:v2) so the
-// black+amber brand pivot resets everyone's previously-cached "dark" choice
-// back to the light default. New toggles persist under the v2 key.
-const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:theme:v2')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
+// Inline theme-boot, runs before paint so the user's saved choice paints
+// without a flash of the wrong theme. Storage key is versioned (:v3) and
+// the fallback flipped to "dark" so first-time visitors land in the
+// brand's home theme (off-black + amber). Old :v1 / :v2 values are
+// ignored, so anyone with a cached "light" gets the new default once.
+const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:theme:v3')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -70,7 +71,7 @@ export default function RootLayout({
     url: SITE.url,
     logo: `${SITE.url}/logo.png`,
     description:
-      "4Pie Labs helps painting contractors, tour operators, and local service businesses dominate Google, Maps, and AI answer engines. AI-first marketing built by a tech company — not a traditional agency.",
+      "4Pie Labs helps painting contractors, tour operators, and local service businesses dominate Google, Maps, and AI answer engines. AI-first marketing built by a tech company - not a traditional agency.",
     sameAs: [
       "https://www.linkedin.com/company/4-pie-labs/",
       "https://www.instagram.com/devbelaal",

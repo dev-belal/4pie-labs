@@ -1,5 +1,5 @@
 /**
- * Cal.com API v2 client. Server-only — must never be imported in client code.
+ * Cal.com API v2 client. Server-only - must never be imported in client code.
  *
  * Auth: Bearer token via CAL_API_KEY env var.
  * Endpoints used:

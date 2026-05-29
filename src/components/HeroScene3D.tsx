@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
 /**
- * Phase 3 hero 3D scene — port of v2's hero-3d.js to React Three Fiber.
+ * Phase 3 hero 3D scene - port of v2's hero-3d.js to React Three Fiber.
  *
  * Composition: a glassy iridescent icosahedron with a violet inner sphere,
  * two orbit rings (violet + peach), and a 90-particle field. Mouse parallax
@@ -13,7 +13,7 @@ import * as THREE from "three";
  * document.documentElement re-tints materials when data-theme flips, and the
  * scene respects prefers-reduced-motion by freezing on a single render.
  *
- * Mounted via dynamic({ ssr: false }) from Hero.tsx — three.js touches window
+ * Mounted via dynamic({ ssr: false }) from Hero.tsx - three.js touches window
  * at module-eval time, so it must never render on the server.
  */
 
@@ -32,26 +32,30 @@ function Scene() {
   const { camera, gl } = useThree();
 
   // Theme-aware tinting. Re-runs whenever <html data-theme> changes.
-  // Amber palette: light uses neutral glass + amber-600 core; dark goes pure
-  // amber crystal floating in off-black (the brand image).
+  // Amber crystal in both themes: light uses amber-500 + high iridescence
+  // for warm glow against cream; dark goes amber-400 against off-black.
+  // No more white glass in light, the mesh now belongs to the brand.
   useEffect(() => {
     const apply = () => {
       const dark =
         document.documentElement.getAttribute("data-theme") === "dark";
       if (mainMatRef.current) {
-        mainMatRef.current.color.setHex(dark ? 0xfbbf24 : 0xffffff);
-        mainMatRef.current.iridescence = dark ? 0.85 : 0.7;
+        mainMatRef.current.color.setHex(dark ? 0xfbbf24 : 0xf59e0b);
+        mainMatRef.current.iridescence = dark ? 0.9 : 1.0;
+        mainMatRef.current.transmission = dark ? 0.9 : 0.78;
+        mainMatRef.current.emissive.setHex(dark ? 0x3a2a08 : 0x000000);
+        mainMatRef.current.emissiveIntensity = dark ? 0.35 : 0;
       }
       if (innerMatRef.current) {
-        innerMatRef.current.color.setHex(dark ? 0xfde68a : 0xd97706);
+        innerMatRef.current.color.setHex(dark ? 0xfde68a : 0xb45309);
       }
       if (ring1MatRef.current) {
         ring1MatRef.current.color.setHex(dark ? 0xfbbf24 : 0xd97706);
-        ring1MatRef.current.opacity = dark ? 0.55 : 0.45;
+        ring1MatRef.current.opacity = dark ? 0.65 : 0.55;
       }
       if (particleMatRef.current) {
         particleMatRef.current.color.setHex(dark ? 0xfbbf24 : 0xd97706);
-        particleMatRef.current.opacity = dark ? 0.7 : 0.55;
+        particleMatRef.current.opacity = dark ? 0.8 : 0.7;
       }
     };
     apply();
@@ -74,7 +78,7 @@ function Scene() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // Mouse parallax — track pointer relative to the canvas.
+  // Mouse parallax - track pointer relative to the canvas.
   useEffect(() => {
     const el = gl.domElement;
     const onMove = (e: MouseEvent) => {
@@ -189,7 +193,7 @@ function Scene() {
         />
       </mesh>
 
-      {/* Orbit ring 1 — theme-aware amber core ring. */}
+      {/* Orbit ring 1 - theme-aware amber core ring. */}
       <mesh ref={ring1Ref} rotation={[Math.PI / 3, 0, 0]}>
         <torusGeometry args={[2.0, 0.012, 8, 80]} />
         <meshBasicMaterial
@@ -200,7 +204,7 @@ function Scene() {
         />
       </mesh>
 
-      {/* Orbit ring 2 — warm peach, kept as a complementary contrast. */}
+      {/* Orbit ring 2 - warm peach, kept as a complementary contrast. */}
       <mesh
         ref={ring2Ref}
         rotation={[Math.PI / 4, 0, Math.PI / 3]}

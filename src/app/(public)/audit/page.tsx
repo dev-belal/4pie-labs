@@ -5,7 +5,7 @@ import { AuditForm } from "@/components/AuditForm";
 export const metadata: Metadata = {
   title: "Free AI marketing audit",
   description:
-    "12-point audit of your local visibility across Google, Maps, and AI answer engines. No pitch, no pressure — you leave with a plan.",
+    "12-point audit of your local visibility across Google, Maps, and AI answer engines. No pitch, no pressure - you leave with a plan.",
 };
 
 const POINTS = [
@@ -33,12 +33,12 @@ export default function AuditPage() {
         </span>
         <h1 className="text-[clamp(36px,5vw,52px)] font-semibold leading-[1.1] tracking-tight text-foreground mb-6 [text-wrap:balance]">
           See where you stand{" "}
-          <span className="font-serif italic font-normal text-primary">
+          <span className="font-semibold text-primary">
             before you spend.
           </span>
         </h1>
         <p className="text-lg text-muted-foreground mb-3">
-          A 12-point audit of your local visibility — Google, Maps, AI answer
+          A 12-point audit of your local visibility - Google, Maps, AI answer
           engines, ads, conversion path. No pitch deck, no pressure. You leave
           with a plan, free.
         </p>

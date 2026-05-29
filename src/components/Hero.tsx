@@ -6,14 +6,14 @@ import { motion } from "framer-motion";
 import { Activity, ArrowRight } from "lucide-react";
 
 // three.js touches window at module-eval time, so HeroScene3D must never SSR.
-// Loading: nothing — the AEO card overlay carries the right column on its own
+// Loading: nothing - the AEO card overlay carries the right column on its own
 // while the 3D chunk streams in.
 const HeroScene3D = dynamic(() => import("./HeroScene3D"), {
   ssr: false,
   loading: () => null,
 });
 
-// Phase 3 stats numbers from the v2 design (placeholder — replace before launch).
+// Phase 3 stats numbers from the v2 design (placeholder - replace before launch).
 const STATS = [
   { label: "Active client engagements", val: "11" },
   { label: "Avg. qualified lead increase, 90 days", val: "3.4×" },
@@ -22,7 +22,7 @@ const STATS = [
 ];
 
 /**
- * Phase 3 hero — copy on the left, a floating "Live · AEO citations rising"
+ * Phase 3 hero - copy on the left, a floating "Live · AEO citations rising"
  * card on the right (desktop); single column on mobile. The Instrument Serif
  * italic accent on "first." is the visual hook. Local depth blobs add
  * atmosphere; the R3F 3D scene lands in a later commit and will sit behind
@@ -69,7 +69,7 @@ export function Hero() {
               className="text-[clamp(40px,6vw,64px)] font-semibold leading-[1.05] tracking-tight text-foreground [text-wrap:balance]"
             >
               Become the business everyone in your area finds{" "}
-              <span className="font-serif italic font-normal text-primary">
+              <span className="font-semibold text-primary">
                 first.
               </span>
             </motion.h1>
@@ -81,7 +81,7 @@ export function Hero() {
               className="text-lg text-muted-foreground mt-6 max-w-xl leading-relaxed"
             >
               4Pie Labs helps painting contractors, tour operators, and local
-              service businesses dominate Google, Maps, and AI answer engines —
+              service businesses dominate Google, Maps, and AI answer engines -
               so the next customer in your market calls{" "}
               <em className="text-primary not-italic font-medium">you</em>, not
               your competitor.

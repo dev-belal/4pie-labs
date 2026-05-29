@@ -15,7 +15,7 @@ const BLOG_SELECT =
 
 export const getAllPosts = cache(async (): Promise<BlogPost[]> => {
   try {
-    // Public anonymous read — no cookies, lets Next.js statically ISR.
+    // Public anonymous read - no cookies, lets Next.js statically ISR.
     const supabase = createPublicClient();
     const { data } = await supabase
       .from("blogs")

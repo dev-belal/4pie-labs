@@ -46,7 +46,7 @@ export function ProgramsGridHome() {
       <div className="max-w-[1240px] mx-auto">
         <div className="text-center mb-12 md:mb-14">
           <span
-            className="block font-serif italic text-[40px] md:text-[56px] leading-none text-primary/40 mb-2"
+            className="block font-semibold text-[40px] md:text-[56px] leading-none text-primary/30 tracking-tight mb-2"
             aria-hidden
           >
             04
@@ -56,12 +56,12 @@ export function ProgramsGridHome() {
           </span>
           <h2 className="text-[clamp(28px,3.5vw,40px)] font-semibold tracking-tight text-foreground leading-[1.15]">
             Pick the engagement that{" "}
-            <span className="font-serif italic font-normal text-primary">
+            <span className="font-semibold text-primary">
               fits.
             </span>
           </h2>
           <p className="text-lg text-muted-foreground mt-5 max-w-2xl mx-auto">
-            AEO is included in every tier. No pricing on the site — book a call
+            AEO is included in every tier. No pricing on the site - book a call
             and we&apos;ll quote against your market.
           </p>
         </div>

@@ -41,7 +41,7 @@ function ensureSessionId(): string {
 }
 
 /**
- * Lightweight Markdown renderer — the chat brain only emits plain text plus
+ * Lightweight Markdown renderer - the chat brain only emits plain text plus
  * the occasional [label](url) link. We deliberately do NOT pull in a full
  * Markdown lib; anything beyond links is treated as plain text.
  */
@@ -157,7 +157,7 @@ export function ChatWidget() {
       const data = (await response.json()) as { reply?: string };
       const botText =
         data.reply?.trim() ||
-        "I'm having a bit of trouble right now — you can also email us at fourpielabs@gmail.com.";
+        "I'm having a bit of trouble right now - you can also email us at fourpielabs@gmail.com.";
 
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),

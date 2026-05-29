@@ -11,7 +11,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
  * apply `export const revalidate = N` and serve cached HTML at the edge.
  *
  * Never use this for writes or for anything that depends on the signed-in
- * user — those must go through ./server.ts to carry the session cookie.
+ * user - those must go through ./server.ts to carry the session cookie.
  */
 
 // We haven't generated DB types, so fall back to the permissive default

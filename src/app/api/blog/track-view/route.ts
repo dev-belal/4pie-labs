@@ -27,7 +27,7 @@ export async function POST(request: Request) {
 
   const { slug } = parsed.data;
 
-  // Only count views for posts that actually exist — avoids logging
+  // Only count views for posts that actually exist - avoids logging
   // page_view metrics for bogus or probed slugs.
   const post = await getPostBySlug(slug);
   if (!post) {

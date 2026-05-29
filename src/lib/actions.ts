@@ -104,11 +104,11 @@ export async function submitContact(
   if (!ok) {
     return {
       status: "error",
-      message: "We couldn't submit right now — please try again shortly.",
+      message: "We couldn't submit right now - please try again shortly.",
     };
   }
 
-  return { status: "success", message: "Request sent — we'll be in touch." };
+  return { status: "success", message: "Request sent - we'll be in touch." };
 }
 
 export async function submitCustomRequest(
@@ -155,13 +155,13 @@ export async function submitCustomRequest(
   if (!ok) {
     return {
       status: "error",
-      message: "We couldn't submit right now — please try again shortly.",
+      message: "We couldn't submit right now - please try again shortly.",
     };
   }
 
   return {
     status: "success",
-    message: "Request sent — our architects will reach out.",
+    message: "Request sent - our architects will reach out.",
   };
 }
 
@@ -211,7 +211,7 @@ export async function submitROI(
   if (!ok) {
     return {
       status: "error",
-      message: "We couldn't save your report — please try again shortly.",
+      message: "We couldn't save your report - please try again shortly.",
     };
   }
 
@@ -279,13 +279,13 @@ export async function submitBudgetLead(
   if (!ok) {
     return {
       status: "error",
-      message: "We couldn't submit right now — please try again shortly.",
+      message: "We couldn't submit right now - please try again shortly.",
     };
   }
 
   return {
     status: "success",
-    message: "Thanks — we'll email you the breakdown within 24 hours.",
+    message: "Thanks - we'll email you the breakdown within 24 hours.",
   };
 }
 
@@ -337,13 +337,13 @@ export async function submitAuditLead(
   if (!ok) {
     return {
       status: "error",
-      message: "We couldn't submit right now — please try again shortly.",
+      message: "We couldn't submit right now - please try again shortly.",
     };
   }
 
   return {
     status: "success",
     message:
-      "Audit booked — your 12-point report lands in your inbox within 48 hours.",
+      "Audit booked - your 12-point report lands in your inbox within 48 hours.",
   };
 }

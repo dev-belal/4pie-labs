@@ -6,7 +6,7 @@ import { ADMIN_COOKIE_NAME, verifyAdminToken } from "@/lib/admin-token";
  * so we can verify the HMAC session cookie (`@/lib/admin-token`, timing-safe)
  * here as defense-in-depth in front of the page-level `readAdminSession()`
  * check. This file MUST live at `src/proxy.ts` (next to `src/app`) to be
- * picked up — a stray `proxy.ts` at the repo root is silently ignored.
+ * picked up - a stray `proxy.ts` at the repo root is silently ignored.
  */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

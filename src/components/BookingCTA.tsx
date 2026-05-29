@@ -27,7 +27,7 @@ export function BookingCTA() {
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-12">
               Stop watching competitors outrank you. Book a free 30-minute
               strategy session and we&apos;ll show you exactly what&apos;s
-              holding your business back — and what we&apos;d do about it.
+              holding your business back - and what we&apos;d do about it.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">

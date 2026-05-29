@@ -5,12 +5,12 @@ import { ServicesBrowser } from "@/components/ServicesBrowser";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Local SEO, Maps pack, AEO, paid ads, and conversion engineering — the full local-growth catalog for painting contractors, tour operators, and service businesses.",
+    "Local SEO, Maps pack, AEO, paid ads, and conversion engineering - the full local-growth catalog for painting contractors, tour operators, and service businesses.",
   alternates: { canonical: "/services" },
   openGraph: {
-    title: "Services — 4Pie Labs",
+    title: "Services - 4Pie Labs",
     description:
-      "Local SEO, Maps pack, AEO, paid ads, and conversion engineering — built for local service businesses.",
+      "Local SEO, Maps pack, AEO, paid ads, and conversion engineering - built for local service businesses.",
     url: "/services",
     type: "website",
   },
@@ -44,7 +44,7 @@ export default function ServicesPage() {
         </span>
         <h1 className="text-[clamp(36px,5.5vw,56px)] font-semibold leading-[1.05] tracking-tight text-foreground [text-wrap:balance]">
           Everything we run, so you{" "}
-          <span className="font-serif italic font-normal text-primary">
+          <span className="font-semibold text-primary">
             don&apos;t have to.
           </span>
         </h1>

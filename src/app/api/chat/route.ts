@@ -84,7 +84,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         reply:
-          "Sorry — I'm having trouble reaching my brain right now. Try again in a minute, or email us at fourpielabs@gmail.com.",
+          "Sorry - I'm having trouble reaching my brain right now. Try again in a minute, or email us at fourpielabs@gmail.com.",
       },
       { status: 200 },
     );

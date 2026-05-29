@@ -38,7 +38,7 @@ export async function getMonthSlots(
     return { ok: true, slots };
   } catch (err) {
     console.error("Cal.com slots error:", err);
-    return { ok: false, error: "Couldn't load availability — try again." };
+    return { ok: false, error: "Couldn't load availability - try again." };
   }
 }
 
@@ -80,7 +80,7 @@ export async function bookSlot(
     const msg = err instanceof Error ? err.message : "Unknown error";
     console.error("Cal.com booking error:", msg);
 
-    // Conflict / slot-taken — broad net because Cal.com wording varies.
+    // Conflict / slot-taken - broad net because Cal.com wording varies.
     if (
       /no\s+longer\s+available|already\s+booked|conflict|slot.*(?:taken|busy|unavailable|gone)|time.*(?:taken|busy|unavailable)|not\s+available/i.test(
         msg,
@@ -90,7 +90,7 @@ export async function bookSlot(
         status: "error",
         code: "slot_taken",
         message:
-          "That slot was just taken — I've refreshed the times, please pick another.",
+          "That slot was just taken - I've refreshed the times, please pick another.",
       };
     }
 
@@ -110,7 +110,7 @@ export async function bookSlot(
     return {
       status: "error",
       message:
-        humanMsg ?? "Couldn't confirm the booking — please try again.",
+        humanMsg ?? "Couldn't confirm the booking - please try again.",
     };
   }
 }

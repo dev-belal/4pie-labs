@@ -9,21 +9,21 @@ import { useCallback, useEffect, useState } from "react";
  * persists user choice to localStorage.
  */
 
-// Versioned key — bumped to :v2 when the brand pivoted to black + amber,
-// invalidating everyone's previously-cached "dark" choice so the new
+// Versioned key, bumped to :v3 when dark became the default theme,
+// invalidating everyone's previously-cached :v1/:v2 choice so the new
 // default takes hold for both fresh and returning visitors.
-const STORAGE_KEY = "4pielabs:theme:v2";
+const STORAGE_KEY = "4pielabs:theme:v3";
 
 export type Theme = "light" | "dark";
 
 function readCurrent(): Theme {
-  if (typeof document === "undefined") return "light";
-  return (document.documentElement.getAttribute("data-theme") as Theme) || "light";
+  if (typeof document === "undefined") return "dark";
+  return (document.documentElement.getAttribute("data-theme") as Theme) || "dark";
 }
 
 export function useTheme() {
   // SSR-safe default; the effect below reads the real value after mount.
-  const [theme, setThemeState] = useState<Theme>("light");
+  const [theme, setThemeState] = useState<Theme>("dark");
 
   useEffect(() => {
     setThemeState(readCurrent());

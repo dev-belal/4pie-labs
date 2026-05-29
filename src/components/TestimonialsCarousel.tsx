@@ -51,7 +51,7 @@ export function TestimonialsCarousel({
   const [rawIndex, setRawIndex] = useState(0);
 
   // Clamp during render so a viewport flip (e.g. rotating the phone) can
-  // never leave us pointing past the last card — derived, no effect needed.
+  // never leave us pointing past the last card - derived, no effect needed.
   const currentIndex = clamp(rawIndex, 0, maxIndex);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -84,7 +84,7 @@ export function TestimonialsCarousel({
     [paginate],
   );
 
-  // Touch swipe — distinguishes horizontal from vertical so vertical
+  // Touch swipe - distinguishes horizontal from vertical so vertical
   // page scroll still flows through naturally.
   const onTouchStart = useCallback((e: React.TouchEvent) => {
     const t = e.touches[0];
@@ -112,7 +112,7 @@ export function TestimonialsCarousel({
     [paginateFromGesture],
   );
 
-  // Trackpad horizontal scroll — only when horizontal intent dominates
+  // Trackpad horizontal scroll - only when horizontal intent dominates
   // vertical, so vertical page scroll still flows through.
   useEffect(() => {
     const el = containerRef.current;
@@ -156,7 +156,7 @@ export function TestimonialsCarousel({
         onTouchEnd={onTouchEnd}
         className="relative px-4 md:px-16 group/carousel touch-pan-y select-none"
       >
-        {/* Prev / Next — desktop overlay */}
+        {/* Prev / Next - desktop overlay */}
         <div className="absolute top-1/2 -translate-y-1/2 left-0 z-20 hidden md:block">
           <button
             type="button"
@@ -180,7 +180,7 @@ export function TestimonialsCarousel({
           </button>
         </div>
 
-        {/* Viewport — clips the strip to one row of cards. */}
+        {/* Viewport - clips the strip to one row of cards. */}
         <div className="overflow-hidden">
           <motion.div
             className="flex"
@@ -272,7 +272,7 @@ export function TestimonialsCarousel({
         </button>
       </div>
 
-      {/* Pagination dots — one per scroll position, not per card */}
+      {/* Pagination dots - one per scroll position, not per card */}
       <div className="flex justify-center gap-2 mt-12">
         {Array.from({ length: maxIndex + 1 }, (_, i) => (
           <button

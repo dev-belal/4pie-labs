@@ -2,7 +2,7 @@ import { useCallback, useSyncExternalStore } from "react";
 
 /**
  * SSR-safe media-query hook. Returns `false` on the server and the initial
- * client render, then the real match after hydration — and updates when the
+ * client render, then the real match after hydration - and updates when the
  * query starts/stops matching.
  *
  * Built on `useSyncExternalStore` so there is no `setState` inside an effect

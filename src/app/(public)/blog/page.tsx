@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     "Deep dives into AI automation, digital marketing strategy, and the future of autonomous agencies.",
   alternates: { canonical: "/blog" },
   openGraph: {
-    title: "Blog — 4Pie Labs",
+    title: "Blog - 4Pie Labs",
     description:
       "Deep dives into AI automation, digital marketing strategy, and the future of autonomous agencies.",
     url: "/blog",

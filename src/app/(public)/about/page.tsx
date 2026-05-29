@@ -17,11 +17,11 @@ export const metadata: Metadata = {
   },
 };
 
-// v2 pillars — realigned around local search + AEO + accountable growth.
+// v2 pillars - realigned around local search + AEO + accountable growth.
 const PILLARS = [
   {
     title: "Local search, not vanity rankings",
-    desc: "Maps pack, Google Business Profile, NAP consistency, citation depth — the dials that actually decide who gets called. We don't chase city-wide #1s when the buyer search is three miles wide.",
+    desc: "Maps pack, Google Business Profile, NAP consistency, citation depth - the dials that actually decide who gets called. We don't chase city-wide #1s when the buyer search is three miles wide.",
     icon: Map,
   },
   {
@@ -31,7 +31,7 @@ const PILLARS = [
   },
   {
     title: "One funnel, accountable",
-    desc: "Search, ads, content, and conversion path — wired into the same dashboard with call tracking and lead attribution. You always know which channel made you money this month.",
+    desc: "Search, ads, content, and conversion path - wired into the same dashboard with call tracking and lead attribution. You always know which channel made you money this month.",
     icon: Search,
   },
 ];
@@ -72,7 +72,7 @@ export default function AboutPage() {
         </span>
         <h1 className="text-[clamp(40px,6vw,60px)] font-semibold leading-[1.05] tracking-tight text-foreground [text-wrap:balance]">
           Built around how local search{" "}
-          <span className="font-serif italic font-normal text-primary">
+          <span className="font-semibold text-primary">
             actually works
           </span>{" "}
           now.
@@ -92,7 +92,7 @@ export default function AboutPage() {
               <div className="relative h-[420px] lg:h-full min-h-[520px] overflow-hidden">
                 <Image
                   src="/founder.jpg"
-                  alt="Syed Belal — Founder of 4Pie Labs"
+                  alt="Syed Belal - Founder of 4Pie Labs"
                   fill
                   sizes="(max-width: 1024px) 100vw, 42vw"
                   className="object-cover object-top"
@@ -186,16 +186,16 @@ export default function AboutPage() {
 
               <div className="space-y-4 text-muted-foreground leading-relaxed text-[15px]">
                 <p>
-                  I started out as a front-end developer in 2021 — five years
+                  I started out as a front-end developer in 2021 - five years
                   building interfaces, learning to think in systems, and
                   developing a taste for clean, functional design.
                 </p>
                 <p>
                   Then AI happened. I went deep on autonomous agents and
-                  agency-grade automation — the kind of work{" "}
+                  agency-grade automation - the kind of work{" "}
                   <strong className="text-foreground">Liam Ottley</strong> and{" "}
                   <strong className="text-foreground">Nate Herk</strong> were
-                  pioneering — and founded 4Pie Labs in 2024 as an AI
+                  pioneering - and founded 4Pie Labs in 2024 as an AI
                   automation studio.
                 </p>
                 <p>
@@ -205,15 +205,15 @@ export default function AboutPage() {
                   <em className="text-foreground not-italic font-medium">
                     visibility
                   </em>{" "}
-                  — being the business the next customer in their area finds
+                  - being the business the next customer in their area finds
                   first, on Google, Maps, and now ChatGPT and Perplexity. The
                   AI tooling we&apos;d built turned into a real edge:
                   schema-first sites, AEO-grade content, Maps pack monitoring,
                   attribution wired end-to-end.
                 </p>
                 <p>
-                  So we rebuilt 4Pie Labs around that. One funnel — search,
-                  ads, AEO, conversion — accountable to revenue. Same
+                  So we rebuilt 4Pie Labs around that. One funnel - search,
+                  ads, AEO, conversion - accountable to revenue. Same
                   systems-thinking, applied to a problem local service
                   businesses actually wake up worrying about.
                 </p>
@@ -231,7 +231,7 @@ export default function AboutPage() {
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground [text-wrap:balance]">
             From code to{" "}
-            <span className="font-serif italic font-normal text-primary">
+            <span className="font-semibold text-primary">
               local growth partner.
             </span>
           </h2>
@@ -267,13 +267,13 @@ export default function AboutPage() {
         <div className="text-center mb-14">
           <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground [text-wrap:balance]">
             Three pillars.{" "}
-            <span className="font-serif italic font-normal text-primary">
+            <span className="font-semibold text-primary">
               One funnel.
             </span>
           </h2>
           <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
             Everything we build is designed to make local service businesses
-            the first call in their market — and the cited answer in every AI
+            the first call in their market - and the cited answer in every AI
             engine that matters.
           </p>
         </div>

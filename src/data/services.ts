@@ -21,12 +21,12 @@ import {
 } from "lucide-react";
 
 /**
- * Service catalog — categories mirror the navbar Services dropdown
+ * Service catalog - categories mirror the navbar Services dropdown
  * (AI-First SEO + AEO, Performance Ads, Custom AI Systems) so that
  * clicking a menu item lands on the right tab via `?category=<slug>`.
  *
  * The category order here also drives the order of the sidebar tabs in
- * `ServicesBrowser` — keep it aligned with the navbar dropdown.
+ * `ServicesBrowser` - keep it aligned with the navbar dropdown.
  */
 export type ServiceCategory =
   | "AI-First SEO + AEO"
@@ -69,7 +69,7 @@ export function categoryFromSlug(slug: string): ServiceCategory | null {
 
 export const services: Service[] = [
   // ────────────────────────────────────────────────────────────────────────
-  // AI-First SEO + AEO — visibility on Google, Maps, and answer engines.
+  // AI-First SEO + AEO - visibility on Google, Maps, and answer engines.
   // ────────────────────────────────────────────────────────────────────────
   {
     title: "SEO Optimization",
@@ -103,7 +103,7 @@ export const services: Service[] = [
       "Long-term authority + topical-cluster roadmap",
     ],
     seoDesc:
-      "Build a content engine that drives sustainable growth. Our holistic content strategies align your message with user intent, building trust and authority across every digital touchpoint — including the answer engines that now sit in front of search.",
+      "Build a content engine that drives sustainable growth. Our holistic content strategies align your message with user intent, building trust and authority across every digital touchpoint - including the answer engines that now sit in front of search.",
   },
   {
     title: "Content Optimisation",
@@ -154,7 +154,7 @@ export const services: Service[] = [
       "Strategic visual positioning against local competitors",
     ],
     seoDesc:
-      "Elevate your brand with strategic visual optimization. We refine your identity to ensure consistency, professionalism, and impact across every touchpoint of your customer journey — including how AI engines summarize you.",
+      "Elevate your brand with strategic visual optimization. We refine your identity to ensure consistency, professionalism, and impact across every touchpoint of your customer journey - including how AI engines summarize you.",
   },
   {
     title: "Editorial Content Creation",
@@ -175,7 +175,7 @@ export const services: Service[] = [
   },
 
   // ────────────────────────────────────────────────────────────────────────
-  // Performance Ads — paid, conversion, growth.
+  // Performance Ads - paid, conversion, growth.
   // ────────────────────────────────────────────────────────────────────────
   {
     title: "PPC Management",
@@ -260,7 +260,7 @@ export const services: Service[] = [
       "Scalable production for large-scale campaigns",
     ],
     seoDesc:
-      "Performance-driven ad creatives that deliver ROI. Our designs aren't just beautiful — they're scientifically engineered to stop the scroll, increase click-through rates, and drive conversions.",
+      "Performance-driven ad creatives that deliver ROI. Our designs aren't just beautiful - they're scientifically engineered to stop the scroll, increase click-through rates, and drive conversions.",
   },
   {
     title: "Social Media Design",
@@ -281,7 +281,7 @@ export const services: Service[] = [
   },
 
   // ────────────────────────────────────────────────────────────────────────
-  // Custom AI Systems — back-office automation, agents, dashboards.
+  // Custom AI Systems - back-office automation, agents, dashboards.
   // ────────────────────────────────────────────────────────────────────────
   {
     title: "AI Operating Systems",

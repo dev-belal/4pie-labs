@@ -3,25 +3,25 @@ import { SITE } from "@/lib/site";
 
 /**
  * Single source of truth for the chatbot's persona, knowledge and goals.
- * Edit this prompt to change Pie's behavior — no other code changes needed.
+ * Edit this prompt to change Pie's behavior - no other code changes needed.
  */
 const SYSTEM_PROMPT = `You are Pie, the friendly assistant on the 4Pie Labs website (${SITE.url}).
 
 # About 4Pie Labs
 
-4Pie Labs is an AI-first marketing agency for local service businesses —
+4Pie Labs is an AI-first marketing agency for local service businesses -
 painting contractors, tour operators, and other home-services categories.
 We help them dominate Google, Maps, and AI answer engines so the next
 customer in their market calls them, not a competitor. We offer three
 service lines:
 
-  1. **AI-First SEO + AEO** — Local SEO, Google Business Profile,
+  1. **AI-First SEO + AEO** - Local SEO, Google Business Profile,
      Answer Engine Optimization (ChatGPT / Perplexity / Gemini / AI
      Overviews), AEO content engine, schema, and content production.
-  2. **Performance Ads** — Google Search + Maps ads, YouTube + video,
+  2. **Performance Ads** - Google Search + Maps ads, YouTube + video,
      Meta + social, PPC management, conversion optimization, email
      marketing.
-  3. **Custom AI Systems** — AI operating systems, autonomous agents,
+  3. **Custom AI Systems** - AI operating systems, autonomous agents,
      workflow automation, CRM automation, custom dashboards, secure AI
      integration.
 
@@ -81,7 +81,7 @@ function client(): Anthropic {
 
 /**
  * Generate the next assistant reply given full conversation history.
- * History should NOT include the system prompt — that's added here.
+ * History should NOT include the system prompt - that's added here.
  */
 export async function generateChatReply(history: ChatTurn[]): Promise<string> {
   if (history.length === 0) {
@@ -95,7 +95,7 @@ export async function generateChatReply(history: ChatTurn[]): Promise<string> {
       {
         type: "text",
         text: SYSTEM_PROMPT,
-        // Cache the system prompt — same bytes on every request, so every
+        // Cache the system prompt - same bytes on every request, so every
         // turn after the first hits a warm cache and pays ~0.1× input cost
         // for the prompt body.
         cache_control: { type: "ephemeral" },
@@ -112,7 +112,7 @@ export async function generateChatReply(history: ChatTurn[]): Promise<string> {
     .trim();
 
   if (!text) {
-    return "Sorry — I'm having trouble formulating a reply. Try again, or email us at fourpielabs@gmail.com.";
+    return "Sorry - I'm having trouble formulating a reply. Try again, or email us at fourpielabs@gmail.com.";
   }
 
   return text;
@@ -120,7 +120,7 @@ export async function generateChatReply(history: ChatTurn[]): Promise<string> {
 
 /**
  * Naive lead-intent detector. Looks for a real-looking email in the
- * latest user message. We deliberately keep this simple — anything more
+ * latest user message. We deliberately keep this simple - anything more
  * sophisticated belongs in a server-side classifier call rather than here.
  */
 const EMAIL_RE = /[\w.+-]+@[A-Za-z0-9-]+\.[A-Za-z0-9.-]+/;

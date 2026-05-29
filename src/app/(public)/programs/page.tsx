@@ -6,13 +6,13 @@ import { ProgramsCarousel } from "@/components/ProgramsCarousel";
 export const metadata: Metadata = {
   title: "Programs",
   description:
-    "Four programs from foundation to full-stack — Core, Pipeline, Operating System, Pulse. AEO is included in every tier. No pricing on the site — book a call.",
+    "Four programs from foundation to full-stack - Core, Pipeline, Operating System, Pulse. AEO is included in every tier. No pricing on the site - book a call.",
 };
 
 const FAQS = [
   {
     q: "Is AEO really included in every tier?",
-    a: "Yes. AEO is our differentiator and the floor of what we offer, not an upsell. Every program — Core through Operating System — includes ongoing AEO work for ChatGPT, Perplexity, Google AI Overviews, and Gemini.",
+    a: "Yes. AEO is our differentiator and the floor of what we offer, not an upsell. Every program - Core through Operating System - includes ongoing AEO work for ChatGPT, Perplexity, Google AI Overviews, and Gemini.",
   },
   {
     q: "Why no pricing on the site?",
@@ -20,11 +20,11 @@ const FAQS = [
   },
   {
     q: "Do you offer market exclusivity?",
-    a: "Yes — for Core and above. We don't run two competing painting contractors in the same service area, or two tour operators selling overlapping experiences.",
+    a: "Yes - for Core and above. We don't run two competing painting contractors in the same service area, or two tour operators selling overlapping experiences.",
   },
   {
     q: "Can I switch tiers mid-engagement?",
-    a: "Always. Most clients start at Core and graduate to Pipeline once ranking + AEO momentum kicks in. The transition is structured — nothing gets dropped.",
+    a: "Always. Most clients start at Core and graduate to Pipeline once ranking + AEO momentum kicks in. The transition is structured - nothing gets dropped.",
   },
   {
     q: "What does the first 90 days look like?",
@@ -46,18 +46,18 @@ export default function ProgramsPage() {
         </span>
         <h1 className="text-[clamp(36px,5vw,56px)] font-semibold leading-[1.1] tracking-tight text-foreground mb-6 [text-wrap:balance]">
           Four programs.{" "}
-          <span className="font-serif italic font-normal text-primary">
+          <span className="font-semibold text-primary">
             One philosophy.
           </span>
         </h1>
         <p className="text-lg text-muted-foreground">
           Every engagement combines some mix of these. AEO runs through all of
-          them — it&apos;s the floor, not an upsell. Swipe, arrow, or pick from
+          them - it&apos;s the floor, not an upsell. Swipe, arrow, or pick from
           the deck below to jump between tiers.
         </p>
       </section>
 
-      {/* Carousel — client component owns hash + keyboard + swipe state */}
+      {/* Carousel - client component owns hash + keyboard + swipe state */}
       <ProgramsCarousel />
 
       {/* CTA strip */}

@@ -4,7 +4,7 @@ import {
   type Testimonial,
 } from "./TestimonialsCarousel";
 
-// PLACEHOLDER TESTIMONIALS — see the marker comment above the carousel below.
+// PLACEHOLDER TESTIMONIALS - see the marker comment above the carousel below.
 // Real, anonymized-by-industry+region quotes replace these before public
 // launch. Neutral initials avatars (ui-avatars) avoid misattributing a real
 // person's photo to a placeholder.
@@ -12,7 +12,7 @@ const STATIC_TESTIMONIALS: Testimonial[] = [
   {
     headline: "[PLACEHOLDER headline]",
     quote:
-      "[PLACEHOLDER — Real quote about how 4Pie Labs helped them go from being invisible online to being the top-ranked tour operator in their market. Specific before-state, specific result, specific quality of working with us.]",
+      "[PLACEHOLDER - Real quote about how 4Pie Labs helped them go from being invisible online to being the top-ranked tour operator in their market. Specific before-state, specific result, specific quality of working with us.]",
     name: "Tour Operator",
     role: "[Region], multi-year client",
     avatar:
@@ -21,7 +21,7 @@ const STATIC_TESTIMONIALS: Testimonial[] = [
   {
     headline: "[PLACEHOLDER headline]",
     quote:
-      "[PLACEHOLDER — Real quote from a painting contractor about leaving a traditional agency, working with us, and seeing predictable lead flow within months. Reference dashboards or AI agent if relevant.]",
+      "[PLACEHOLDER - Real quote from a painting contractor about leaving a traditional agency, working with us, and seeing predictable lead flow within months. Reference dashboards or AI agent if relevant.]",
     name: "Painting Contractor",
     role: "[Region], multi-year client",
     avatar:
@@ -30,7 +30,7 @@ const STATIC_TESTIMONIALS: Testimonial[] = [
   {
     headline: "[PLACEHOLDER headline]",
     quote:
-      "[PLACEHOLDER — Real quote from a tour operator or local service business about the difference between working with a 'tech company that does marketing' vs. a traditional agency. Reference dashboards, AI agents, AEO, or custom work.]",
+      "[PLACEHOLDER - Real quote from a tour operator or local service business about the difference between working with a 'tech company that does marketing' vs. a traditional agency. Reference dashboards, AI agents, AEO, or custom work.]",
     name: "Local Service Business",
     role: "[Region], multi-year client",
     avatar:
@@ -70,7 +70,7 @@ export async function Testimonials() {
       }));
     }
   } catch {
-    // Supabase unavailable — fall back to static testimonials
+    // Supabase unavailable - fall back to static testimonials
   }
 
   return (

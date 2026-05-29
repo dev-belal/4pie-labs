@@ -100,7 +100,7 @@ export function ROICalculator() {
             </h2>
             <p className="text-foreground/60 mb-10">
               Get a recommended monthly budget based on your industry and growth
-              goals — instant, no email required.
+              goals - instant, no email required.
             </p>
 
             <div className="space-y-8">
@@ -257,7 +257,7 @@ export function ROICalculator() {
               href="/book"
               className="group mt-5 inline-flex items-center justify-center gap-2 text-sm font-medium text-foreground/50 hover:text-foreground transition-colors text-center"
             >
-              Or skip the form — book a call and we&apos;ll build your plan live
+              Or skip the form - book a call and we&apos;ll build your plan live
               <ArrowRight className="w-3.5 h-3.5 shrink-0 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>

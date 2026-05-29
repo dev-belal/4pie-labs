@@ -15,7 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 
 /**
- * Programs carousel — one card at a time, deep-linkable via #hash.
+ * Programs carousel - one card at a time, deep-linkable via #hash.
  *
  * Navigation:
  *   - Click the menu item in the navbar (`/programs#pipeline`) → reads
@@ -52,13 +52,13 @@ export const PROGRAMS: Program[] = [
     tagline: "Foundation",
     tag: "Foundation",
     intro:
-      "Where most clients start. Visibility-first — search, maps, AI answer engines, and the website that converts them.",
+      "Where most clients start. Visibility-first - search, maps, AI answer engines, and the website that converts them.",
     whatsIncluded: [
       "Local SEO + on-page technical SEO",
       "Answer Engine Optimization (ChatGPT / Perplexity / AI Overviews / Gemini)",
       "Google Business Profile management + review velocity",
       "Conversion-tuned website (or rebuild)",
-      "Monthly content production — long-form pages tuned for AI retrieval",
+      "Monthly content production - long-form pages tuned for AI retrieval",
       "Market exclusivity in your service area",
     ],
     terms: "Month-to-month after an initial 90-day commitment.",
@@ -72,7 +72,7 @@ export const PROGRAMS: Program[] = [
     tagColor: "primary",
     featured: true,
     intro:
-      "Core, plus the demand-capture engine. Paid that pays — and the AI scoring layer that turns clicks into booked jobs.",
+      "Core, plus the demand-capture engine. Paid that pays - and the AI scoring layer that turns clicks into booked jobs.",
     whatsIncluded: [
       "Everything in Core",
       "Google Search + Maps ads",
@@ -90,7 +90,7 @@ export const PROGRAMS: Program[] = [
     tagline: "Full-stack",
     tag: "Full-stack",
     intro:
-      "Pipeline, plus the AI operating layer most agencies can't build. The full stack — visibility, capture, automation, and your own performance dashboards.",
+      "Pipeline, plus the AI operating layer most agencies can't build. The full stack - visibility, capture, automation, and your own performance dashboards.",
     whatsIncluded: [
       "Everything in Pipeline",
       "Multi-channel ads (Google / Meta / YouTube)",
@@ -198,7 +198,7 @@ export function ProgramsCarousel() {
     return () => window.removeEventListener("keydown", onKey);
   }, [prev, next]);
 
-  // Touch swipe — record start, commit on end if horizontal travel passed
+  // Touch swipe - record start, commit on end if horizontal travel passed
   // the threshold and dominated vertical travel.
   const onTouchStart = (e: React.TouchEvent) => {
     const t = e.touches[0];
@@ -214,7 +214,7 @@ export function ProgramsCarousel() {
     const dx = t.clientX - start.x;
     const dy = t.clientY - start.y;
     if (Math.abs(dx) < SWIPE_THRESHOLD_PX) return;
-    if (Math.abs(dx) < Math.abs(dy)) return; // mostly vertical — ignore
+    if (Math.abs(dx) < Math.abs(dy)) return; // mostly vertical - ignore
     if (dx < 0) next();
     else prev();
   };
@@ -264,7 +264,7 @@ export function ProgramsCarousel() {
           <ChevronLeft className="w-5 h-5" />
         </button>
 
-        {/* Card stage — single program at a time, animated on switch. */}
+        {/* Card stage - single program at a time, animated on switch. */}
         <div
           className="flex-1 relative overflow-hidden touch-pan-y select-none"
           onTouchStart={onTouchStart}
@@ -418,7 +418,7 @@ export function ProgramsCarousel() {
         </button>
       </div>
 
-      {/* Mini-pill deck — jump to any program */}
+      {/* Mini-pill deck - jump to any program */}
       <div
         className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3"
         role="tablist"

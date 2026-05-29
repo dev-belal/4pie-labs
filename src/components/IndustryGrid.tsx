@@ -1,7 +1,7 @@
 import { Compass, Home, Sparkles } from "lucide-react";
 
 /**
- * Phase 3 industry grid — three industry tiles surfacing the verticals from
+ * Phase 3 industry grid - three industry tiles surfacing the verticals from
  * the v2 design. Imagery is a styled gradient placeholder for now; swap in
  * real photography (Unsplash or licensed) in a later commit.
  */
@@ -39,7 +39,7 @@ export function IndustryGrid() {
       <div className="max-w-[1240px] mx-auto">
         <div className="text-center mb-12 md:mb-14">
           <span
-            className="block font-serif italic text-[40px] md:text-[56px] leading-none text-primary/40 mb-2"
+            className="block font-semibold text-[40px] md:text-[56px] leading-none text-primary/30 tracking-tight mb-2"
             aria-hidden
           >
             03
@@ -49,7 +49,7 @@ export function IndustryGrid() {
           </span>
           <h2 className="text-[clamp(28px,3.5vw,40px)] font-semibold tracking-tight text-foreground leading-[1.15]">
             Three industries we know{" "}
-            <span className="font-serif italic font-normal text-primary">
+            <span className="font-semibold text-primary">
               deeply.
             </span>
           </h2>
