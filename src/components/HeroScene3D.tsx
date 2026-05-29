@@ -37,8 +37,11 @@ function Scene() {
   // No more white glass in light, the mesh now belongs to the brand.
   useEffect(() => {
     const apply = () => {
+      // Dark is the CSS default; only "light" explicitly opts out. Reading
+      // the attribute this way means the scene renders the brand amber even
+      // if the boot script hasn't run yet (no FOUC into white-glass).
       const dark =
-        document.documentElement.getAttribute("data-theme") === "dark";
+        document.documentElement.getAttribute("data-theme") !== "light";
       if (mainMatRef.current) {
         mainMatRef.current.color.setHex(dark ? 0xfbbf24 : 0xf59e0b);
         mainMatRef.current.iridescence = dark ? 0.9 : 1.0;

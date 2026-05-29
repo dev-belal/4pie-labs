@@ -22,12 +22,13 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-// Inline theme-boot, runs before paint so the user's saved choice paints
-// without a flash of the wrong theme. Storage key is versioned (:v3) and
-// the fallback flipped to "dark" so first-time visitors land in the
-// brand's home theme (off-black + amber). Old :v1 / :v2 values are
-// ignored, so anyone with a cached "light" gets the new default once.
-const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:theme:v3')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
+// Inline theme-boot. Dark is the CSS default (defined in @theme), so the
+// script only needs to set data-theme="light" when the user has explicitly
+// opted in to light. Anything else (no stored value, "dark", or a script
+// failure) leaves the dark default intact. Storage key is versioned (:v3)
+// so old :v1 / :v2 caches are ignored - everyone hits the new dark default
+// on first load.
+const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:theme:v3');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
