@@ -13,7 +13,7 @@ const INDUSTRIES = [
     href: "/services#tour",
     Icon: Compass,
     gradient:
-      "linear-gradient(135deg, rgba(124,92,255,0.18), rgba(232,155,124,0.22))",
+      "linear-gradient(135deg, rgba(251,191,36,0.22), rgba(232,155,124,0.24))",
   },
   {
     title: "Painting contractors",
@@ -21,7 +21,7 @@ const INDUSTRIES = [
     href: "/services#painting",
     Icon: Home,
     gradient:
-      "linear-gradient(135deg, rgba(232,155,124,0.22), rgba(244,201,93,0.18))",
+      "linear-gradient(135deg, rgba(232,155,124,0.24), rgba(217,119,6,0.22))",
   },
   {
     title: "Other local services",
@@ -29,7 +29,7 @@ const INDUSTRIES = [
     href: "/services#local",
     Icon: Sparkles,
     gradient:
-      "linear-gradient(135deg, rgba(244,201,93,0.18), rgba(124,92,255,0.18))",
+      "linear-gradient(135deg, rgba(217,119,6,0.22), rgba(251,191,36,0.22))",
   },
 ];
 
@@ -60,7 +60,7 @@ export function IndustryGrid() {
             <a
               key={title}
               href={href}
-              className="group block rounded-2xl bg-surface border border-card-border overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(26,26,26,0.08),0_2px_6px_rgba(26,26,26,0.04)]"
+              className="group block rounded-2xl bg-surface border border-card-border overflow-hidden transition-all hover:-translate-y-0.5 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)]"
             >
               <div
                 className="aspect-[16/10] grid place-items-center relative"

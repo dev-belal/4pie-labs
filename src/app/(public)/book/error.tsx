@@ -51,7 +51,7 @@ export default function BookError({
         <button
           type="button"
           onClick={reset}
-          className="inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-full text-sm font-bold hover:scale-105 transition-transform"
+          className="inline-flex items-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-full text-sm font-bold hover:scale-105 transition-transform"
         >
           <RefreshCw className="w-4 h-4" />
           Try again

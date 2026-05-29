@@ -39,23 +39,25 @@ type DropdownItem = {
   tagColor?: "primary";
 };
 
+// Hrefs use `?category=<slug>` so ServicesBrowser deep-links to the right
+// tab on click. Slugs match SERVICE_CATEGORY_SLUGS in src/data/services.ts.
 const SERVICE_ITEMS: DropdownItem[] = [
   {
     title: "AI-First SEO + AEO",
     sub: "Get cited by ChatGPT, Perplexity, Gemini.",
-    href: "/services#aeo",
+    href: "/services?category=aeo",
     Icon: MessageCircle,
   },
   {
     title: "Performance Ads",
     sub: "Paid that pays. Google, Meta, YouTube.",
-    href: "/services#ads",
+    href: "/services?category=ads",
     Icon: Search,
   },
   {
     title: "Custom AI Systems",
     sub: "Agents, dashboards, CRM automation.",
-    href: "/services#ai",
+    href: "/services?category=ai",
     Icon: Cpu,
   },
 ];
@@ -163,6 +165,7 @@ export function Navbar() {
               width={128}
               height={32}
               priority
+              data-logo
               className="h-7 w-auto"
             />
           </Link>
@@ -213,7 +216,7 @@ export function Navbar() {
             </button>
             <Link
               href="/book"
-              className="hidden md:inline-flex items-center gap-1.5 h-[38px] px-4 rounded-full bg-primary hover:bg-primary-hover text-white text-sm font-medium transition-colors"
+              className="hidden md:inline-flex items-center gap-1.5 h-[38px] px-4 rounded-full bg-primary hover:bg-primary-hover text-on-primary text-sm font-medium transition-colors"
             >
               Schedule call
               <ArrowRight className="w-3.5 h-3.5" />
@@ -264,7 +267,7 @@ export function Navbar() {
           <Link
             href="/book"
             onClick={close}
-            className="block mt-3 text-center px-4 py-3.5 rounded-xl bg-primary text-white font-medium"
+            className="block mt-3 text-center px-4 py-3.5 rounded-xl bg-primary text-on-primary font-medium"
           >
             Schedule call →
           </Link>

@@ -176,9 +176,9 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   label="Service Required"
                   icon={<Send className="w-3.5 h-3.5 text-primary" />}
                   options={[
-                    { value: "AI Automation", label: "AI Automation" },
-                    { value: "Design Creatives", label: "Design Creatives" },
-                    { value: "Digital Marketing", label: "Digital Marketing" },
+                    { value: "AI-First SEO + AEO", label: "AI-First SEO + AEO" },
+                    { value: "Performance Ads", label: "Performance Ads" },
+                    { value: "Custom AI Systems", label: "Custom AI Systems" },
                   ]}
                   value={serviceType}
                   onChange={setServiceType}
@@ -229,8 +229,8 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       : state.status === "error"
                         ? "bg-red-500 text-foreground"
                         : isHovered
-                          ? "bg-accent text-foreground shadow-[0_0_30px_rgba(59,130,246,0.3)]"
-                          : "bg-primary text-white shadow-[0_0_20px_rgba(255,255,255,0.1)]",
+                          ? "bg-primary-hover text-on-primary shadow-[var(--shadow-cta-strong)]"
+                          : "bg-primary text-on-primary shadow-[var(--shadow-cta)]",
                     (pending || state.status === "success") &&
                       "opacity-80 cursor-not-allowed",
                   )}

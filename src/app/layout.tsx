@@ -23,8 +23,10 @@ const instrumentSerif = Instrument_Serif({
 });
 
 // Inline theme-boot — runs before paint so the user's saved choice paints
-// without a flash of the wrong theme. Mirrors what the v2 mock did inline.
-const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:theme')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
+// without a flash of the wrong theme. Storage key is versioned (:v2) so the
+// black+amber brand pivot resets everyone's previously-cached "dark" choice
+// back to the light default. New toggles persist under the v2 key.
+const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:theme:v2')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),

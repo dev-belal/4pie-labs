@@ -127,7 +127,7 @@ export function AuditForm() {
       <button
         type="submit"
         disabled={pending}
-        className="group inline-flex items-center gap-2 bg-primary hover:bg-primary-hover disabled:opacity-70 text-white px-6 py-3 rounded-lg text-base font-medium transition-colors"
+        className="group inline-flex items-center gap-2 bg-primary hover:bg-primary-hover disabled:opacity-70 text-on-primary px-6 py-3 rounded-lg text-base font-semibold transition-all shadow-[var(--shadow-cta)] hover:shadow-[var(--shadow-cta-strong)]"
       >
         {pending ? "Submitting…" : "Get my audit"}
         <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

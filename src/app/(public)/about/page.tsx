@@ -53,7 +53,7 @@ export default function AboutPage() {
         className="absolute pointer-events-none -top-32 -left-32 w-[480px] h-[480px] rounded-full opacity-50 blur-[80px]"
         style={{
           background:
-            "radial-gradient(circle, rgba(124,92,255,0.40), transparent 60%)",
+            "radial-gradient(circle, rgba(251,191,36,0.40), transparent 60%)",
         }}
       />
       <span
@@ -61,7 +61,7 @@ export default function AboutPage() {
         className="absolute pointer-events-none top-[40%] -right-24 w-[420px] h-[420px] rounded-full opacity-50 blur-[80px]"
         style={{
           background:
-            "radial-gradient(circle, rgba(232,155,124,0.32), transparent 60%)",
+            "radial-gradient(circle, rgba(217,119,6,0.30), transparent 60%)",
         }}
       />
 

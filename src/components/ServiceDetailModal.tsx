@@ -99,7 +99,7 @@ export function ServiceDetailModal({
                         className="flex items-start gap-3 group/item border-l border-foreground/5 pl-4 py-0.5 hover:border-primary/30 transition-colors"
                       >
                         <div className="mt-1 flex-shrink-0">
-                          <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(139,92,246,0.6)]" />
+                          <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[var(--shadow-dot-glow)]" />
                         </div>
                         <span className="text-sm text-foreground/50 group-hover/item:text-foreground/80 transition-colors leading-snug">
                           {point}
@@ -118,7 +118,7 @@ export function ServiceDetailModal({
                   onClose();
                   onContactClick();
                 }}
-                className="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-full font-bold text-sm flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl"
+                className="w-full sm:w-auto px-6 py-3 bg-primary text-on-primary rounded-full font-bold text-sm flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl"
               >
                 Get Started
                 <Zap className="w-4 h-4 fill-current" />

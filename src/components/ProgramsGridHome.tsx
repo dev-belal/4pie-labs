@@ -74,8 +74,8 @@ export function ProgramsGridHome() {
               className={cn(
                 "group block rounded-2xl border p-6 transition-all hover:-translate-y-0.5",
                 p.featured
-                  ? "bg-foreground text-background border-foreground hover:shadow-[0_8px_24px_rgba(124,92,255,0.18)]"
-                  : "bg-surface border-card-border hover:shadow-[0_8px_24px_rgba(26,26,26,0.06),0_2px_6px_rgba(26,26,26,0.04)]",
+                  ? "bg-foreground text-background border-foreground hover:shadow-[var(--shadow-cta-strong)]"
+                  : "bg-surface border-card-border shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)]",
               )}
             >
               <div className="flex items-start justify-between mb-4">
