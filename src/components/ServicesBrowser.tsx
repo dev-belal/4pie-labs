@@ -80,27 +80,27 @@ export function ServicesBrowser() {
             </div>
 
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-subtle-foreground" />
               <input
                 type="text"
                 placeholder="Find a service..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-3 pl-12 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                className="w-full bg-surface border border-border rounded-lg py-2.5 pl-11 pr-4 text-sm text-foreground placeholder:text-subtle-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {categories.map((cat) => (
                 <button
                   type="button"
                   key={cat}
                   onClick={() => selectCategory(cat)}
                   className={cn(
-                    "w-full flex items-center justify-between px-6 py-4 rounded-2xl text-left font-bold transition-all",
+                    "w-full flex items-center justify-between px-4 py-3 rounded-xl text-left text-sm font-semibold transition-all border",
                     activeCategory === cat
-                      ? "glass-morphism border-primary/20 text-foreground translate-x-1"
-                      : "text-foreground/30 hover:text-foreground/50",
+                      ? "bg-primary-muted border-primary text-foreground"
+                      : "bg-surface border-card-border text-muted-foreground hover:text-foreground hover:border-border",
                   )}
                 >
                   {cat}
@@ -108,7 +108,7 @@ export function ServicesBrowser() {
                     className={cn(
                       "w-4 h-4 transition-transform",
                       activeCategory === cat
-                        ? "translate-x-0 opacity-100"
+                        ? "translate-x-0 opacity-100 text-primary"
                         : "-translate-x-2 opacity-0",
                     )}
                   />
@@ -135,35 +135,34 @@ export function ServicesBrowser() {
                     type="button"
                     key={service.title}
                     onClick={() => setSelectedService(service)}
-                    className="group glass-morphism p-10 rounded-[40px] border-foreground/10 hover:border-foreground/20 transition-all flex flex-col gap-8 shadow-2xl relative overflow-hidden cursor-pointer text-left"
+                    className="group bg-surface border border-card-border rounded-2xl p-7 md:p-8 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5 transition-all flex flex-col gap-5 relative overflow-hidden cursor-pointer text-left"
                   >
-                    <div
-                      className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} p-0.5 group-hover:scale-110 transition-transform`}
-                    >
-                      <div className="w-full h-full bg-background rounded-[14px] flex items-center justify-center">
-                        <Icon className="w-7 h-7" />
-                      </div>
+                    <div className="flex items-start justify-between">
+                      <span className="w-12 h-12 rounded-xl grid place-items-center bg-primary-muted text-primary">
+                        <Icon className="w-5 h-5" />
+                      </span>
+                      <span className="text-[11px] font-medium text-subtle-foreground tracking-wider tabular-nums">
+                        0{idx + 1}
+                      </span>
                     </div>
 
-                    <div>
-                      <h3 className="text-2xl font-display font-bold mb-4">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold tracking-tight text-foreground mb-2">
                         {service.title}
                       </h3>
-                      <p className="text-foreground/60 leading-relaxed mb-6">
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-4">
                         {service.desc}
                       </p>
-                      <div className="pt-6 border-t border-foreground/5 text-sm text-foreground/40 group-hover:text-foreground/60 transition-colors italic">
-                        {service.details}
-                      </div>
+                      {service.details && (
+                        <div className="pt-4 border-t border-border text-xs text-subtle-foreground italic leading-relaxed">
+                          {service.details}
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex items-center gap-2 text-xs font-bold text-primary group-hover:gap-3 transition-all mt-auto uppercase tracking-widest">
-                      Configure Service
-                      <ArrowRight className="w-4 h-4" />
-                    </div>
-
-                    <div className="absolute top-10 right-10 text-foreground/5 font-display text-4xl font-black pointer-events-none">
-                      {(idx + 1).toString().padStart(2, "0")}
+                    <div className="flex items-center gap-1.5 text-xs font-semibold text-primary group-hover:gap-2 transition-all mt-auto uppercase tracking-wider">
+                      View details
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </div>
                   </button>
                 );
@@ -171,31 +170,30 @@ export function ServicesBrowser() {
 
               {filteredServices.length === 0 && (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.97 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="col-span-full group glass-morphism p-12 rounded-[40px] border-primary/20 bg-primary/5 text-center flex flex-col items-center gap-6 shadow-2xl relative overflow-hidden"
+                  className="col-span-full bg-surface border border-card-border rounded-2xl shadow-[var(--shadow-card)] p-10 md:p-12 text-center flex flex-col items-center gap-5"
                 >
-                  <div className="absolute inset-0 bg-primary/5 blur-3xl rounded-full -z-10" />
-                  <div className="w-20 h-20 rounded-3xl bg-primary/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <Sparkles className="w-10 h-10 text-primary" />
-                  </div>
+                  <span className="w-14 h-14 rounded-2xl bg-primary-muted grid place-items-center">
+                    <Sparkles className="w-6 h-6 text-primary" />
+                  </span>
                   <div>
-                    <h3 className="text-3xl font-display font-bold mb-4">
+                    <h3 className="text-xl font-semibold tracking-tight text-foreground mb-2">
                       Didn&apos;t find what you need?
                     </h3>
-                    <p className="text-foreground/60 max-w-md mx-auto leading-relaxed">
-                      We build custom AI operating systems for unique workflows.
-                      Tell us what you&apos;re looking for and we&apos;ll build
-                      it.
+                    <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+                      We build custom AI operating systems for unique
+                      workflows. Tell us what you&apos;re looking for and
+                      we&apos;ll scope it.
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={openCustomRequest}
-                    className="flex items-center gap-3 bg-primary hover:bg-primary-hover text-on-primary px-10 py-4 rounded-full font-semibold hover:scale-105 active:scale-95 transition-all shadow-[var(--shadow-cta)] hover:shadow-[var(--shadow-cta-strong)]"
+                    className="group inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-on-primary px-7 py-3 rounded-lg text-sm font-semibold transition-all shadow-[var(--shadow-cta)] hover:shadow-[var(--shadow-cta-strong)]"
                   >
-                    Submit Custom Request
-                    <ArrowRight className="w-5 h-5" />
+                    Submit a custom request
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </motion.div>
               )}

@@ -82,52 +82,38 @@ export function ShareActions() {
   };
 
   return (
-    <div className="flex items-center gap-3 ml-auto">
+    <div className="flex items-center gap-2 ml-auto">
       <button
         type="button"
         aria-label="Copy link"
         onClick={handleCopyLink}
-        className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center border border-foreground/10 hover:bg-primary transition-all group"
+        className="w-9 h-9 rounded-full bg-surface border border-card-border hover:border-primary/40 flex items-center justify-center transition-colors group"
       >
         <LinkIcon
-          className={`w-4 h-4 ${copied ? "text-emerald-400" : "text-foreground/40 group-hover:text-foreground"}`}
+          className={`w-3.5 h-3.5 ${copied ? "text-success" : "text-muted-foreground group-hover:text-primary"}`}
         />
       </button>
       <button
         type="button"
         aria-label="Share on Facebook"
-        className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center border border-foreground/10 hover:bg-[#1877F2] transition-all group"
+        className="w-9 h-9 rounded-full bg-surface border border-card-border hover:border-primary/40 flex items-center justify-center transition-colors group"
       >
-        <FacebookIcon className="w-4 h-4 text-foreground/40 group-hover:text-foreground" />
+        <FacebookIcon className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
       </button>
       <button
         type="button"
         aria-label="Share on Twitter"
-        className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center border border-foreground/10 hover:bg-[#1DA1F2] transition-all group"
+        className="w-9 h-9 rounded-full bg-surface border border-card-border hover:border-primary/40 flex items-center justify-center transition-colors group"
       >
-        <TwitterIcon className="w-4 h-4 text-foreground/40 group-hover:text-foreground" />
+        <TwitterIcon className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
       </button>
       <button
         type="button"
         aria-label="Share on LinkedIn"
-        className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center border border-foreground/10 hover:bg-[#0077B5] transition-all group"
+        className="w-9 h-9 rounded-full bg-surface border border-card-border hover:border-primary/40 flex items-center justify-center transition-colors group"
       >
-        <LinkedinIcon className="w-4 h-4 text-foreground/40 group-hover:text-foreground" />
+        <LinkedinIcon className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
       </button>
-    </div>
-  );
-}
-
-export function MarqueeFooter() {
-  return (
-    <div className="sticky bottom-0 left-0 right-0 bg-background/80 backdrop-blur-md border-t border-foreground/5 py-4 text-center text-[10px] font-bold text-foreground/20 uppercase tracking-[0.3em] overflow-hidden whitespace-nowrap">
-      <motion.div
-        animate={{ x: [-1000, 0] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-      >
-        AI RESEARCH 2026 • 4PIE LABS INSIGHTS • AUTONOMOUS AGENCY PROTOCOLS •
-        DESIGN PSYCHOLOGY • MARKET AUTOMATION •
-      </motion.div>
     </div>
   );
 }

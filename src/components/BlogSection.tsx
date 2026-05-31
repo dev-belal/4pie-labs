@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 import { blogs as staticBlogs, type BlogPost } from "@/data/blogs";
 import { createPublicClient } from "@/lib/supabase/public-client";
 import { cn } from "@/lib/utils";
@@ -29,57 +29,79 @@ export async function BlogSection() {
   return (
     <section
       id="blog"
-      className="py-24 px-4 border-t border-foreground/5 bg-background relative overflow-hidden"
+      className="relative py-24 md:py-28 px-4 border-t border-border overflow-hidden"
     >
-      <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-foreground/5 blur-[120px] rounded-full -translate-y-1/2 -translate-x-1/2 pointer-events-none" />
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 text-foreground">
+      <span
+        aria-hidden
+        className="absolute pointer-events-none -top-10 left-0 w-[500px] h-[500px] rounded-full opacity-50 blur-[100px]"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(232,155,124,0.20), transparent 60%)",
+        }}
+      />
+
+      <div className="relative z-10 max-w-[1240px] mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 md:mb-16 gap-6">
           <div>
-            <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
-              Articles &amp; Insights.
+            <span className="inline-block text-xs font-medium text-primary tracking-widest uppercase mb-3">
+              Field notes
+            </span>
+            <h2 className="text-[clamp(32px,4vw,44px)] font-semibold tracking-tight text-foreground mb-4 [text-wrap:balance]">
+              Articles &amp;{" "}
+              <span className="font-semibold text-primary">insights.</span>
             </h2>
-            <p className="text-foreground/40 text-lg">
-              Insights on AI-first marketing, local SEO, and answer engine
+            <p className="text-muted-foreground text-base md:text-lg max-w-xl">
+              Deep dives on AI-first marketing, local SEO, and answer-engine
               optimization for service businesses.
             </p>
           </div>
           <Link
             href="/blog"
-            className="flex items-center gap-2 text-sm font-bold bg-primary text-on-primary px-6 py-3 rounded-full hover:scale-105 transition-transform"
+            className="group inline-flex items-center gap-2 bg-surface hover:bg-surface-2 border border-border text-foreground px-6 py-3 rounded-lg text-sm font-medium transition-colors shrink-0"
           >
-            VIEW ALL ARTICLES
-            <ArrowUpRight className="w-4 h-4" />
+            View all articles
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {featuredPosts.map((post, i) => (
             <Link
               key={post.id}
               href={`/blog/${post.slug}`}
               className={cn(
-                "group cursor-pointer block",
+                "group block bg-surface border border-card-border rounded-2xl overflow-hidden shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5 transition-all",
                 i === 2 && "hidden md:block",
               )}
             >
-              <div className="relative aspect-[16/10] rounded-[32px] overflow-hidden mb-6 border border-foreground/5">
+              <div className="relative aspect-[16/10] overflow-hidden">
                 <Image
                   src={post.image}
                   alt={post.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute top-4 left-4 bg-background/50 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-foreground/80">
+                <span className="absolute top-4 left-4 inline-flex items-center px-2.5 py-1 rounded-full bg-surface/90 backdrop-blur border border-card-border text-[10px] font-medium tracking-widest text-primary uppercase">
                   {post.category}
+                </span>
+              </div>
+              <div className="p-6 flex flex-col">
+                <div className="flex items-center gap-3 text-[11px] font-medium text-subtle-foreground uppercase tracking-wider mb-3">
+                  <span className="flex items-center gap-1.5">
+                    <Clock className="w-3 h-3" />
+                    {post.readTime}
+                  </span>
+                  <span className="w-1 h-1 rounded-full bg-border" />
+                  <span>{post.date}</span>
                 </div>
+                <h3 className="text-lg font-semibold tracking-tight leading-snug text-foreground group-hover:text-primary transition-colors mb-2">
+                  {post.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                  {post.excerpt}
+                </p>
               </div>
-              <div className="flex items-center gap-3 text-foreground/30 text-xs font-bold mb-3 uppercase tracking-widest">
-                {post.date}
-              </div>
-              <h3 className="text-xl font-display font-bold leading-tight group-hover:text-primary transition-colors text-foreground">
-                {post.title}
-              </h3>
             </Link>
           ))}
         </div>
