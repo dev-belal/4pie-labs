@@ -1,37 +1,48 @@
-import { Compass, Home, Sparkles } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 /**
- * Phase 3 industry grid - three industry tiles surfacing the verticals from
- * the v2 design. Imagery is a styled gradient placeholder for now; swap in
- * real photography (Unsplash or licensed) in a later commit.
+ * Industry tiles surfacing the three verticals the Pipeline program is
+ * tuned for. Each click lands on /programs#pipeline so the visitor sees
+ * the program tier built for their category. Imagery is sourced from
+ * Pixabay - tourism, painter at work, and a small-business storefront -
+ * served through Next/Image with `cdn.pixabay.com` registered in
+ * next.config.ts remotePatterns.
  */
 
-const INDUSTRIES = [
+type Industry = {
+  title: string;
+  sub: string;
+  image: string;
+  alt: string;
+};
+
+const INDUSTRIES: Industry[] = [
   {
     title: "Tour operators",
     sub: "Where 60% of our book lives. Tours, attractions, hospitality.",
-    href: "/audit",
-    Icon: Compass,
-    gradient:
-      "linear-gradient(135deg, rgba(251,191,36,0.22), rgba(232,155,124,0.24))",
+    image:
+      "https://cdn.pixabay.com/photo/2017/12/15/13/51/polynesia-3021072_1280.jpg",
+    alt: "Tropical island with palm trees and turquoise water, hospitality and tourism",
   },
   {
     title: "Painting contractors",
     sub: "Where our craftsmanship pays. Residential + commercial.",
-    href: "/audit",
-    Icon: Home,
-    gradient:
-      "linear-gradient(135deg, rgba(232,155,124,0.24), rgba(217,119,6,0.22))",
+    image:
+      "https://cdn.pixabay.com/photo/2017/05/13/19/13/painter-2310148_1280.jpg",
+    alt: "Painter applying paint with a roller to an interior wall",
   },
   {
     title: "Other local services",
     sub: "Landscaping, roofing, wellness, professional services.",
-    href: "/audit",
-    Icon: Sparkles,
-    gradient:
-      "linear-gradient(135deg, rgba(217,119,6,0.22), rgba(251,191,36,0.22))",
+    image:
+      "https://cdn.pixabay.com/photo/2018/04/16/12/02/store-3324168_1280.jpg",
+    alt: "Independent small business storefront on a city street",
   },
 ];
+
+const PIPELINE_HREF = "/programs#pipeline";
 
 export function IndustryGrid() {
   return (
@@ -49,35 +60,40 @@ export function IndustryGrid() {
           </span>
           <h2 className="text-[clamp(28px,3.5vw,40px)] font-semibold tracking-tight text-foreground leading-[1.15]">
             Three industries we know{" "}
-            <span className="font-semibold text-primary">
-              deeply.
-            </span>
+            <span className="font-semibold text-primary">deeply.</span>
           </h2>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-          {INDUSTRIES.map(({ title, sub, href, Icon, gradient }) => (
-            <a
+          {INDUSTRIES.map(({ title, sub, image, alt }) => (
+            <Link
               key={title}
-              href={href}
+              href={PIPELINE_HREF}
               className="group block rounded-2xl bg-surface border border-card-border overflow-hidden transition-all hover:-translate-y-0.5 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)]"
             >
-              <div
-                className="aspect-[16/10] grid place-items-center relative"
-                style={{ background: gradient }}
-                aria-hidden
-              >
-                <Icon className="w-12 h-12 text-foreground/40" />
+              <div className="aspect-[16/10] relative overflow-hidden bg-surface-2">
+                <Image
+                  src={image}
+                  alt={alt}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent pointer-events-none" />
               </div>
-              <div className="p-5 md:p-6">
+              <div className="p-5 md:p-6 flex flex-col">
                 <h3 className="text-lg font-semibold tracking-tight text-foreground mb-1.5">
                   {title}
                 </h3>
-                <p className="text-sm text-muted-foreground leading-snug">
+                <p className="text-sm text-muted-foreground leading-snug mb-4">
                   {sub}
                 </p>
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary uppercase tracking-wider group-hover:gap-2 transition-all">
+                  See the Pipeline program
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </span>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

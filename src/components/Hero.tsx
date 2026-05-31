@@ -145,7 +145,7 @@ export function Hero() {
             </div>
 
             {/* Bottom card */}
-            <div className="absolute bottom-0 left-0 right-0 z-10 bg-surface/90 backdrop-blur border border-card-border rounded-2xl p-5 shadow-[0_4px_12px_rgba(26,26,26,0.06),0_1px_3px_rgba(26,26,26,0.04)] flex items-center gap-4">
+            <div className="absolute bottom-0 left-0 right-0 z-10 bg-surface/90 backdrop-blur border border-card-border rounded-2xl p-5 shadow-[var(--shadow-card)] flex items-center gap-4">
               <span className="w-12 h-12 rounded-xl bg-primary-muted text-primary grid place-items-center shrink-0">
                 <Activity className="w-5 h-5" />
               </span>
@@ -158,7 +158,7 @@ export function Hero() {
                 </div>
               </div>
               <Link
-                href="/audit"
+                href="/services/aeo"
                 className="text-xs font-medium text-primary hover:underline shrink-0"
               >
                 View →
