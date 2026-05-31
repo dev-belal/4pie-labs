@@ -224,6 +224,19 @@ h1, h2, h3, h4, h5, h6 {
   filter: none;
 }
 
+/* Footer logo flips the OPPOSITE way - the footer band is `bg-foreground`
+   which inverts with the body theme (dark band in light mode, cream band
+   in dark mode), so the logo has to invert with it. In dark body theme
+   the footer is cream, so the logo stays its native dark color (no filter).
+   In light body theme the footer is dark, so we force the logo white via
+   brightness(0) invert(1). */
+[data-footer-logo] {
+  filter: none;
+}
+:root[data-theme="light"] [data-footer-logo] {
+  filter: brightness(0) invert(1);
+}
+
 /* Was a dark gradient + heavy shadow. Now a clean themed surface card. */
 .glass-morphism {
   background: var(--color-surface);

@@ -2,14 +2,13 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, Clock, User } from "lucide-react";
+import { ArrowRight, ChevronLeft, Clock, User } from "lucide-react";
 import { blogs as staticBlogs } from "@/data/blogs";
 import { getPostBySlug } from "@/lib/blog";
 import { JsonLd } from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
 import {
   FacebookIcon,
-  MarqueeFooter,
   ReadingProgress,
   ShareActions,
   TrackView,
@@ -40,7 +39,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       url: `/blog/${slug}`,
       authors: [post.author],
-      // opengraph-image.tsx handles the image automatically
     },
     twitter: {
       card: "summary_large_image",
@@ -58,7 +56,7 @@ function renderContent(content: string) {
       return (
         <h2
           key={key}
-          className="text-3xl font-display font-bold text-foreground pt-8"
+          className="text-2xl md:text-3xl font-semibold tracking-tight text-foreground pt-6 mb-3"
         >
           {line.replace("## ", "")}
         </h2>
@@ -68,7 +66,7 @@ function renderContent(content: string) {
       return (
         <h3
           key={key}
-          className="text-2xl font-display font-bold text-foreground pt-4"
+          className="text-xl md:text-2xl font-semibold tracking-tight text-foreground pt-4 mb-2"
         >
           {line.replace("### ", "")}
         </h3>
@@ -76,14 +74,14 @@ function renderContent(content: string) {
     }
     if (line.startsWith("**")) {
       return (
-        <p key={key} className="font-bold text-foreground">
+        <p key={key} className="font-semibold text-foreground">
           {line.replace(/\*\*/g, "")}
         </p>
       );
     }
     if (line.startsWith("- ")) {
       return (
-        <li key={key} className="ml-6 list-disc">
+        <li key={key} className="ml-6 list-disc text-muted-foreground">
           {line.replace("- ", "")}
         </li>
       );
@@ -98,10 +96,6 @@ export default async function BlogPostPage({ params }: Props) {
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  // View tracking is fired per-visit from the client (<TrackView/>), not here:
-  // this page is ISR-cached (revalidate=3600), so a server-side call would only
-  // run on cache regeneration rather than on every visit.
-
   const article = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -109,10 +103,7 @@ export default async function BlogPostPage({ params }: Props) {
     description: post.excerpt,
     image: [post.image],
     datePublished: post.date,
-    author: {
-      "@type": "Person",
-      name: post.author,
-    },
+    author: { "@type": "Person", name: post.author },
     publisher: {
       "@type": "Organization",
       name: SITE.name,
@@ -146,54 +137,62 @@ export default async function BlogPostPage({ params }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden pt-20">
+    <div className="overflow-x-hidden">
       <JsonLd data={article} />
       <JsonLd data={breadcrumb} />
       <TrackView slug={slug} />
       <ReadingProgress />
 
-      <div className="max-w-4xl mx-auto px-4 py-20 relative">
+      <article className="max-w-3xl mx-auto px-4 pt-10 md:pt-14 pb-24">
         <Link
           href="/blog"
-          className="flex items-center gap-2 text-foreground/50 hover:text-primary mb-12 transition-colors group w-fit"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-10 transition-colors group w-fit"
         >
-          <ChevronRight className="w-4 h-4 rotate-180 group-hover:-translate-x-1 transition-transform" />
-          Back to Insights
+          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          Back to insights
         </Link>
 
-        <header className="mb-16">
-          <div className="flex items-center gap-4 text-xs font-bold text-primary uppercase tracking-[0.2em] mb-6">
+        <header className="mb-12">
+          <div className="flex items-center gap-3 text-[11px] font-medium text-primary uppercase tracking-widest mb-5">
             <span>{post.category}</span>
-            <span className="w-1 h-1 rounded-full bg-foreground/20" />
-            <span>{post.date}</span>
+            <span className="w-1 h-1 rounded-full bg-border" />
+            <span className="text-subtle-foreground">{post.date}</span>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-display font-bold text-foreground mb-10 leading-[1.1]">
+          <h1 className="text-[clamp(32px,5vw,52px)] font-semibold tracking-tight leading-[1.1] text-foreground mb-8 [text-wrap:balance]">
             {post.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-8 py-8 border-y border-foreground/5">
+          <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+            {post.excerpt}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-6 py-5 border-y border-border">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary/20">
-                <User className="w-5 h-5 text-primary" />
-              </div>
+              <span className="w-10 h-10 rounded-full bg-primary-muted grid place-items-center">
+                <User className="w-4 h-4 text-primary" />
+              </span>
               <div>
-                <div className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest">
-                  Written By
+                <div className="text-[10px] font-medium text-subtle-foreground uppercase tracking-widest">
+                  Written by
                 </div>
-                <div className="text-foreground font-bold">{post.author}</div>
+                <div className="text-sm text-foreground font-semibold">
+                  {post.author}
+                </div>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-foreground/5 flex items-center justify-center border border-foreground/10">
-                <Clock className="w-5 h-5 text-foreground/40" />
-              </div>
+              <span className="w-10 h-10 rounded-full bg-surface-2 grid place-items-center border border-card-border">
+                <Clock className="w-4 h-4 text-muted-foreground" />
+              </span>
               <div>
-                <div className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest">
-                  Reading Time
+                <div className="text-[10px] font-medium text-subtle-foreground uppercase tracking-widest">
+                  Reading time
                 </div>
-                <div className="text-foreground font-bold">{post.readTime}</div>
+                <div className="text-sm text-foreground font-semibold">
+                  {post.readTime}
+                </div>
               </div>
             </div>
 
@@ -201,40 +200,37 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </header>
 
-        <div className="relative aspect-[21/9] rounded-[48px] overflow-hidden mb-20 shadow-2xl">
+        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-14 border border-card-border shadow-[var(--shadow-card)]">
           <Image
             src={post.image}
             alt={post.title}
             fill
-            sizes="(max-width: 1024px) 100vw, 896px"
+            sizes="(max-width: 1024px) 100vw, 768px"
             priority
             className="object-cover"
           />
-          <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-[48px]" />
         </div>
 
-        <article className="prose prose-invert prose-lg max-w-none">
-          <div className="text-foreground/70 leading-[1.8] space-y-8 font-light text-lg">
-            {renderContent(post.content)}
-          </div>
-        </article>
+        <div className="text-foreground/85 leading-[1.75] space-y-5 text-base md:text-lg">
+          {renderContent(post.content)}
+        </div>
 
-        <div className="mt-32 pt-16 border-t border-foreground/5 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="mt-20 pt-10 border-t border-border flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left">
-            <div className="text-[10px] font-bold text-foreground/30 uppercase tracking-[0.2em] mb-2">
+            <div className="text-[10px] font-medium text-subtle-foreground uppercase tracking-widest mb-2">
               Share this insight
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
-                className="flex items-center gap-2 glass-morphism px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#1877F2]/20 transition-all text-foreground"
+                className="inline-flex items-center gap-2 bg-surface border border-card-border hover:border-border px-4 py-2 rounded-lg text-xs font-semibold text-foreground transition-colors"
               >
                 <FacebookIcon className="w-3.5 h-3.5" />
                 Facebook
               </button>
               <button
                 type="button"
-                className="flex items-center gap-2 glass-morphism px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#1DA1F2]/20 transition-all text-foreground"
+                className="inline-flex items-center gap-2 bg-surface border border-card-border hover:border-border px-4 py-2 rounded-lg text-xs font-semibold text-foreground transition-colors"
               >
                 <TwitterIcon className="w-3.5 h-3.5" />
                 Twitter
@@ -244,15 +240,13 @@ export default async function BlogPostPage({ params }: Props) {
 
           <Link
             href="/blog"
-            className="flex items-center gap-3 bg-primary text-on-primary px-8 py-4 rounded-full font-bold hover:scale-105 transition-all text-sm"
+            className="group inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-on-primary px-6 py-3 rounded-lg text-sm font-semibold transition-all shadow-[var(--shadow-cta)] hover:shadow-[var(--shadow-cta-strong)]"
           >
             Back to all articles
-            <ChevronRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
-      </div>
-
-      <MarqueeFooter />
+      </article>
     </div>
   );
 }

@@ -5,12 +5,12 @@ import { BlogBrowser } from "@/components/BlogBrowser";
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "Deep dives into AI automation, digital marketing strategy, and the future of autonomous agencies.",
+    "AEO, local SEO, and AI-first marketing playbooks for painting contractors, tour operators, and local service businesses.",
   alternates: { canonical: "/blog" },
   openGraph: {
     title: "Blog - 4Pie Labs",
     description:
-      "Deep dives into AI automation, digital marketing strategy, and the future of autonomous agencies.",
+      "AEO, local SEO, and AI-first marketing playbooks for local service businesses.",
     url: "/blog",
     type: "website",
   },
@@ -22,13 +22,27 @@ export default async function BlogPage() {
   const posts = await getAllPosts();
 
   return (
-    <div className="min-h-screen bg-background pt-32 pb-24 px-4 overflow-x-hidden">
-      <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
-      <div className="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
+    <main className="relative px-4 pt-12 md:pt-20 pb-24 overflow-x-hidden">
+      <span
+        aria-hidden
+        className="absolute pointer-events-none -top-24 -left-32 w-[480px] h-[480px] rounded-full opacity-50 blur-[80px]"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(251,191,36,0.32), transparent 60%)",
+        }}
+      />
+      <span
+        aria-hidden
+        className="absolute pointer-events-none top-[35%] -right-24 w-[400px] h-[400px] rounded-full opacity-50 blur-[80px]"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(232,155,124,0.28), transparent 60%)",
+        }}
+      />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="relative z-10 max-w-[1240px] mx-auto">
         <BlogBrowser posts={posts} />
       </div>
-    </div>
+    </main>
   );
 }

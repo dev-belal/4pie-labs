@@ -28,7 +28,7 @@ const steps: Step[] = [
   {
     week: "Week 1",
     title: "Discovery & Audit",
-    desc: "We map your current presence (Google, Maps, GBP, AI engines, ads) against your top competitors and your top 50 buyer queries. You see exactly where you're losing - and what's possible.",
+    desc: "We map your current presence (Google, Maps, GBP, AI engines, ads) against your top competitors and your top 50 buyer queries. You see exactly where you're losing, and what's possible.",
     icon: Search,
   },
   {
@@ -57,12 +57,6 @@ const steps: Step[] = [
   },
 ];
 
-/**
- * Respect the OS-level "reduce motion" preference. When on, we skip the
- * mouse-follow 3D tilt entirely - both for accessibility (vestibular
- * disorders) and to avoid jank on low-end devices that tend to match
- * this setting by default.
- */
 function usePrefersReducedMotion(): boolean {
   return useMediaQuery("(prefers-reduced-motion: reduce)");
 }
@@ -76,8 +70,8 @@ function TimelineCard({ step, index }: { step: Step; index: number }) {
   const mouseXSpring = useSpring(x);
   const mouseYSpring = useSpring(y);
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["6deg", "-6deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-6deg", "6deg"]);
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (reduced) return;
@@ -114,20 +108,26 @@ function TimelineCard({ step, index }: { step: Step; index: number }) {
           initial={{ opacity: 0, x: index % 2 === 0 ? 30 : -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="group relative p-8 glass-morphism rounded-[32px] border-foreground/10 hover:border-foreground/20 hover:bg-foreground/[0.07] transition-colors shadow-2xl cursor-default transform-gpu"
+          className="group relative p-7 md:p-8 bg-surface border border-card-border rounded-2xl shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] transition-shadow cursor-default transform-gpu"
         >
-          <div style={{ transform: "translateZ(50px)" }} className="relative z-10">
-            <div className="text-primary font-bold mb-2 tracking-widest uppercase text-xs">
+          <div
+            style={{ transform: "translateZ(40px)" }}
+            className="relative z-10"
+          >
+            <span className="inline-block text-xs font-medium text-primary tracking-widest uppercase mb-3">
               {step.week}
-            </div>
-            <h3 className="text-2xl font-display font-bold mb-4">{step.title}</h3>
-            <p className="text-foreground/50 leading-relaxed text-sm">{step.desc}</p>
+            </span>
+            <h3 className="text-2xl font-semibold tracking-tight text-foreground mb-3">
+              {step.title}
+            </h3>
+            <p className="text-muted-foreground leading-relaxed text-sm">
+              {step.desc}
+            </p>
           </div>
-          <div className="absolute inset-0 rounded-[32px] bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         </motion.div>
       </div>
 
-      <div className="relative z-10 flex items-center justify-center w-12 h-12 rounded-full bg-background border-4 border-primary/30 shadow-[var(--shadow-dot-glow)]">
+      <div className="relative z-10 flex items-center justify-center w-12 h-12 rounded-full bg-background border-2 border-primary/40 shadow-[var(--shadow-dot-glow)] shrink-0">
         <Icon className="w-5 h-5 text-primary" />
       </div>
 
@@ -138,25 +138,32 @@ function TimelineCard({ step, index }: { step: Step; index: number }) {
 
 export function Timeline() {
   return (
-    <section className="py-24 px-4 bg-background border-t border-foreground/5 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 blur-[130px] rounded-full -translate-y-1/3 translate-x-1/3 pointer-events-none" />
+    <section className="relative py-24 md:py-28 px-4 border-t border-border overflow-hidden">
+      <span
+        aria-hidden
+        className="absolute pointer-events-none top-10 right-0 w-[500px] h-[500px] rounded-full opacity-50 blur-[100px]"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(251,191,36,0.20), transparent 60%)",
+        }}
+      />
 
-      <div className="max-w-7xl mx-auto relative">
-        <div className="text-center mb-20">
-          <div className="text-xs font-bold text-foreground/30 uppercase tracking-[0.2em] mb-4">
+      <div className="relative z-10 max-w-[1240px] mx-auto">
+        <div className="text-center mb-16 md:mb-20">
+          <span className="inline-block text-xs font-medium text-primary tracking-widest uppercase mb-4">
             Ready to rank?
-          </div>
-          <h2 className="text-4xl md:text-6xl font-display font-bold mb-6">
-            From signed to ranked <br />
-            <span className="text-foreground/50">- in 90 days.</span>
+          </span>
+          <h2 className="text-[clamp(32px,4.5vw,48px)] font-semibold tracking-tight text-foreground mb-5 leading-[1.1] [text-wrap:balance]">
+            From signed to ranked{" "}
+            <span className="font-semibold text-primary">in 90 days.</span>
           </h2>
-          <p className="text-foreground/40 max-w-2xl mx-auto text-lg">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             A structured rollout designed to compound from week one.
           </p>
         </div>
 
         <div className="relative">
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-foreground/10 -translate-x-1/2 hidden md:block" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2 hidden md:block" />
 
           <div className="space-y-12 md:space-y-0">
             {steps.map((step, i) => (

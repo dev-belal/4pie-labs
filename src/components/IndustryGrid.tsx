@@ -10,7 +10,7 @@ const INDUSTRIES = [
   {
     title: "Tour operators",
     sub: "Where 60% of our book lives. Tours, attractions, hospitality.",
-    href: "/services#tour",
+    href: "/audit",
     Icon: Compass,
     gradient:
       "linear-gradient(135deg, rgba(251,191,36,0.22), rgba(232,155,124,0.24))",
@@ -18,7 +18,7 @@ const INDUSTRIES = [
   {
     title: "Painting contractors",
     sub: "Where our craftsmanship pays. Residential + commercial.",
-    href: "/services#painting",
+    href: "/audit",
     Icon: Home,
     gradient:
       "linear-gradient(135deg, rgba(232,155,124,0.24), rgba(217,119,6,0.22))",
@@ -26,7 +26,7 @@ const INDUSTRIES = [
   {
     title: "Other local services",
     sub: "Landscaping, roofing, wellness, professional services.",
-    href: "/services#local",
+    href: "/audit",
     Icon: Sparkles,
     gradient:
       "linear-gradient(135deg, rgba(217,119,6,0.22), rgba(251,191,36,0.22))",

@@ -40,7 +40,7 @@ export function AEOCallout() {
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Link
-              href="/services#aeo"
+              href="/services/aeo"
               className="inline-flex items-center gap-2 bg-surface hover:bg-surface-2 border border-border text-foreground px-5 py-3 rounded-lg text-sm font-medium transition-colors"
             >
               How AEO works

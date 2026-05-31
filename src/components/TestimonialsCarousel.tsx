@@ -163,9 +163,9 @@ export function TestimonialsCarousel({
             aria-label="Previous testimonial"
             onClick={() => paginate(-1)}
             disabled={isAtStart}
-            className="p-4 rounded-full glass-morphism border-foreground/10 hover:border-primary/50 hover:bg-foreground/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-foreground/10 disabled:hover:bg-transparent"
+            className="p-3.5 rounded-full bg-surface border border-card-border hover:border-primary/40 shadow-[var(--shadow-pill)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <ChevronLeft className="w-6 h-6 text-foreground/50 group-hover/btn:text-primary transition-colors" />
+            <ChevronLeft className="w-5 h-5 text-muted-foreground group-hover/btn:text-primary transition-colors" />
           </button>
         </div>
         <div className="absolute top-1/2 -translate-y-1/2 right-0 z-20 hidden md:block">
@@ -174,9 +174,9 @@ export function TestimonialsCarousel({
             aria-label="Next testimonial"
             onClick={() => paginate(1)}
             disabled={isAtEnd}
-            className="p-4 rounded-full glass-morphism border-foreground/10 hover:border-primary/50 hover:bg-foreground/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-foreground/10 disabled:hover:bg-transparent"
+            className="p-3.5 rounded-full bg-surface border border-card-border hover:border-primary/40 shadow-[var(--shadow-pill)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all group/btn disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <ChevronRight className="w-6 h-6 text-foreground/50 group-hover/btn:text-primary transition-colors" />
+            <ChevronRight className="w-5 h-5 text-muted-foreground group-hover/btn:text-primary transition-colors" />
           </button>
         </div>
 
@@ -204,10 +204,10 @@ export function TestimonialsCarousel({
                       ? undefined
                       : { y: -6, transition: { duration: 0.25 } }
                   }
-                  className="p-8 glass-morphism rounded-[40px] hover:border-primary/30 hover:bg-foreground/[0.04] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] flex flex-col justify-between h-full transform-gpu transition-all"
+                  className="p-7 md:p-8 bg-surface border border-card-border rounded-2xl shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] flex flex-col justify-between h-full transform-gpu transition-all"
                 >
                   <div>
-                    <div className="flex gap-1 mb-6">
+                    <div className="flex gap-1 mb-5">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                           key={star}
@@ -215,30 +215,29 @@ export function TestimonialsCarousel({
                         />
                       ))}
                     </div>
-                    <h3 className="text-xl font-bold mb-4 text-foreground leading-tight min-h-[3.5rem]">
+                    <h3 className="text-lg font-semibold tracking-tight mb-3 text-foreground leading-tight min-h-[3rem]">
                       {t.headline}
                     </h3>
-                    <p className="text-sm text-foreground/50 leading-relaxed mb-8 italic">
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-6">
                       &ldquo;{t.quote}&rdquo;
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-4 border-t border-foreground/5 pt-6 mt-auto">
-                    <div className="relative group/avatar w-12 h-12">
-                      <div className="absolute inset-0 bg-primary/20 blur-md rounded-full pointer-events-none opacity-0 group-hover/avatar:opacity-100 transition-opacity" />
+                  <div className="flex items-center gap-3 border-t border-border pt-5 mt-auto">
+                    <div className="relative w-10 h-10 shrink-0">
                       <Image
                         src={t.avatar}
                         alt={t.name}
                         fill
-                        sizes="48px"
-                        className="rounded-full object-cover relative border border-foreground/10 grayscale hover:grayscale-0 transition-all duration-500"
+                        sizes="40px"
+                        className="rounded-full object-cover border border-card-border"
                       />
                     </div>
-                    <div>
-                      <div className="font-bold text-sm text-foreground">
+                    <div className="min-w-0">
+                      <div className="font-semibold text-sm text-foreground truncate">
                         {t.name}
                       </div>
-                      <div className="text-[10px] text-foreground/30 uppercase tracking-wider font-semibold">
+                      <div className="text-[10px] text-subtle-foreground uppercase tracking-wider font-medium truncate">
                         {t.role}
                       </div>
                     </div>
@@ -257,7 +256,7 @@ export function TestimonialsCarousel({
           aria-label="Previous testimonial"
           onClick={() => paginate(-1)}
           disabled={isAtStart}
-          className="p-4 rounded-full glass-morphism border-foreground/10 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-foreground/50 disabled:opacity-30 disabled:cursor-not-allowed"
+          className="p-3.5 rounded-full bg-surface border border-card-border hover:border-primary/40 shadow-[var(--shadow-pill)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-muted-foreground hover:text-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -266,7 +265,7 @@ export function TestimonialsCarousel({
           aria-label="Next testimonial"
           onClick={() => paginate(1)}
           disabled={isAtEnd}
-          className="p-4 rounded-full glass-morphism border-foreground/10 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-foreground/50 disabled:opacity-30 disabled:cursor-not-allowed"
+          className="p-3.5 rounded-full bg-surface border border-card-border hover:border-primary/40 shadow-[var(--shadow-pill)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background text-muted-foreground hover:text-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
@@ -283,7 +282,7 @@ export function TestimonialsCarousel({
             className={`h-1.5 rounded-full transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
               i === currentIndex
                 ? "bg-primary w-8"
-                : "bg-foreground/10 w-2 hover:bg-foreground/20"
+                : "bg-border w-2 hover:bg-muted-foreground"
             }`}
           />
         ))}
