@@ -42,12 +42,12 @@ const PILLARS: Pillar[] = [
   {
     label: "AI-First SEO + AEO",
     subtitle:
-      "Win every search that matters — including the ones happening inside ChatGPT.",
+      "Win every search that matters - including the ones happening inside ChatGPT.",
     services: [
       {
         title: "Local SEO",
         slug: "local-seo",
-        desc: 'Rank in the top 3 for every search a customer in your area is making — Google, Maps, "near me" queries, and long-tail intent.',
+        desc: 'Rank in the top 3 for every search a customer in your area is making - Google, Maps, "near me" queries, and long-tail intent.',
         icon: MapPin,
         color: "from-blue-500 to-cyan-400",
       },
@@ -89,7 +89,7 @@ const PILLARS: Pillar[] = [
       {
         title: "YouTube + Video Ads",
         slug: "video-ads",
-        desc: "Short-form ad creative engineered for local awareness and remarketing — designed to make you the obvious choice.",
+        desc: "Short-form ad creative engineered for local awareness and remarketing - designed to make you the obvious choice.",
         icon: Play,
         color: "from-rose-500 to-red-400",
       },
@@ -103,7 +103,7 @@ const PILLARS: Pillar[] = [
       {
         title: "Custom Landing Pages",
         slug: "landing-pages",
-        desc: "Each campaign gets its own landing page, built to convert — not a homepage that hopes for the best.",
+        desc: "Each campaign gets its own landing page, built to convert - not a homepage that hopes for the best.",
         icon: MousePointerClick,
         color: "from-purple-500 to-pink-400",
       },
@@ -138,7 +138,7 @@ const PILLARS: Pillar[] = [
       {
         title: "Custom Dashboards",
         slug: "dashboards",
-        desc: "The same dashboards we use to manage your campaigns, available to you — your data, in one place, in real time.",
+        desc: "The same dashboards we use to manage your campaigns, available to you - your data, in one place, in real time.",
         icon: LayoutDashboard,
         color: "from-fuchsia-500 to-purple-400",
       },

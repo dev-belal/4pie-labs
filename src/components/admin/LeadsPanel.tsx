@@ -452,7 +452,7 @@ function humanizeKey(k: string) {
 }
 
 function formatValue(v: unknown): string {
-  if (v == null) return "—";
+  if (v == null) return "-";
   if (typeof v === "number") return v.toLocaleString();
   if (typeof v === "string") return v;
   return JSON.stringify(v, null, 2);

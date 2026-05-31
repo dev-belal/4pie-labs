@@ -1,4 +1,4 @@
-// Phase 3 logos row — text mocks of placeholder client names from the v2
+// Phase 3 logos row - text mocks of placeholder client names from the v2
 // design. Replace with real logos before public launch.
 
 const LOGOS = [

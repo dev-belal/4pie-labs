@@ -12,7 +12,7 @@ const inter = Inter({
   display: "swap",
 });
 
-// Instrument Serif — italic accent on hero headlines only ("finds first.").
+// Instrument Serif - italic accent on hero headlines only ("finds first.").
 // Single italic display weight is enough; we never set it as the body font.
 const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
@@ -22,11 +22,13 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-// Inline theme-boot — runs before paint so the user's saved choice paints
-// without a flash of the wrong theme. Storage key is versioned (:v2) so the
-// black+amber brand pivot resets everyone's previously-cached "dark" choice
-// back to the light default. New toggles persist under the v2 key.
-const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:theme:v2')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
+// Inline theme-boot. Dark is the CSS default (defined in @theme), so the
+// script only needs to set data-theme="light" when the user has explicitly
+// opted in to light. Anything else (no stored value, "dark", or a script
+// failure) leaves the dark default intact. Storage key is versioned (:v3)
+// so old :v1 / :v2 caches are ignored - everyone hits the new dark default
+// on first load.
+const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:theme:v3');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -70,7 +72,7 @@ export default function RootLayout({
     url: SITE.url,
     logo: `${SITE.url}/logo.png`,
     description:
-      "4Pie Labs helps painting contractors, tour operators, and local service businesses dominate Google, Maps, and AI answer engines. AI-first marketing built by a tech company — not a traditional agency.",
+      "4Pie Labs helps painting contractors, tour operators, and local service businesses dominate Google, Maps, and AI answer engines. AI-first marketing built by a tech company - not a traditional agency.",
     sameAs: [
       "https://www.linkedin.com/company/4-pie-labs/",
       "https://www.instagram.com/devbelaal",

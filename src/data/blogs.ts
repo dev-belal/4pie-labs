@@ -29,7 +29,7 @@ export const blogs: BlogPost[] = [
     content: `
 # How to calculate ROI for AI automation projects
 
-Integrating AI into your business isn't just about being "modern"—it's about the bottom line. But how do you measure the success of an automation project?
+Integrating AI into your business isn't just about being "modern"-it's about the bottom line. But how do you measure the success of an automation project?
 
 ## The Core Framework
 

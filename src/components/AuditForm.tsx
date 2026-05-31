@@ -6,7 +6,7 @@ import { submitAuditLead } from "@/lib/actions";
 import { initialFormState } from "@/lib/form-types";
 
 /**
- * Phase 3 audit lead form — posts to submitAuditLead which validates with
+ * Phase 3 audit lead form - posts to submitAuditLead which validates with
  * auditLeadSchema and inserts into the leads table under source "Free AI
  * audit" (type "contact" since the lead_type enum doesn't have an "audit"
  * value; the source string is the discriminator the admin panel uses).

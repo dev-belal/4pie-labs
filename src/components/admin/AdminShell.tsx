@@ -39,7 +39,7 @@ export function AdminShell({
   const router = useRouter();
 
   // We dropped the Supabase realtime channel when we moved off Supabase Auth
-  // — the anon client can no longer SELECT leads/conversations/messages, so
+  // - the anon client can no longer SELECT leads/conversations/messages, so
   // RLS would suppress the events. Poll every 15s while the tab is visible;
   // server actions still force an immediate revalidate on explicit edits.
   useEffect(() => {

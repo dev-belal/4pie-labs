@@ -9,7 +9,7 @@ import {
 
 /**
  * Lightweight HMAC-signed cookie session for the admin portal.
- * No Supabase Auth involved — the admin logs in with env-var credentials
+ * No Supabase Auth involved - the admin logs in with env-var credentials
  * and we issue a signed cookie that server actions / pages can verify.
  *
  * The crypto + token encoding lives in `@/lib/admin-token` (no `next/headers`

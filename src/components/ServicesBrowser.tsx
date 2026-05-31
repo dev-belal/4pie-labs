@@ -23,7 +23,7 @@ export function ServicesBrowser() {
   const searchParams = useSearchParams();
 
   /** Resolve the initial category from `?category=<slug>` in the URL on
-   *  first render — lets the footer / other pages deep-link into a
+   *  first render - lets the footer / other pages deep-link into a
    *  pre-filtered catalog. Falls back to the first category. */
   const categoryFromUrl = (): ServiceCategory => {
     const raw = searchParams.get("category");
@@ -74,7 +74,7 @@ export function ServicesBrowser() {
                 Browse by category
               </h2>
               <p className="text-muted-foreground text-sm">
-                Three buckets — the same three you see in the nav. Pick one
+                Three buckets - the same three you see in the nav. Pick one
                 or search across all.
               </p>
             </div>

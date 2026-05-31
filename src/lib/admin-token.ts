@@ -63,7 +63,7 @@ export function makeAdminToken(
 /**
  * Verify a raw token string. Returns the payload if the signature is valid
  * (timing-safe compare) and the token is unexpired; otherwise null.
- * Never throws — a missing/short secret or malformed token yields null so
+ * Never throws - a missing/short secret or malformed token yields null so
  * callers (including the Proxy gate) can fail closed safely.
  */
 export function verifyAdminToken(token: string): SessionPayload | null {
@@ -75,7 +75,7 @@ export function verifyAdminToken(token: string): SessionPayload | null {
   try {
     expected = sign(payloadB64);
   } catch {
-    // Missing/short ADMIN_SESSION_SECRET — treat as unauthenticated.
+    // Missing/short ADMIN_SESSION_SECRET - treat as unauthenticated.
     return null;
   }
 

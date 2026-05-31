@@ -17,7 +17,7 @@ import type { Mesh } from "three";
  * are pushed wider and farther back than the centerpiece so the focal
  * area behind the headline stays soft (no element competes with the type).
  *
- * Loaded via next/dynamic with ssr:false from Hero.tsx — three.js touches
+ * Loaded via next/dynamic with ssr:false from Hero.tsx - three.js touches
  * `window` at module-eval time, so it must never run on the server.
  */
 function CoreMesh() {
@@ -62,7 +62,7 @@ export default function HeroScene() {
       <pointLight position={[0, 0, 4]} intensity={0.5} color="#ffffff" />
 
       <Suspense fallback={null}>
-        {/* Centerpiece — pushed back so it sits behind the headline */}
+        {/* Centerpiece - pushed back so it sits behind the headline */}
         <Float
           speed={1.2}
           rotationIntensity={0.5}
@@ -72,7 +72,7 @@ export default function HeroScene() {
           <CoreMesh />
         </Float>
 
-        {/* Satellite — accent torus, far top-right */}
+        {/* Satellite - accent torus, far top-right */}
         <Float
           speed={1.6}
           rotationIntensity={1.4}
@@ -91,7 +91,7 @@ export default function HeroScene() {
           </mesh>
         </Float>
 
-        {/* Satellite — primary octahedron, far bottom-left */}
+        {/* Satellite - primary octahedron, far bottom-left */}
         <Float
           speed={1.4}
           rotationIntensity={1.1}
@@ -110,7 +110,7 @@ export default function HeroScene() {
           </mesh>
         </Float>
 
-        {/* Atmospheric sparkles — wider spread for backdrop coverage */}
+        {/* Atmospheric sparkles - wider spread for backdrop coverage */}
         <Sparkles
           count={90}
           scale={[12, 7, 5]}

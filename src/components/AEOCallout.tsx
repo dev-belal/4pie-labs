@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2, MessageCircle } from "lucide-react";
 
 /**
- * Phase 3 AEO wedge callout — the "Answer Engine Optimization" differentiator.
+ * Phase 3 AEO wedge callout - the "Answer Engine Optimization" differentiator.
  * Two-column on desktop: copy on the left, a stylized mock of a ChatGPT
  * conversation citing a 4Pie Labs client on the right. PLACEHOLDER content
  * (the client name and stats inside the mock are illustrative until a real
@@ -18,7 +18,7 @@ export function AEOCallout() {
         {/* Copy */}
         <div>
           <span
-            className="block font-serif italic text-[40px] md:text-[56px] leading-none text-primary/40 mb-2"
+            className="block font-semibold text-[40px] md:text-[56px] leading-none text-primary/30 tracking-tight mb-2"
             aria-hidden
           >
             01

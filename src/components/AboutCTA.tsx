@@ -19,7 +19,7 @@ export function AboutCTA() {
       >
         <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-3 [text-wrap:balance]">
           Ready to be the{" "}
-          <span className="font-serif italic font-normal text-primary">
+          <span className="font-semibold text-primary">
             first call
           </span>{" "}
           in your market?

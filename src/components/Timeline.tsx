@@ -28,7 +28,7 @@ const steps: Step[] = [
   {
     week: "Week 1",
     title: "Discovery & Audit",
-    desc: "We map your current presence (Google, Maps, GBP, AI engines, ads) against your top competitors and your top 50 buyer queries. You see exactly where you're losing — and what's possible.",
+    desc: "We map your current presence (Google, Maps, GBP, AI engines, ads) against your top competitors and your top 50 buyer queries. You see exactly where you're losing - and what's possible.",
     icon: Search,
   },
   {
@@ -59,7 +59,7 @@ const steps: Step[] = [
 
 /**
  * Respect the OS-level "reduce motion" preference. When on, we skip the
- * mouse-follow 3D tilt entirely — both for accessibility (vestibular
+ * mouse-follow 3D tilt entirely - both for accessibility (vestibular
  * disorders) and to avoid jank on low-end devices that tend to match
  * this setting by default.
  */
@@ -148,7 +148,7 @@ export function Timeline() {
           </div>
           <h2 className="text-4xl md:text-6xl font-display font-bold mb-6">
             From signed to ranked <br />
-            <span className="text-foreground/50">— in 90 days.</span>
+            <span className="text-foreground/50">- in 90 days.</span>
           </h2>
           <p className="text-foreground/40 max-w-2xl mx-auto text-lg">
             A structured rollout designed to compound from week one.

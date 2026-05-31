@@ -18,7 +18,7 @@ const SERVICES: { label: string; href: string }[] = [
 /**
  * The footer is *deliberately* kept dark in Phase 2. The Mailchimp / Webflow /
  * Linear marketing pattern is a dark footer punctuating an otherwise light
- * page — it separates "site content" from "site meta" without a hard edge.
+ * page - it separates "site content" from "site meta" without a hard edge.
  */
 export function Footer() {
   return (

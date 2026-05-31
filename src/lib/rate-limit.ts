@@ -1,7 +1,7 @@
 /**
  * Lean in-memory rate limiter. Fine for single-instance deployments.
  * For multi-region / serverless, swap for Upstash Redis or a Vercel KV-backed
- * implementation — the function signature stays the same.
+ * implementation - the function signature stays the same.
  */
 
 type Bucket = { count: number; resetAt: number };

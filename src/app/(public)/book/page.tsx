@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     "Pick a 30-minute slot to talk about how 4Pie Labs can automate your operations. Calendar invite + Google Meet link sent automatically.",
   alternates: { canonical: "/book" },
   openGraph: {
-    title: "Book a strategy call — 4Pie Labs",
+    title: "Book a strategy call - 4Pie Labs",
     description:
       "Pick a 30-minute slot to talk about your AI automation roadmap.",
     url: "/book",

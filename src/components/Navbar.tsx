@@ -72,7 +72,7 @@ const PROGRAM_ITEMS: DropdownItem[] = [
   },
   {
     title: "Pipeline",
-    sub: "Lead-gen machine — ads + landing pages + AI scoring.",
+    sub: "Lead-gen machine - ads + landing pages + AI scoring.",
     href: "/programs#pipeline",
     Icon: Plus,
     tag: "Most popular",
@@ -86,7 +86,7 @@ const PROGRAM_ITEMS: DropdownItem[] = [
   },
   {
     title: "Pulse",
-    sub: "Social-first — Meta, YouTube, TikTok.",
+    sub: "Social-first - Meta, YouTube, TikTok.",
     href: "/programs#pulse",
     Icon: Activity,
   },
