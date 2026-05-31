@@ -18,6 +18,10 @@ type Industry = {
   alt: string;
 };
 
+// Tour operators imagery comes from Pixabay; the painter + storefront
+// shots are from Unsplash because the Pixabay IDs we tried for those
+// two didn't resolve. Both hostnames are configured under
+// next.config.ts `images.remotePatterns`.
 const INDUSTRIES: Industry[] = [
   {
     title: "Tour operators",
@@ -30,14 +34,14 @@ const INDUSTRIES: Industry[] = [
     title: "Painting contractors",
     sub: "Where our craftsmanship pays. Residential + commercial.",
     image:
-      "https://cdn.pixabay.com/photo/2017/05/13/19/13/painter-2310148_1280.jpg",
+      "https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=1280&q=80",
     alt: "Painter applying paint with a roller to an interior wall",
   },
   {
     title: "Other local services",
     sub: "Landscaping, roofing, wellness, professional services.",
     image:
-      "https://cdn.pixabay.com/photo/2018/04/16/12/02/store-3324168_1280.jpg",
+      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1280&q=80",
     alt: "Independent small business storefront on a city street",
   },
 ];

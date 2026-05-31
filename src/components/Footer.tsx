@@ -106,21 +106,6 @@ export function Footer() {
               ))}
             </ul>
           </div>
-          <div>
-            <h4 className="text-background font-semibold text-xs uppercase tracking-widest mb-4">
-              Admin
-            </h4>
-            <ul className="space-y-3 text-background/60 text-sm">
-              <li>
-                <Link
-                  href="/admin/login"
-                  className="hover:text-primary transition-colors"
-                >
-                  Internal Portal
-                </Link>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
       <div className="mt-12 pt-12 border-t border-background/10 text-center text-background/50 text-xs">
