@@ -7,25 +7,23 @@ const QUICK_LINKS = [
   { label: "Services", href: "/services" },
 ];
 
-// The three pivot pillars. Linked to the /services catalog for now; per-pillar
-// anchors land in Phase 1C when /services is rebuilt.
+// The three pivot pillars - each links to its dedicated landing page.
 const SERVICES: { label: string; href: string }[] = [
-  { label: "AI-First SEO + AEO", href: "/services" },
-  { label: "Performance Ads", href: "/services" },
-  { label: "Custom AI Systems", href: "/services" },
+  { label: "AI-First SEO + AEO", href: "/services/aeo" },
+  { label: "Performance Ads", href: "/services/ads" },
+  { label: "Custom AI Systems", href: "/services/ai" },
 ];
 
 /**
- * The footer is *deliberately* kept dark in Phase 2. The Mailchimp / Webflow /
- * Linear marketing pattern is a dark footer punctuating an otherwise light
- * page - it separates "site content" from "site meta" without a hard edge.
+ * The footer is a contrast band that flips with the body theme via
+ * `bg-foreground` / `text-background` - dark band in light mode, cream
+ * band in dark mode. The logo follows: `data-footer-logo` triggers a
+ * theme-flipped CSS filter (white logo in light mode, dark logo in dark
+ * mode) so it stays visible whichever side the footer lands on.
  */
 export function Footer() {
   return (
-    <footer
-      data-theme="light"
-      className="pt-24 pb-12 px-4 bg-foreground text-background"
-    >
+    <footer className="pt-24 pb-12 px-4 bg-foreground text-background">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12 items-center md:items-start">
         <div className="text-center md:text-left md:ml-5 flex flex-col items-center md:items-start">
           <Link href="/" className="mb-4 inline-flex items-center gap-3">
@@ -34,7 +32,8 @@ export function Footer() {
               alt="4Pie Labs"
               width={128}
               height={32}
-              className="h-8 w-auto brightness-0 invert"
+              data-footer-logo
+              className="h-8 w-auto"
             />
           </Link>
           <p className="text-background/60 max-w-xs mb-6 px-4 md:px-0 text-sm">
