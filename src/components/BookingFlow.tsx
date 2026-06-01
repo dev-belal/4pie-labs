@@ -288,14 +288,22 @@ export function BookingFlow() {
           <div className="md:grid md:grid-cols-[1fr_auto] md:gap-12 md:items-stretch">
             {/* Desktop info column - logo, dialogue, bullets, timezone */}
             <div className="hidden md:flex md:flex-col">
-              <Image
-                src="/logo.png"
-                alt="4Pie Labs"
-                width={120}
-                height={28}
-                data-logo
-                className="h-7 w-auto mb-7"
-              />
+              {/* Constrained logo. The data-logo filter inverts the dark
+                  PNG to cream on dark mode (and leaves it untouched on
+                  light), but at large sizes it can ghost - we cap height
+                  at 24px and let the width auto-scale to keep the wordmark
+                  crisp and proportional. */}
+              <div className="mb-7">
+                <Image
+                  src="/logo.png"
+                  alt="4Pie Labs"
+                  width={96}
+                  height={24}
+                  data-logo
+                  priority
+                  className="h-6 w-auto"
+                />
+              </div>
 
               <h2 className="text-xl font-semibold tracking-tight text-foreground mb-2">
                 What we&apos;ll cover

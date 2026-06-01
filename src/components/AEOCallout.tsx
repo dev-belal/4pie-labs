@@ -17,12 +17,6 @@ export function AEOCallout() {
       <div className="max-w-[1240px] mx-auto grid lg:grid-cols-[1.05fr_1fr] gap-12 lg:gap-16 items-center">
         {/* Copy */}
         <div>
-          <span
-            className="block font-semibold text-[40px] md:text-[56px] leading-none text-primary/30 tracking-tight mb-2"
-            aria-hidden
-          >
-            01
-          </span>
           <span className="block text-xs font-medium text-primary tracking-widest uppercase mb-3">
             The wedge · Answer Engine Optimization
           </span>

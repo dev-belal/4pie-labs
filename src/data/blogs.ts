@@ -23,7 +23,7 @@ export const blogs: BlogPost[] = [
     date: "Feb 24, 2026",
     readTime: "8 min read",
     image:
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1280&q=80",
     excerpt:
       "Learn the exact framework for measuring the financial impact of AI integration in your agency operations.",
     content: `
@@ -64,7 +64,7 @@ By following this framework, you can present a clear, data-backed case for AI in
     date: "Feb 20, 2026",
     readTime: "5 min read",
     image:
-      "https://images.unsplash.com/photo-1675557009875-436f09709f5e?q=80&w=800&auto=format&fit=crop",
+      "https://cdn.pixabay.com/photo/2017/05/04/16/37/meeting-2284501_1280.jpg",
     excerpt:
       "Discover the low-hanging fruit in your workflow that can be handled by simple AI agents immediately.",
     content: `
@@ -99,7 +99,7 @@ Start with one, master it, and move to the next. High-impact automation is about
     date: "Feb 15, 2026",
     readTime: "6 min read",
     image:
-      "https://images.unsplash.com/photo-1684128080072-520e5b721e7d?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1280&q=80",
     excerpt:
       "Avoid the pitfalls that drain budgets and frustrate teams during AI implementation.",
     content: `
