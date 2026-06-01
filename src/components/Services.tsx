@@ -241,7 +241,13 @@ export function Services() {
 
       <div className="relative z-10 max-w-[1240px] mx-auto">
         <div className="text-center mb-10 md:mb-12">
-          <span className="inline-block text-xs font-medium text-primary tracking-widest uppercase mb-4">
+          <span
+            className="block font-semibold text-[40px] md:text-[56px] leading-none text-primary/30 tracking-tight mb-2"
+            aria-hidden
+          >
+            02
+          </span>
+          <span className="block text-xs font-medium text-muted-foreground tracking-widest uppercase mb-3">
             The system
           </span>
           <h2 className="text-[clamp(32px,4.5vw,48px)] font-semibold tracking-tight text-foreground mb-5 leading-[1.1] [text-wrap:balance]">

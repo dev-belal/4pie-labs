@@ -9,12 +9,14 @@ import {
   useState,
   useTransition,
 } from "react";
+import Image from "next/image";
 import { DayPicker } from "react-day-picker";
 import {
   ArrowLeft,
   ArrowRight,
   Calendar as CalendarIcon,
   Check,
+  CheckCircle2,
   Clock,
   Loader2,
   Mail,
@@ -276,51 +278,104 @@ export function BookingFlow() {
 
       {step === "date" && (
         <div className="bg-surface border border-card-border rounded-2xl shadow-[var(--shadow-card)] p-6 md:p-10">
-          <div className="flex items-center gap-2 text-xs text-subtle-foreground mb-6">
+          {/* Mobile-only timezone hint - desktop puts it at the bottom of
+              the left column instead. */}
+          <div className="md:hidden flex items-center gap-2 text-xs text-subtle-foreground mb-6">
             <Clock className="w-3.5 h-3.5" />
             All times shown in {timeZone}
           </div>
-          {loadError ? (
-            <div className="text-error text-sm py-12 text-center">
-              {loadError}
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              <DayPicker
-                mode="single"
-                month={month}
-                onMonthChange={setMonth}
-                selected={selectedDay}
-                onSelect={(day) => {
-                  if (!day) return;
-                  const key = ymdKey(day);
-                  if ((slotsByDay[key]?.length ?? 0) === 0) return;
-                  setSelectedDay(day);
-                  setSelectedSlot(undefined);
-                  setStep("time");
-                }}
-                modifiers={
-                  availableDays.length > 0
-                    ? { available: availableDays }
-                    : undefined
-                }
-                modifiersClassNames={{
-                  available: "font-bold text-primary",
-                  selected: "bg-primary text-on-primary",
-                }}
-                disabled={{ before: new Date() }}
-                classNames={{
-                  day: "rounded-xl w-10 h-10 text-sm transition-colors",
-                }}
+
+          <div className="md:grid md:grid-cols-[1fr_auto] md:gap-12 md:items-stretch">
+            {/* Desktop info column - logo, dialogue, bullets, timezone */}
+            <div className="hidden md:flex md:flex-col">
+              <Image
+                src="/logo.png"
+                alt="4Pie Labs"
+                width={120}
+                height={28}
+                data-logo
+                className="h-7 w-auto mb-7"
               />
+
+              <h2 className="text-xl font-semibold tracking-tight text-foreground mb-2">
+                What we&apos;ll cover
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mb-5">
+                30 minutes, no pitch deck. We walk through your market, the
+                gaps your competitors are filling, and the AEO + ads plan
+                that gets you the next customer.
+              </p>
+
+              <ul className="space-y-2.5 max-w-sm">
+                {[
+                  "Your top buyer queries vs. the Maps pack",
+                  "AEO citations across ChatGPT, Perplexity, Gemini",
+                  "Ad coverage + conversion path",
+                  "A concrete next-step plan, free",
+                ].map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-start gap-2.5 text-sm"
+                  >
+                    <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
+                    <span className="text-foreground/90 leading-snug">
+                      {item}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-auto pt-8 flex items-center gap-2 text-xs text-subtle-foreground">
+                <Clock className="w-3.5 h-3.5" />
+                All times shown in {timeZone}
+              </div>
             </div>
-          )}
-          {loading && (
-            <div className="flex items-center justify-center gap-2 text-subtle-foreground text-xs mt-4">
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              Loading availability…
+
+            {/* Calendar - desktop: pinned right, full-size. Mobile: centered. */}
+            <div className="md:justify-self-end">
+              {loadError ? (
+                <div className="text-error text-sm py-12 text-center">
+                  {loadError}
+                </div>
+              ) : (
+                <div className="flex justify-center md:justify-end">
+                  <DayPicker
+                    mode="single"
+                    month={month}
+                    onMonthChange={setMonth}
+                    selected={selectedDay}
+                    onSelect={(day) => {
+                      if (!day) return;
+                      const key = ymdKey(day);
+                      if ((slotsByDay[key]?.length ?? 0) === 0) return;
+                      setSelectedDay(day);
+                      setSelectedSlot(undefined);
+                      setStep("time");
+                    }}
+                    modifiers={
+                      availableDays.length > 0
+                        ? { available: availableDays }
+                        : undefined
+                    }
+                    modifiersClassNames={{
+                      available: "font-bold text-primary",
+                      selected: "bg-primary text-on-primary",
+                    }}
+                    disabled={{ before: new Date() }}
+                    classNames={{
+                      day: "rounded-xl w-10 h-10 text-sm transition-colors",
+                    }}
+                  />
+                </div>
+              )}
+              {loading && (
+                <div className="flex items-center justify-center gap-2 text-subtle-foreground text-xs mt-4">
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Loading availability…
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       )}
 
