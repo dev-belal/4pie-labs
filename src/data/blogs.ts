@@ -23,7 +23,7 @@ export const blogs: BlogPost[] = [
     date: "Feb 24, 2026",
     readTime: "8 min read",
     image:
-      "https://cdn.pixabay.com/photo/2017/12/09/07/40/artificial-intelligence-3007211_1280.jpg",
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1280&q=80",
     excerpt:
       "Learn the exact framework for measuring the financial impact of AI integration in your agency operations.",
     content: `
@@ -99,7 +99,7 @@ Start with one, master it, and move to the next. High-impact automation is about
     date: "Feb 15, 2026",
     readTime: "6 min read",
     image:
-      "https://cdn.pixabay.com/photo/2017/05/15/20/14/binary-code-2316272_1280.jpg",
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1280&q=80",
     excerpt:
       "Avoid the pitfalls that drain budgets and frustrate teams during AI implementation.",
     content: `
