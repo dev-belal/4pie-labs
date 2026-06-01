@@ -22,13 +22,23 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-// Inline theme-boot. Dark is the CSS default (defined in @theme), so the
-// script only needs to set data-theme="light" when the user has explicitly
-// opted in to light. Anything else (no stored value, "dark", or a script
-// failure) leaves the dark default intact. Storage key is versioned (:v3)
-// so old :v1 / :v2 caches are ignored - everyone hits the new dark default
-// on first load.
-const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:theme:v3');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();`;
+// Inline theme + scroll boot. Runs before paint.
+//
+// 1. Theme: dark is the CSS default (defined in @theme), so the script
+//    only needs to set data-theme="light" when the user has explicitly
+//    opted in to light. Storage key is versioned (:v3) so old :v1/:v2
+//    caches are ignored.
+//
+// 2. Scroll: `history.scrollRestoration = "manual"` opts out of the
+//    browser's automatic "restore the scroll position the visitor was
+//    at before the refresh" behavior. Combined with an explicit
+//    `scrollTo(0,0)` on DOMContentLoaded, this means a refresh always
+//    lands at the top of the page (the request the user expects when
+//    they hit Cmd-R / Ctrl-R / F5). Next.js's App Router handles
+//    scroll-on-navigation separately, so this only affects the
+//    initial / refresh load - not in-app navigation, which still
+//    auto-scrolls to top.
+const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:theme:v3');if(t==='light')document.documentElement.setAttribute('data-theme','light');if('scrollRestoration' in history)history.scrollRestoration='manual';window.addEventListener('DOMContentLoaded',function(){window.scrollTo(0,0);});}catch(e){}})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
