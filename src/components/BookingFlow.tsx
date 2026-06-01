@@ -9,6 +9,7 @@ import {
   useState,
   useTransition,
 } from "react";
+import Image from "next/image";
 import { DayPicker } from "react-day-picker";
 import {
   ArrowLeft,
@@ -285,20 +286,23 @@ export function BookingFlow() {
           </div>
 
           <div className="md:grid md:grid-cols-[1fr_auto] md:gap-12 md:items-stretch">
-            {/* Desktop info column - brand mark, dialogue, bullets, timezone */}
+            {/* Desktop info column - logo, dialogue, bullets, timezone */}
             <div className="hidden md:flex md:flex-col">
-              {/* Typographic brand mark - avoids the data-logo filter that
-                  rendered the PNG ghosted on dark bg. Always crisp because
-                  it's tokens + Inter, not a raster image. */}
-              <div className="inline-flex items-center gap-2.5 mb-7 w-fit">
-                <span className="w-9 h-9 rounded-xl bg-primary-muted grid place-items-center shrink-0">
-                  <span className="text-primary font-bold text-sm leading-none tracking-tight">
-                    4P
-                  </span>
-                </span>
-                <span className="text-base font-semibold tracking-tight text-foreground">
-                  4Pie Labs
-                </span>
+              {/* Constrained logo. The data-logo filter inverts the dark
+                  PNG to cream on dark mode (and leaves it untouched on
+                  light), but at large sizes it can ghost - we cap height
+                  at 24px and let the width auto-scale to keep the wordmark
+                  crisp and proportional. */}
+              <div className="mb-7">
+                <Image
+                  src="/logo.png"
+                  alt="4Pie Labs"
+                  width={96}
+                  height={24}
+                  data-logo
+                  priority
+                  className="h-6 w-auto"
+                />
               </div>
 
               <h2 className="text-xl font-semibold tracking-tight text-foreground mb-2">
