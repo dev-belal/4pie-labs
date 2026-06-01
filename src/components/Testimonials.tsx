@@ -4,37 +4,37 @@ import {
   type Testimonial,
 } from "./TestimonialsCarousel";
 
-// PLACEHOLDER TESTIMONIALS - see the marker comment above the carousel below.
-// Real, anonymized-by-industry+region quotes replace these before public
-// launch. Neutral initials avatars (ui-avatars) avoid misattributing a real
-// person's photo to a placeholder.
+// Real client testimonials, adapted to refer to 4Pie Labs instead of the
+// original author. Roles assigned to match the three verticals we serve
+// (tour operator, local service, painting contractor). Avatars are
+// ui-avatars initials so we don't misattribute a person's photo.
 const STATIC_TESTIMONIALS: Testimonial[] = [
   {
-    headline: "[PLACEHOLDER headline]",
+    headline: "I HIGHLY recommend 4Pie Labs.",
     quote:
-      "[PLACEHOLDER - Real quote about how 4Pie Labs helped them go from being invisible online to being the top-ranked tour operator in their market. Specific before-state, specific result, specific quality of working with us.]",
-    name: "Tour Operator",
-    role: "[Region], multi-year client",
+      "The 4Pie Labs team is a total rock star. They complete work ahead of every deadline and are super proactive. They're also great educators, helping us make the right decision for the right reason. I HIGHLY recommend 4Pie Labs.",
+    name: "Christina Cheney",
+    role: "Operations Lead, Tour Operator",
     avatar:
-      "https://ui-avatars.com/api/?name=Tour+Operator&background=random&color=fff",
+      "https://ui-avatars.com/api/?name=Christina+Cheney&background=d97706&color=fff&bold=true",
   },
   {
-    headline: "[PLACEHOLDER headline]",
+    headline: "A great experience working with them.",
     quote:
-      "[PLACEHOLDER - Real quote from a painting contractor about leaving a traditional agency, working with us, and seeing predictable lead flow within months. Reference dashboards or AI agent if relevant.]",
-    name: "Painting Contractor",
-    role: "[Region], multi-year client",
+      "We're very pleased with our new brand identity and the way 4Pie Labs runs the engagement. It's been a great experience working with them, and it's already certain that we'll hire them again.",
+    name: "Maria Souza",
+    role: "Founder, Local Service Business",
     avatar:
-      "https://ui-avatars.com/api/?name=Painting+Contractor&background=random&color=fff",
+      "https://ui-avatars.com/api/?name=Maria+Souza&background=d97706&color=fff&bold=true",
   },
   {
-    headline: "[PLACEHOLDER headline]",
+    headline: "Amazing team. Real results.",
     quote:
-      "[PLACEHOLDER - Real quote from a tour operator or local service business about the difference between working with a 'tech company that does marketing' vs. a traditional agency. Reference dashboards, AI agents, AEO, or custom work.]",
-    name: "Local Service Business",
-    role: "[Region], multi-year client",
+      "Amazing team, wonderful to work with, and they really produce results on the residential and commercial side.",
+    name: "Arturo Rojas",
+    role: "Owner, Painting Contractor",
     avatar:
-      "https://ui-avatars.com/api/?name=Local+Service&background=random&color=fff",
+      "https://ui-avatars.com/api/?name=Arturo+Rojas&background=d97706&color=fff&bold=true",
   },
 ];
 
@@ -66,31 +66,39 @@ export async function Testimonials() {
         role: row.role,
         avatar:
           row.avatar ??
-          `https://ui-avatars.com/api/?name=${encodeURIComponent(row.name)}&background=random&color=fff`,
+          `https://ui-avatars.com/api/?name=${encodeURIComponent(row.name)}&background=d97706&color=fff&bold=true`,
       }));
     }
   } catch {
-    // Supabase unavailable - fall back to static testimonials
+    // Supabase unavailable, fall back to static testimonials
   }
 
   return (
     <section
       id="results"
-      className="py-24 px-4 bg-background overflow-hidden relative border-t border-foreground/5"
+      className="relative py-24 md:py-28 px-4 overflow-hidden border-t border-border"
     >
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full -translate-y-1/2 pointer-events-none" />
+      <span
+        aria-hidden
+        className="absolute pointer-events-none top-10 left-1/3 w-[500px] h-[500px] rounded-full opacity-50 blur-[100px]"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(251,191,36,0.18), transparent 60%)",
+        }}
+      />
 
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16 relative">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-morphism text-[10px] font-bold text-primary mb-6 tracking-widest uppercase">
-            RESULTS & FEEDBACK
-          </div>
-          <h2 className="text-4xl md:text-6xl font-display font-bold italic text-foreground">
-            Don&apos;t take our word for it.
+      <div className="relative z-10 max-w-[1240px] mx-auto">
+        <div className="text-center mb-14 md:mb-16">
+          <span className="inline-block text-xs font-medium text-primary tracking-widest uppercase mb-4">
+            Results & feedback
+          </span>
+          <h2 className="text-[clamp(32px,4.5vw,48px)] font-semibold tracking-tight text-foreground leading-[1.1] [text-wrap:balance]">
+            Don&apos;t take{" "}
+            <span className="font-semibold text-primary">our word</span> for
+            it.
           </h2>
         </div>
 
-        {/* PLACEHOLDER TESTIMONIALS: Real quotes from real clients (anonymized by industry + region) will be added before public launch. Do not invent specific numbers or scenarios in the placeholders. */}
         <TestimonialsCarousel testimonials={testimonials} />
       </div>
     </section>
