@@ -241,12 +241,6 @@ export function Services() {
 
       <div className="relative z-10 max-w-[1240px] mx-auto">
         <div className="text-center mb-10 md:mb-12">
-          <span
-            className="block font-semibold text-[40px] md:text-[56px] leading-none text-primary/30 tracking-tight mb-2"
-            aria-hidden
-          >
-            02
-          </span>
           <span className="block text-xs font-medium text-muted-foreground tracking-widest uppercase mb-3">
             The system
           </span>

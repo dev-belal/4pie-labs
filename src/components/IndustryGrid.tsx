@@ -53,12 +53,6 @@ export function IndustryGrid() {
     <section className="px-4 py-24 md:py-28">
       <div className="max-w-[1240px] mx-auto">
         <div className="text-center mb-12 md:mb-14">
-          <span
-            className="block font-semibold text-[40px] md:text-[56px] leading-none text-primary/30 tracking-tight mb-2"
-            aria-hidden
-          >
-            03
-          </span>
           <span className="block text-xs font-medium text-muted-foreground tracking-widest uppercase mb-3">
             Built for
           </span>
