@@ -18,6 +18,8 @@ import {
   services,
   type ServiceCategory,
 } from "@/data/services";
+import { JsonLd } from "@/components/JsonLd";
+import { SITE } from "@/lib/site";
 
 /**
  * One landing page per service category - /services/aeo, /services/ads,
@@ -35,7 +37,12 @@ type CategoryMeta = {
   eyebrow: string;
   headlinePrefix: string;
   headlineAccent: string;
+  /** Long-form value-prop rendered on the page hero. */
   subhead: string;
+  /** Short (<160 char) version used by generateMetadata so search snippets
+   *  don't truncate. Kept distinct from `subhead` because the on-page copy
+   *  benefits from the longer pitch. */
+  metaDescription: string;
   Icon: LucideIcon;
   bullets: string[];
   faqs: { q: string; a: string }[];
@@ -48,6 +55,8 @@ const CATEGORY_META: Record<ServiceCategory, CategoryMeta> = {
     headlineAccent: "first.",
     subhead:
       "Local SEO + Google Business Profile + Answer Engine Optimization across ChatGPT, Perplexity, Gemini, and Google AI Overviews. We engineer your site to be the source those engines cite, not the link they skip.",
+    metaDescription:
+      "Get cited by ChatGPT, Perplexity, and Google AI Overviews. 4Pie Labs builds AI-first SEO and answer engine optimization for local service businesses.",
     Icon: MessageCircle,
     bullets: [
       "Top-3 Maps pack rankings for your 50 highest-intent buyer queries",
@@ -76,6 +85,8 @@ const CATEGORY_META: Record<ServiceCategory, CategoryMeta> = {
     headlineAccent: "pays.",
     subhead:
       "Google Search + Maps, Meta + Instagram, YouTube + TikTok, and the conversion path that ties every click to revenue. Predictable lead flow, every channel measured, no agency theatre.",
+    metaDescription:
+      "Performance ads that turn clicks into booked jobs. 4Pie Labs runs Google, Maps, and paid campaigns built for local service businesses.",
     Icon: Search,
     bullets: [
       "AI-optimized bidding + ad copy + targeting per channel",
@@ -104,6 +115,8 @@ const CATEGORY_META: Record<ServiceCategory, CategoryMeta> = {
     headlineAccent: "can't build.",
     subhead:
       "AI operating systems, autonomous agents, workflow automation, CRM integration, custom dashboards. The back-office layer that makes the rest of your marketing actually work - and that gives you data nobody else in your market has.",
+    metaDescription:
+      "Custom AI systems for local service businesses: lead scoring, attribution, and automation wired into one accountable funnel by 4Pie Labs.",
     Icon: Cpu,
     bullets: [
       "Custom AI agents that answer inquiries 24/7 + book appointments",
@@ -161,11 +174,11 @@ export async function generateMetadata({
   const meta = CATEGORY_META[category];
   return {
     title: meta.eyebrow,
-    description: meta.subhead,
+    description: meta.metaDescription,
     alternates: { canonical: `/services/${slug}` },
     openGraph: {
       title: `${meta.eyebrow} - 4Pie Labs`,
-      description: meta.subhead,
+      description: meta.metaDescription,
       url: `/services/${slug}`,
       type: "website",
     },
@@ -186,8 +199,79 @@ export default async function ServiceCategoryPage({
   const categoryServices = services.filter((s) => s.category === category);
   const otherCategories = categories.filter((c) => c !== category);
 
+  // Structured data, all bound to real values from CATEGORY_META + services.
+  // 4Pie Labs is a remote / national agency, so areaServed is the US as a
+  // Country - NOT a LocalBusiness, which would imply a physical storefront.
+  const headline = `${meta.headlinePrefix} ${meta.headlineAccent}`.trim();
+  const pageUrl = `${SITE.url}/services/${slug}`;
+
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: headline,
+    serviceType: category,
+    description: meta.metaDescription,
+    url: pageUrl,
+    provider: {
+      "@type": "Organization",
+      name: SITE.name,
+      url: SITE.url,
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
+    },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: `${category} catalog`,
+      itemListElement: categoryServices.map((s, i) => ({
+        "@type": "Offer",
+        position: i + 1,
+        itemOffered: {
+          "@type": "Service",
+          name: s.title,
+          description: s.desc,
+        },
+      })),
+    },
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: meta.faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE.url },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Services",
+        item: `${SITE.url}/services`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: category,
+        item: pageUrl,
+      },
+    ],
+  };
+
   return (
     <main className="relative px-4 pb-32 overflow-hidden">
+      <JsonLd data={serviceSchema} />
+      <JsonLd data={faqSchema} />
+      <JsonLd data={breadcrumbSchema} />
+
       {/* Local depth blobs */}
       <span
         aria-hidden

@@ -2,6 +2,23 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Quote, Search, Sparkles, Map } from "lucide-react";
 import { AboutCTA } from "@/components/AboutCTA";
+import { JsonLd } from "@/components/JsonLd";
+import { SITE } from "@/lib/site";
+
+// Founder identity used by the Person JSON-LD below. The visible social
+// links in the founder card are currently still hardcoded; if you update
+// the URLs in one place, update both so the schema doesn't drift from
+// what's on the page.
+const FOUNDER = {
+  name: "Syed Belal",
+  jobTitle: "Founder & CEO",
+  sameAs: [
+    "https://www.instagram.com/devbelaal",
+    "https://www.linkedin.com/in/syedbilalraza",
+    "https://www.x.com/devbelaal",
+    "https://www.youtube.com/@devbelaal",
+  ],
+} as const;
 
 export const metadata: Metadata = {
   title: "About",
@@ -45,8 +62,24 @@ const MILESTONES = [
 ];
 
 export default function AboutPage() {
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: FOUNDER.name,
+    jobTitle: FOUNDER.jobTitle,
+    url: `${SITE.url}/about`,
+    image: `${SITE.url}/founder.jpg`,
+    worksFor: {
+      "@type": "Organization",
+      name: SITE.name,
+      url: SITE.url,
+    },
+    sameAs: FOUNDER.sameAs,
+  };
+
   return (
     <main className="relative pt-12 md:pt-20 pb-32 px-4 overflow-hidden">
+      <JsonLd data={personSchema} />
       {/* Local depth blobs */}
       <span
         aria-hidden

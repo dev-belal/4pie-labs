@@ -14,9 +14,10 @@ import { BlogSection } from "@/components/BlogSection";
 import { JsonLd } from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
 
-const HOME_TITLE = `${SITE.name} - AI-First Marketing for Painting Contractors, Tour Operators & Local Service Businesses`;
+const HOME_TITLE =
+  "AI-First Marketing for Local Service Businesses | 4Pie Labs";
 const HOME_DESCRIPTION =
-  "4Pie Labs helps painting contractors, tour operators, and local service businesses dominate Google, Maps, and AI answer engines. AI-first marketing built by a tech company - not a traditional agency.";
+  "4Pie Labs helps painting contractors, tour operators, and local service businesses get found first on Google, Maps, and AI search. Book a free audit.";
 
 export const metadata: Metadata = {
   // `absolute` bypasses the root layout's "%s | 4Pie Labs" template since the
