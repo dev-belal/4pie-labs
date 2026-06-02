@@ -56,9 +56,9 @@ export function ConversationsPanel({
 
   if (conversations.length === 0) {
     return (
-      <div className="rounded-2xl border border-foreground/5 bg-foreground/[0.02] p-16 text-center">
-        <MessageCircle className="w-10 h-10 mx-auto text-foreground/20 mb-4" />
-        <p className="text-foreground/40 text-sm">
+      <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-16 text-center">
+        <MessageCircle className="w-10 h-10 mx-auto text-[var(--muted)] mb-4" />
+        <p className="text-[var(--muted)] text-sm">
           No chat sessions yet. Visitor conversations will appear here as they
           come in.
         </p>
@@ -68,33 +68,33 @@ export function ConversationsPanel({
 
   return (
     <>
-      <div className="space-y-3">
+      <div className="space-y-2">
         {conversations.map((c) => (
           <button
             key={c.id}
             type="button"
             onClick={() => setOpenId(c.id)}
-            className="w-full text-left p-5 rounded-2xl border border-foreground/5 bg-foreground/[0.02] hover:border-foreground/15 hover:bg-foreground/[0.04] transition-all group"
+            className="w-full text-left p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:border-[var(--border-strong)] hover:bg-[var(--surface-hover)] transition-colors group"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] text-foreground/40 uppercase tracking-widest font-bold">
+                  <span className="text-xs text-[var(--muted)] font-medium">
                     {c.lead_id ? "Lead captured" : "Anonymous"}
                   </span>
-                  <span className="text-foreground/20">·</span>
-                  <span className="text-[10px] text-foreground/40">
+                  <span className="text-[var(--faint)]">·</span>
+                  <span className="text-xs text-[var(--muted)]">
                     {c.message_count} msg
                   </span>
                 </div>
-                <p className="text-sm text-foreground/80 truncate">
+                <p className="text-sm text-[var(--fg)] truncate">
                   {c.preview ?? "(no user messages yet)"}
                 </p>
-                <p className="text-[11px] text-foreground/30 mt-1 font-mono truncate">
+                <p className="text-xs text-[var(--muted)] mt-1 font-mono truncate">
                   {c.session_id}
                 </p>
               </div>
-              <div className="text-[11px] text-foreground/40 shrink-0">
+              <div className="text-xs text-[var(--muted)] shrink-0 tabular-nums">
                 {timeAgo(c.last_message_at)}
               </div>
             </div>
@@ -117,12 +117,14 @@ export function ConversationsPanel({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.98 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-2xl max-h-[85vh] bg-surface border border-foreground/10 rounded-3xl shadow-2xl flex flex-col"
+              className="w-full max-w-2xl max-h-[85vh] bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xl flex flex-col"
             >
-              <header className="flex items-center justify-between p-5 border-b border-foreground/5">
+              <header className="flex items-center justify-between p-4 border-b border-[var(--border)]">
                 <div className="min-w-0">
-                  <h3 className="text-foreground font-bold">Chat transcript</h3>
-                  <p className="text-[11px] text-foreground/40 font-mono truncate">
+                  <h3 className="text-[var(--fg)] font-semibold">
+                    Chat transcript
+                  </h3>
+                  <p className="text-xs text-[var(--muted)] font-mono truncate">
                     {open.session_id}
                   </p>
                 </div>
@@ -130,15 +132,15 @@ export function ConversationsPanel({
                   type="button"
                   aria-label="Close transcript"
                   onClick={() => setOpenId(null)}
-                  className="p-2 rounded-full text-foreground/40 hover:bg-foreground/5 hover:text-foreground"
+                  className="p-2 rounded-full text-[var(--muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--fg)]"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </header>
 
-              <div className="flex-1 overflow-y-auto p-5 space-y-4">
+              <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {loading && (
-                  <p className="text-foreground/40 text-sm text-center py-8">
+                  <p className="text-[var(--muted)] text-sm text-center py-8">
                     Loading…
                   </p>
                 )}
@@ -151,21 +153,21 @@ export function ConversationsPanel({
                       <div
                         className={`w-8 h-8 rounded-full shrink-0 flex items-center justify-center border ${
                           m.role === "user"
-                            ? "bg-primary/10 border-primary/20"
-                            : "bg-foreground/5 border-foreground/10"
+                            ? "bg-[var(--accent-softer)] border-primary/30"
+                            : "bg-[var(--surface-hover)] border-[var(--border)]"
                         }`}
                       >
                         {m.role === "user" ? (
                           <User className="w-4 h-4 text-primary" />
                         ) : (
-                          <MessageCircle className="w-4 h-4 text-foreground/60" />
+                          <MessageCircle className="w-4 h-4 text-[var(--muted)]" />
                         )}
                       </div>
                       <div
                         className={`p-3 rounded-2xl text-sm leading-relaxed max-w-[80%] whitespace-pre-wrap ${
                           m.role === "user"
-                            ? "bg-primary/20 text-foreground rounded-tr-none"
-                            : "bg-foreground/5 text-foreground/80 rounded-tl-none border border-foreground/5"
+                            ? "bg-[var(--accent-soft)] text-[var(--on-soft)] rounded-tr-none"
+                            : "bg-[var(--surface-hover)] text-[var(--fg)] rounded-tl-none border border-[var(--border)]"
                         }`}
                       >
                         {m.content}
@@ -173,7 +175,7 @@ export function ConversationsPanel({
                     </div>
                   ))}
                 {!loading && thread?.length === 0 && (
-                  <p className="text-foreground/40 text-sm text-center py-8">
+                  <p className="text-[var(--muted)] text-sm text-center py-8">
                     No messages in this session.
                   </p>
                 )}

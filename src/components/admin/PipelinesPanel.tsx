@@ -39,9 +39,9 @@ const KIND_LABELS: Record<StageKind, string> = {
   lost: "Lost",
 };
 const KIND_DOT: Record<StageKind, string> = {
-  open: "bg-foreground/30",
-  won: "bg-emerald-400",
-  lost: "bg-red-400",
+  open: "bg-[var(--muted)]",
+  won: "bg-[var(--status-won)]",
+  lost: "bg-[var(--status-lost)]",
 };
 
 export function PipelinesPanel({
@@ -271,7 +271,7 @@ export function PipelinesPanel({
           onSelect={setActiveId}
           onNew={handleNewPipeline}
         />
-        <div className="flex gap-1 p-1 rounded-xl bg-foreground/5 border border-foreground/5">
+        <div className="flex gap-1 p-1 rounded-lg bg-[var(--surface-hover)] border border-[var(--border)]">
           <ViewTab
             active={view === "builder"}
             onClick={() => setView("builder")}
@@ -289,14 +289,14 @@ export function PipelinesPanel({
               <button
                 type="button"
                 onClick={() => handleAddStage(active.id)}
-                className="px-3 py-2 text-sm font-bold rounded-xl bg-primary text-on-primary hover:opacity-90 flex items-center gap-2"
+                className="px-3 py-2 text-sm font-semibold rounded-lg bg-primary text-on-primary hover:opacity-90 flex items-center gap-2"
               >
                 <Plus className="w-4 h-4" /> Add stage
               </button>
               <button
                 type="button"
                 onClick={() => handleArchivePipeline(active.id)}
-                className="px-3 py-2 text-sm font-medium rounded-xl text-red-400/70 hover:text-red-400 hover:bg-red-400/10"
+                className="px-3 py-2 text-sm font-medium rounded-lg text-red-400/70 hover:text-red-400 hover:bg-red-400/10"
                 title="Archive pipeline"
               >
                 Archive
@@ -311,7 +311,7 @@ export function PipelinesPanel({
         <InlineRename
           value={active.name}
           onCommit={(v) => handleRenamePipeline(active.id, v)}
-          className="text-2xl font-display font-bold"
+          className="text-xl font-semibold"
         />
       )}
 
@@ -410,18 +410,18 @@ function PipelineSwitcher({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="min-w-[220px] flex items-center justify-between gap-2 px-4 py-2 rounded-xl border border-foreground/10 bg-foreground/5 hover:border-foreground/20 text-sm font-bold"
+        className="min-w-[220px] flex items-center justify-between gap-2 px-3 py-2 rounded-lg border border-[var(--border)] bg-[var(--surface-hover)] hover:border-[var(--border-strong)] text-sm font-semibold"
       >
         <span className="flex items-center gap-2">
           <GitBranch className="w-4 h-4 text-primary" />
           {active?.name ?? "No pipelines"}
         </span>
         <ChevronDown
-          className={`w-4 h-4 text-foreground/40 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`w-4 h-4 text-[var(--muted)] transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
       {open && (
-        <div className="absolute top-full left-0 mt-2 w-[260px] rounded-2xl border border-foreground/10 bg-background shadow-xl p-2 z-30">
+        <div className="absolute top-full left-0 mt-2 w-[260px] rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-xl p-2 z-30">
           {pipelines.map((p) => (
             <button
               key={p.id}
@@ -430,9 +430,9 @@ function PipelineSwitcher({
                 onSelect(p.id);
                 setOpen(false);
               }}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-foreground/5 text-left"
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-[var(--surface-hover)] text-left"
             >
-              <GitBranch className="w-4 h-4 text-foreground/40" />
+              <GitBranch className="w-4 h-4 text-[var(--muted)]" />
               <span className="flex-1 truncate">{p.name}</span>
               {p.id === activeId && (
                 <Check className="w-4 h-4 text-primary" />
@@ -440,7 +440,7 @@ function PipelineSwitcher({
             </button>
           ))}
           {pipelines.length > 0 && (
-            <div className="my-1 h-px bg-foreground/10" />
+            <div className="my-1 h-px bg-[var(--border)]" />
           )}
           <button
             type="button"
@@ -448,7 +448,7 @@ function PipelineSwitcher({
               onNew();
               setOpen(false);
             }}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold text-primary hover:bg-primary/10"
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold text-primary hover:bg-primary/10"
           >
             <Plus className="w-4 h-4" />
             New Pipeline
@@ -538,7 +538,7 @@ function BuilderBoard({
       <button
         type="button"
         onClick={onAddStage}
-        className="shrink-0 w-[260px] rounded-2xl border-2 border-dashed border-foreground/10 hover:border-primary/40 hover:bg-primary/5 text-foreground/40 hover:text-primary transition-colors flex flex-col items-center justify-center gap-2 py-12"
+        className="shrink-0 w-[260px] rounded-xl border-2 border-dashed border-[var(--border)] hover:border-primary/40 hover:bg-primary/5 text-[var(--muted)] hover:text-primary transition-colors flex flex-col items-center justify-center gap-2 py-12"
       >
         <Plus className="w-6 h-6" />
         <span className="text-sm font-bold">Add stage</span>
@@ -575,30 +575,30 @@ function StageColumn({
     <div
       onDragOver={onDragOver}
       onDrop={onDrop}
-      className={`shrink-0 w-[260px] rounded-2xl border bg-foreground/[0.02] transition-all ${
+      className={`shrink-0 w-[260px] rounded-xl border bg-[var(--surface)] transition-all ${
         isOver
-          ? "border-primary/50 bg-primary/5"
-          : "border-foreground/5"
+          ? "border-primary/50 bg-[var(--accent-softer)]"
+          : "border-[var(--border)]"
       } ${isDragging ? "opacity-40" : ""}`}
     >
       <div
         draggable
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
-        className="flex items-center gap-2 p-3 border-b border-foreground/5 cursor-grab active:cursor-grabbing"
+        className="flex items-center gap-2 p-3 border-b border-[var(--border)] cursor-grab active:cursor-grabbing"
         title="Drag to reorder"
       >
-        <GripVertical className="w-4 h-4 text-foreground/30 shrink-0" />
+        <GripVertical className="w-4 h-4 text-[var(--muted)] shrink-0" />
         <span className={`w-2 h-2 rounded-full shrink-0 ${KIND_DOT[stage.kind]}`} />
         <InlineRename
           value={stage.name}
           onCommit={onRename}
-          className="text-sm font-bold flex-1"
+          className="text-sm font-semibold flex-1"
         />
         <button
           type="button"
           onClick={onDelete}
-          className="p-1 rounded text-foreground/30 hover:text-red-400 hover:bg-red-400/10"
+          className="p-1 rounded text-[var(--muted)] hover:text-red-400 hover:bg-red-400/10"
           title="Delete stage"
         >
           <Trash2 className="w-3.5 h-3.5" />
@@ -610,11 +610,11 @@ function StageColumn({
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="h-16 rounded-xl bg-foreground/[0.03] border border-dashed border-foreground/5"
+              className="h-16 rounded-lg bg-[var(--surface-hover)]/40 border border-dashed border-[var(--border)]"
             />
           ))}
         </div>
-        <div className="text-[10px] text-foreground/30 uppercase tracking-widest text-center pt-1">
+        <div className="text-xs text-[var(--muted)] text-center pt-1">
           0 opportunities
         </div>
       </div>
@@ -630,16 +630,16 @@ function KindSelector({
   onChange: (k: StageKind) => void;
 }) {
   return (
-    <div className="flex gap-1 p-1 rounded-lg bg-foreground/[0.04]">
+    <div className="flex gap-1 p-1 rounded-md bg-[var(--surface-hover)]">
       {(Object.keys(KIND_LABELS) as StageKind[]).map((k) => (
         <button
           key={k}
           type="button"
           onClick={() => onChange(k)}
-          className={`flex-1 text-[11px] py-1 rounded-md font-medium transition-colors ${
+          className={`flex-1 text-[11px] py-1 rounded-sm font-medium transition-colors ${
             value === k
-              ? "bg-foreground/10 text-foreground"
-              : "text-foreground/40 hover:text-foreground"
+              ? "bg-[var(--surface)] text-[var(--fg)] shadow-sm"
+              : "text-[var(--muted)] hover:text-[var(--fg)]"
           }`}
           title={`Mark stage as ${KIND_LABELS[k]}`}
         >
@@ -667,10 +667,10 @@ function ViewTab({
     <button
       type="button"
       onClick={onClick}
-      className={`px-4 py-1.5 text-sm font-bold rounded-lg transition-colors ${
+      className={`px-4 py-1.5 text-sm font-semibold rounded-md transition-colors ${
         active
-          ? "bg-foreground/10 text-foreground"
-          : "text-foreground/40 hover:text-foreground"
+          ? "bg-[var(--surface)] text-[var(--fg)] shadow-sm"
+          : "text-[var(--muted)] hover:text-[var(--fg)]"
       }`}
     >
       {label}
@@ -725,7 +725,7 @@ function InlineRename({
           if (e.key === "Enter") commit();
           if (e.key === "Escape") cancel();
         }}
-        className={`bg-foreground/10 rounded px-2 py-0.5 outline-none ring-1 ring-primary/50 ${className ?? ""}`}
+        className={`bg-[var(--surface-hover)] rounded px-2 py-0.5 outline-none ring-1 ring-primary/50 ${className ?? ""}`}
       />
     );
   }
@@ -734,11 +734,11 @@ function InlineRename({
     <button
       type="button"
       onClick={() => setEditing(true)}
-      className={`text-left truncate hover:underline decoration-foreground/20 underline-offset-4 inline-flex items-center gap-1 group ${className ?? ""}`}
+      className={`text-left truncate hover:underline decoration-[var(--border-strong)] underline-offset-4 inline-flex items-center gap-1 group ${className ?? ""}`}
       title="Click to rename"
     >
       <span className="truncate">{value}</span>
-      <Pencil className="w-3 h-3 text-foreground/20 group-hover:text-foreground/50 shrink-0" />
+      <Pencil className="w-3 h-3 text-[var(--muted)] opacity-40 group-hover:opacity-100 shrink-0" />
     </button>
   );
 }
@@ -755,12 +755,14 @@ function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-foreground/5 bg-foreground/[0.02] p-16 text-center">
-      <div className="inline-flex w-14 h-14 items-center justify-center rounded-full bg-foreground/5 text-foreground/30 mb-4">
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-16 text-center">
+      <div className="inline-flex w-14 h-14 items-center justify-center rounded-full bg-[var(--surface-hover)] text-[var(--muted)] mb-4">
         {icon}
       </div>
-      <h3 className="text-base font-bold mb-2">{title}</h3>
-      <p className="text-sm text-foreground/50 max-w-md mx-auto mb-6">{body}</p>
+      <h3 className="text-base font-semibold mb-2">{title}</h3>
+      <p className="text-sm text-[var(--muted)] max-w-md mx-auto mb-6">
+        {body}
+      </p>
       {action}
     </div>
   );

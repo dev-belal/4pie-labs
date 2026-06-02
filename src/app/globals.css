@@ -194,6 +194,97 @@ body {
   body { padding-top: 80px; }
 }
 
+/* =============================================================================
+   Admin CRM token scope (Phase 6a).
+   The public site reserves its existing @theme tokens. The admin portal needs
+   a few extras (status hues, source-badge hues, deep accent-tint surfaces,
+   inset highlight ring) which are added ONLY when [data-admin-shell] is in the
+   tree. Public pages never carry that attribute, so nothing about their
+   rendering changes.
+
+   Many tokens the design names (--accent, --on-accent, --surface) are simply
+   aliased to the equivalent public token so admin markup stays consistent
+   with the design's source while reusing the brand's amber palette.
+============================================================================= */
+[data-admin-shell] {
+  /* Aliases — keep design vocabulary while reading the public palette. */
+  --bg: var(--color-background);
+  --surface: var(--color-surface);
+  --surface-2: var(--color-surface-2);
+  --surface-hover: var(--color-card-hover);
+  --fg: var(--color-foreground);
+  --muted: var(--color-muted-foreground);
+  --faint: var(--color-subtle-foreground);
+  --border: var(--color-border);
+  --border-strong: var(--color-card-border);
+  --accent: var(--color-primary);
+  --on-accent: var(--color-on-primary);
+  --accent-soft: var(--color-primary-muted);
+  --on-soft: var(--color-primary-ink);
+
+  /* New tokens — additive. */
+  --accent-softer: color-mix(in srgb, var(--color-primary) 11%, transparent);
+  --accent-glow: color-mix(in srgb, var(--color-primary) 26%, transparent);
+  --ring: rgba(245, 240, 230, 0.06);
+
+  /* Status hues — used by lead/opportunity pills. */
+  --status-new: var(--color-primary);
+  --status-new-bg: rgba(251, 191, 36, 0.13);
+  --status-progress: #60a5fa;
+  --status-progress-bg: rgba(96, 165, 250, 0.14);
+  --status-won: #34d399;
+  --status-won-bg: rgba(52, 211, 153, 0.14);
+  --status-lost: #fb7185;
+  --status-lost-bg: rgba(251, 113, 133, 0.14);
+
+  /* Source badge hues — distinct but on-brand for Audit/Budget/Contact/Chat. */
+  --src-audit: var(--color-primary);
+  --src-audit-bg: rgba(251, 191, 36, 0.13);
+  --src-budget: #2dd4bf;
+  --src-budget-bg: rgba(45, 212, 191, 0.13);
+  --src-contact: #818cf8;
+  --src-contact-bg: rgba(129, 140, 248, 0.14);
+  --src-chat: #e879f9;
+  --src-chat-bg: rgba(232, 121, 249, 0.13);
+
+  /* Density (kept conservative for the laptop-first admin). */
+  --admin-pad: 18px;
+  --admin-gap: 14px;
+  --admin-row-h: 52px;
+  --admin-r-card: 18px;
+}
+
+:root[data-theme="light"] [data-admin-shell] {
+  --accent-softer: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  --accent-glow: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  --ring: rgba(255, 255, 255, 0.9);
+
+  --status-new-bg: rgba(217, 119, 6, 0.12);
+  --status-progress: #2563eb;
+  --status-progress-bg: rgba(37, 99, 235, 0.10);
+  --status-won: #059669;
+  --status-won-bg: rgba(5, 150, 105, 0.11);
+  --status-lost: #e11d48;
+  --status-lost-bg: rgba(225, 29, 72, 0.10);
+
+  --src-audit-bg: rgba(217, 119, 6, 0.12);
+  --src-budget: #0d9488;
+  --src-budget-bg: rgba(13, 148, 136, 0.11);
+  --src-contact: #4f46e5;
+  --src-contact-bg: rgba(79, 70, 229, 0.10);
+  --src-chat: #c026d3;
+  --src-chat-bg: rgba(192, 38, 211, 0.10);
+}
+
+/* Strip the public floating-nav offset for admin pages and let the admin
+   shell own the full viewport. :has() is supported in all evergreen
+   browsers (Chrome 105+, Safari 15.4+, Firefox 121+). */
+body:has([data-admin-shell]) {
+  padding-top: 0 !important;
+  overflow: hidden;
+  background-image: none;
+}
+
 button,
 [role="button"],
 input[type="button"],
