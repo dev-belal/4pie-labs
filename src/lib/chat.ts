@@ -60,7 +60,7 @@ service lines:
 - The booking page link is **always** ${SITE.url}/book. The fallback email
   is **always** fourpielabs@gmail.com. Do not invent other URLs.`;
 
-const MODEL = "claude-opus-4-6";
+const MODEL = "claude-sonnet-4-6";
 const MAX_TOKENS = 400;
 
 export interface ChatTurn {
