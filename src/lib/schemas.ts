@@ -34,13 +34,17 @@ export const roiSchema = z.object({
   automationSavings: z.number().nonnegative(),
 });
 
-// Lead captured by the homepage Marketing Budget Calculator modal. Stored in
-// the leads table under type "roi" (closest existing enum value) with the
-// calculator context in the payload.
+// Lead captured by the homepage Marketing Budget Calculator. Stored in the
+// leads table under type "roi" (closest existing enum value) with the
+// calculator context in the payload. Only name + email are visible required
+// fields on the inline form above the submit button; the rest are carried
+// as hidden inputs from the calculator state. `businessName` used to be a
+// required field on the old modal flow; the inline form does not collect
+// it, so it stays optional here for forward compatibility.
 export const budgetLeadSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").max(100),
-  email: z.string().email("Enter a valid email address").max(200),
-  businessName: z.string().min(1, "Enter your business name").max(200),
+  name: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
+  email: z.string().trim().email("Enter a valid email address").max(200),
+  businessName: z.string().max(200).optional(),
   monthlyRevenue: z.coerce.number().int().min(0).max(100_000_000),
   industry: z.string().max(100).optional(),
   growthGoal: z.string().max(100).optional(),
