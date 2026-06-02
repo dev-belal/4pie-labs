@@ -18,6 +18,8 @@ import {
   services,
   type ServiceCategory,
 } from "@/data/services";
+import { JsonLd } from "@/components/JsonLd";
+import { SITE } from "@/lib/site";
 
 /**
  * One landing page per service category - /services/aeo, /services/ads,
@@ -197,8 +199,79 @@ export default async function ServiceCategoryPage({
   const categoryServices = services.filter((s) => s.category === category);
   const otherCategories = categories.filter((c) => c !== category);
 
+  // Structured data, all bound to real values from CATEGORY_META + services.
+  // 4Pie Labs is a remote / national agency, so areaServed is the US as a
+  // Country - NOT a LocalBusiness, which would imply a physical storefront.
+  const headline = `${meta.headlinePrefix} ${meta.headlineAccent}`.trim();
+  const pageUrl = `${SITE.url}/services/${slug}`;
+
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: headline,
+    serviceType: category,
+    description: meta.metaDescription,
+    url: pageUrl,
+    provider: {
+      "@type": "Organization",
+      name: SITE.name,
+      url: SITE.url,
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
+    },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: `${category} catalog`,
+      itemListElement: categoryServices.map((s, i) => ({
+        "@type": "Offer",
+        position: i + 1,
+        itemOffered: {
+          "@type": "Service",
+          name: s.title,
+          description: s.desc,
+        },
+      })),
+    },
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: meta.faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE.url },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Services",
+        item: `${SITE.url}/services`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: category,
+        item: pageUrl,
+      },
+    ],
+  };
+
   return (
     <main className="relative px-4 pb-32 overflow-hidden">
+      <JsonLd data={serviceSchema} />
+      <JsonLd data={faqSchema} />
+      <JsonLd data={breadcrumbSchema} />
+
       {/* Local depth blobs */}
       <span
         aria-hidden
