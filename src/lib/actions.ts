@@ -39,6 +39,18 @@ interface InsertLeadInput {
   payload: Record<string, unknown>;
 }
 
+// Temporary, REVERT once production submit failure is diagnosed.
+// Surfaces which env var is missing (booleans only, never values) so the
+// real cause shows up in Vercel runtime logs.
+function envPresence() {
+  return {
+    supabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+    supabaseAnon: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    resend: !!process.env.RESEND_API_KEY,
+    n8n: !!process.env.N8N_AUDIT_WEBHOOK_URL,
+  };
+}
+
 async function insertLead(input: InsertLeadInput): Promise<boolean> {
   try {
     const supabase = createPublicClient();
@@ -52,12 +64,23 @@ async function insertLead(input: InsertLeadInput): Promise<boolean> {
       payload: input.payload,
     });
     if (error) {
-      console.error("[leads] insert failed:", error);
+      console.error("[leads] insert failed", {
+        type: input.type,
+        source: input.source,
+        error: `${error.code ?? ""} ${error.message ?? ""}`.trim(),
+        env: envPresence(),
+      });
       return false;
     }
     return true;
   } catch (err) {
-    console.error("[leads] insert threw:", err);
+    console.error("[leads] insert threw", {
+      type: input.type,
+      source: input.source,
+      error:
+        err instanceof Error ? `${err.name}: ${err.message}` : String(err),
+      env: envPresence(),
+    });
     return false;
   }
 }
@@ -352,6 +375,14 @@ export async function submitAuditLead(
   });
 
   if (!ok) {
+    // Temporary, REVERT once root cause is diagnosed. insertLead already
+    // logged the underlying error or exception with env-presence detail;
+    // this action-level line is the entry point in the Vercel logs that
+    // makes the failure easy to grep for.
+    console.error("[audit] submit failed", {
+      error: "insertLead returned false (see preceding [leads] log line)",
+      env: envPresence(),
+    });
     return {
       status: "error",
       message: "We couldn't submit right now - please try again shortly.",
