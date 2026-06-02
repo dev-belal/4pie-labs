@@ -175,6 +175,72 @@ export const getDashboardData = cache(async (): Promise<DashboardData> => {
   };
 });
 
+/* ============================================================
+ * Pipelines + stages (Phase 2 of the CRM expansion).
+ *
+ * Admin-only tables created in migration 0007. RLS denies anon /
+ * authenticated; only the service-role client (this module) can read.
+ * ============================================================ */
+
+export type StageKind = "open" | "won" | "lost";
+
+export interface PipelineStage {
+  id: string;
+  pipeline_id: string;
+  name: string;
+  kind: StageKind;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PipelineWithStages {
+  id: string;
+  name: string;
+  sort_order: number;
+  archived_at: string | null;
+  created_at: string;
+  updated_at: string;
+  stages: PipelineStage[];
+}
+
+/**
+ * Fetch every non-archived pipeline with its stages ordered by sort_order.
+ * Two reads in parallel — the in-list filter on stages avoids fetching a
+ * pipeline's stages individually.
+ */
+export async function getPipelinesWithStages(): Promise<PipelineWithStages[]> {
+  const supabase = createServiceClient();
+
+  const { data: pipelines, error: pipelineErr } = await supabase
+    .from("pipelines")
+    .select("id, name, sort_order, archived_at, created_at, updated_at")
+    .is("archived_at", null)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (pipelineErr || !pipelines || pipelines.length === 0) return [];
+
+  const ids = pipelines.map((p) => p.id as string);
+  const { data: stages } = await supabase
+    .from("pipeline_stages")
+    .select("id, pipeline_id, name, kind, sort_order, created_at, updated_at")
+    .in("pipeline_id", ids)
+    .order("sort_order", { ascending: true });
+
+  const byPipeline = new Map<string, PipelineStage[]>();
+  for (const s of (stages ?? []) as PipelineStage[]) {
+    const list = byPipeline.get(s.pipeline_id) ?? [];
+    list.push(s);
+    byPipeline.set(s.pipeline_id, list);
+  }
+
+  return pipelines.map((p) => ({
+    ...(p as Omit<PipelineWithStages, "stages">),
+    stages: byPipeline.get(p.id as string) ?? [],
+  }));
+}
+
 /** Fetch the full message thread for a single conversation. */
 export async function getConversationMessages(
   conversationId: string,

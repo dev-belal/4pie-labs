@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  GitBranch,
   Inbox,
   LayoutDashboard,
   LogOut,
@@ -13,25 +14,29 @@ import {
   PenTool,
 } from "lucide-react";
 import { signOut } from "@/lib/auth-actions";
-import type { DashboardData } from "@/lib/admin-data";
+import type { DashboardData, PipelineWithStages } from "@/lib/admin-data";
 import { OverviewPanel } from "./OverviewPanel";
 import { BlogPublisher } from "./BlogPublisher";
 import { TestimonialPublisher } from "./TestimonialPublisher";
 import { LeadsPanel } from "./LeadsPanel";
 import { ConversationsPanel } from "./ConversationsPanel";
+import { PipelinesPanel } from "./PipelinesPanel";
 
 type Tab =
   | "overview"
   | "leads"
+  | "pipelines"
   | "conversations"
   | "testimonials"
   | "blogs";
 
 export function AdminShell({
   data,
+  pipelines,
   userEmail,
 }: {
   data: DashboardData;
+  pipelines: PipelineWithStages[];
   userEmail: string;
 }) {
   const [tab, setTab] = useState<Tab>("overview");
@@ -60,6 +65,10 @@ export function AdminShell({
     leads: {
       title: "Inbound Leads",
       sub: "Contact, custom requests, ROI, and chatbot leads",
+    },
+    pipelines: {
+      title: "Pipelines",
+      sub: "Build and manage your sales stages",
     },
     conversations: {
       title: "Chat Conversations",
@@ -101,6 +110,12 @@ export function AdminShell({
             icon={<Inbox className="w-4 h-4" />}
             label="Leads"
             badge={data.newLeads > 0 ? data.newLeads : undefined}
+          />
+          <TabButton
+            active={tab === "pipelines"}
+            onClick={() => setTab("pipelines")}
+            icon={<GitBranch className="w-4 h-4" />}
+            label="Pipelines"
           />
           <TabButton
             active={tab === "conversations"}
@@ -182,6 +197,16 @@ export function AdminShell({
               exit={{ opacity: 0, y: -10 }}
             >
               <LeadsPanel leads={data.leads} />
+            </motion.div>
+          )}
+          {tab === "pipelines" && (
+            <motion.div
+              key="pipelines"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              <PipelinesPanel pipelines={pipelines} />
             </motion.div>
           )}
           {tab === "conversations" && (

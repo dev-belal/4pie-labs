@@ -122,6 +122,32 @@ export const auditLeadSchema = z.object({
   notes: z.string().max(2000).optional(),
 });
 
+// Pipeline + stage editing on /admin. Admin-only, validated server-side.
+// Names are trimmed and capped — UI can be terse and forgiving.
+export const stageKindSchema = z.enum(["open", "won", "lost"]);
+
+export const pipelineNameSchema = z
+  .string()
+  .trim()
+  .min(1, "Name can't be blank")
+  .max(80, "Name is too long");
+
+export const stageNameSchema = z
+  .string()
+  .trim()
+  .min(1, "Stage name can't be blank")
+  .max(80, "Stage name is too long");
+
+export const uuidSchema = z.string().uuid("Invalid id");
+
+export const reorderStagesSchema = z.object({
+  pipelineId: uuidSchema,
+  orderedStageIds: z
+    .array(uuidSchema)
+    .min(2, "A pipeline needs at least 2 stages")
+    .max(40, "Too many stages"),
+});
+
 export const bookingSchema = z.object({
   // Cal.com slot starts include tz offsets (e.g. "...-04:00"), not just "Z",
   // so allow offsets. `local` would also match naive strings; we want a
@@ -146,3 +172,5 @@ export type BlogInsertInput = z.infer<typeof blogInsertSchema>;
 export type TestimonialInsertInput = z.infer<typeof testimonialInsertSchema>;
 export type TrackViewInput = z.infer<typeof trackViewSchema>;
 export type BookingInput = z.infer<typeof bookingSchema>;
+export type StageKind = z.infer<typeof stageKindSchema>;
+export type ReorderStagesInput = z.infer<typeof reorderStagesSchema>;

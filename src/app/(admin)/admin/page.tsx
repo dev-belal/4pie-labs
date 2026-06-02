@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { readAdminSession } from "@/lib/admin-session";
-import { getDashboardData } from "@/lib/admin-data";
+import { getDashboardData, getPipelinesWithStages } from "@/lib/admin-data";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const metadata: Metadata = {
@@ -15,7 +15,12 @@ export default async function AdminPage() {
   const session = await readAdminSession();
   if (!session) redirect("/admin/login");
 
-  const data = await getDashboardData();
+  const [data, pipelines] = await Promise.all([
+    getDashboardData(),
+    getPipelinesWithStages(),
+  ]);
 
-  return <AdminShell data={data} userEmail={session.sub} />;
+  return (
+    <AdminShell data={data} pipelines={pipelines} userEmail={session.sub} />
+  );
 }
