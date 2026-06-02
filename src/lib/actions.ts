@@ -1,5 +1,6 @@
 "use server";
 
+import { after } from "next/server";
 import { headers } from "next/headers";
 import { rateLimit } from "@/lib/rate-limit";
 import {
@@ -49,6 +50,53 @@ function envPresence() {
     resend: !!process.env.RESEND_API_KEY,
     n8n: !!process.env.N8N_AUDIT_WEBHOOK_URL,
   };
+}
+
+/**
+ * Fire-and-forget POST to the n8n audit workflow. Scheduled via `after()`
+ * from the audit action so Vercel keeps the serverless function alive
+ * past the response and the request actually completes (instead of being
+ * aborted the moment the function freezes).
+ *
+ * Best-effort: every failure mode (no env, non-2xx, network, timeout) is
+ * logged and swallowed. Never throws.
+ */
+async function dispatchN8nAuditWebhook(input: {
+  Website: string;
+  email: string;
+  name: string;
+  businessName: string;
+}): Promise<void> {
+  const webhookUrl = process.env.N8N_AUDIT_WEBHOOK_URL;
+  if (!webhookUrl) {
+    console.warn("[n8n] N8N_AUDIT_WEBHOOK_URL not set, skipping audit webhook");
+    return;
+  }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10_000);
+  try {
+    const res = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        Website: input.Website,
+        email: input.email,
+        name: input.name,
+        businessName: input.businessName,
+        source: "4Pie Labs /audit form",
+      }),
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      console.error(
+        `[n8n] audit webhook returned non-2xx: ${res.status} ${res.statusText}`,
+      );
+    }
+  } catch (err) {
+    console.error("[n8n] audit webhook dispatch failed:", err);
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 async function insertLead(input: InsertLeadInput): Promise<boolean> {
@@ -302,23 +350,25 @@ export async function submitBudgetLead(
     };
   }
 
-  // Email side effects, additive and best-effort. See submitAuditLead
-  // for the same rationale.
-  void Promise.allSettled([
-    sendLeadAlert({
-      type: "budget",
-      name: parsed.data.name,
-      email: parsed.data.email,
-      source: "Marketing Budget Calculator",
-      payload: budgetPayload,
-    }),
-    sendLeadConfirmation({
-      type: "budget",
-      name: parsed.data.name,
-      email: parsed.data.email,
-    }),
-  ]).catch((err) => {
-    console.error("[email] budget lead notifications dispatch failed:", err);
+  // Schedule the Resend emails to run AFTER the response is sent. Same
+  // rationale as submitAuditLead: `after()` keeps the serverless context
+  // alive long enough for the sends to complete on Vercel. Each helper
+  // catches internally and logs; Promise.allSettled isolates rejections.
+  after(async () => {
+    await Promise.allSettled([
+      sendLeadAlert({
+        type: "budget",
+        name: parsed.data.name,
+        email: parsed.data.email,
+        source: "Marketing Budget Calculator",
+        payload: budgetPayload,
+      }),
+      sendLeadConfirmation({
+        type: "budget",
+        name: parsed.data.name,
+        email: parsed.data.email,
+      }),
+    ]);
   });
 
   return {
@@ -389,63 +439,40 @@ export async function submitAuditLead(
     };
   }
 
-  // n8n webhook dispatch, additive and best-effort. n8n receives the lead
-  // and auto-generates + emails the 12-point report. Fire-and-forget with
-  // a 10s AbortController timeout; failures are logged and swallowed so
-  // they never change the user-facing success state.
-  void (async () => {
-    const webhookUrl = process.env.N8N_AUDIT_WEBHOOK_URL;
-    if (!webhookUrl) {
-      console.warn("[n8n] N8N_AUDIT_WEBHOOK_URL not set, skipping audit webhook");
-      return;
-    }
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10_000);
-    try {
-      const res = await fetch(webhookUrl, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          Website: parsed.data.businessUrl,
-          email: parsed.data.email,
-          name: parsed.data.name,
-          businessName: parsed.data.businessName,
-          source: "4Pie Labs /audit form",
-        }),
-        signal: controller.signal,
-      });
-      if (!res.ok) {
-        console.error(
-          `[n8n] audit webhook returned non-2xx: ${res.status} ${res.statusText}`,
-        );
-      }
-    } catch (err) {
-      console.error("[n8n] audit webhook dispatch failed:", err);
-    } finally {
-      clearTimeout(timeout);
-    }
-  })();
-
-  // Email side effects, additive and best-effort. Either send may fail
-  // (Resend down, key missing, invalid sender domain, etc.); both
-  // functions catch internally and never throw. We still wrap the
-  // dispatch in a guard so a stray rejection can't bubble up and
-  // change the user-facing success state.
-  void Promise.allSettled([
-    sendLeadAlert({
-      type: "audit",
-      name: parsed.data.name,
-      email: parsed.data.email,
-      source: "Free AI audit",
-      payload: auditPayload,
-    }),
-    sendLeadConfirmation({
-      type: "audit",
-      name: parsed.data.name,
-      email: parsed.data.email,
-    }),
-  ]).catch((err) => {
-    console.error("[email] audit lead notifications dispatch failed:", err);
+  // Schedule the n8n webhook + both Resend emails to run AFTER the response
+  // is sent. `after()` keeps the serverless invocation alive past the
+  // response in the same context, so on Vercel these background tasks
+  // actually complete instead of being aborted the moment the function
+  // would otherwise freeze (the previous `void (async () => {...})()` /
+  // `void Promise.allSettled([...])` pattern was getting orphaned on prod
+  // and producing AbortError + "request could not be resolved" logs).
+  //
+  // Promise.allSettled isolates rejections so one failure can't reject the
+  // others; each helper additionally catches internally and logs, so this
+  // is belt-and-suspenders. insertLead has already returned true above and
+  // is awaited synchronously - the lead row save still gates the FormState
+  // and is unaffected by anything below.
+  after(async () => {
+    await Promise.allSettled([
+      dispatchN8nAuditWebhook({
+        Website: parsed.data.businessUrl,
+        email: parsed.data.email,
+        name: parsed.data.name,
+        businessName: parsed.data.businessName,
+      }),
+      sendLeadAlert({
+        type: "audit",
+        name: parsed.data.name,
+        email: parsed.data.email,
+        source: "Free AI audit",
+        payload: auditPayload,
+      }),
+      sendLeadConfirmation({
+        type: "audit",
+        name: parsed.data.name,
+        email: parsed.data.email,
+      }),
+    ]);
   });
 
   return {
