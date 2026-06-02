@@ -22,10 +22,12 @@ import {
   setStageKind,
 } from "@/lib/pipeline-actions";
 import type {
+  Opportunity,
   PipelineStage,
   PipelineWithStages,
   StageKind,
 } from "@/lib/admin-data";
+import { OpportunitiesBoard } from "./OpportunitiesBoard";
 
 type ToastKind = "success" | "error";
 interface Toast {
@@ -45,16 +47,21 @@ const KIND_DOT: Record<StageKind, string> = {
 };
 
 export function PipelinesPanel({
-  pipelines: initial,
+  pipelines: initialPipelines,
+  opportunities: initialOpportunities,
 }: {
   pipelines: PipelineWithStages[];
+  opportunities: Opportunity[];
 }) {
-  // Local state seeded from server prop. We intentionally do NOT re-sync from
-  // props on poll-refresh so a user's mid-edit work is not clobbered every 15s.
-  // Hard reload picks up external changes if ever needed.
-  const [pipelines, setPipelines] = useState<PipelineWithStages[]>(initial);
+  // Local state seeded from server props. We intentionally do NOT re-sync
+  // from props on poll-refresh so a user's mid-edit work is not clobbered
+  // every 15s. Hard reload picks up external changes if ever needed.
+  const [pipelines, setPipelines] =
+    useState<PipelineWithStages[]>(initialPipelines);
+  const [opportunities, setOpportunities] =
+    useState<Opportunity[]>(initialOpportunities);
   const [activeId, setActiveId] = useState<string | null>(
-    initial[0]?.id ?? null,
+    initialPipelines[0]?.id ?? null,
   );
   const [view, setView] = useState<"builder" | "opportunities">("builder");
   const [toast, setToast] = useState<Toast | null>(null);
@@ -345,12 +352,12 @@ export function PipelinesPanel({
         />
       )}
 
-      {/* Opportunities placeholder */}
+      {/* Opportunities board */}
       {active && view === "opportunities" && (
-        <EmptyState
-          icon={<GitBranch className="w-10 h-10" />}
-          title="Opportunities board coming next"
-          body="Pipeline structure is editable here in Phase 2. The drag-to-promote board lands in Phase 3."
+        <OpportunitiesBoard
+          pipeline={active}
+          opportunities={opportunities}
+          setOpportunities={setOpportunities}
         />
       )}
 

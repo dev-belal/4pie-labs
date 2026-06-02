@@ -19,7 +19,11 @@ import {
 } from "lucide-react";
 import { signOut } from "@/lib/auth-actions";
 import { useTheme } from "@/lib/use-theme";
-import type { DashboardData, PipelineWithStages } from "@/lib/admin-data";
+import type {
+  DashboardData,
+  Opportunity,
+  PipelineWithStages,
+} from "@/lib/admin-data";
 import { OverviewPanel } from "./OverviewPanel";
 import { BlogPublisher } from "./BlogPublisher";
 import { TestimonialPublisher } from "./TestimonialPublisher";
@@ -78,10 +82,12 @@ const HEADINGS: Record<Tab, { title: string; sub: string }> = {
 export function AdminShell({
   data,
   pipelines,
+  opportunities,
   userEmail,
 }: {
   data: DashboardData;
   pipelines: PipelineWithStages[];
+  opportunities: Opportunity[];
   userEmail: string;
 }) {
   const [tab, setTab] = useState<Tab>("overview");
@@ -273,7 +279,10 @@ export function AdminShell({
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.15 }}
               >
-                <PipelinesPanel pipelines={pipelines} />
+                <PipelinesPanel
+                  pipelines={pipelines}
+                  opportunities={opportunities}
+                />
               </motion.div>
             )}
             {tab === "conversations" && (

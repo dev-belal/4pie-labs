@@ -148,6 +148,59 @@ export const reorderStagesSchema = z.object({
     .max(40, "Too many stages"),
 });
 
+// Opportunity source badges (matches the design's lead-source palette).
+// Free-text in the DB; constrained here for UI consistency.
+export const OPPORTUNITY_SOURCES = [
+  "Audit",
+  "Budget",
+  "Contact",
+  "Chat",
+] as const;
+export const opportunitySourceSchema = z.enum(OPPORTUNITY_SOURCES);
+
+// Money cap of $10M (10_000_000_00 cents). Plenty for an agency retainer
+// while still preventing accidental gigantic numbers from typos.
+const VALUE_CENTS_MAX = 10_000_000_00;
+const valueCentsSchema = z.coerce
+  .number()
+  .int()
+  .min(0)
+  .max(VALUE_CENTS_MAX);
+
+export const createOpportunitySchema = z.object({
+  pipelineId: uuidSchema,
+  stageId: uuidSchema,
+  contactName: z
+    .string()
+    .trim()
+    .min(1, "Contact name can't be blank")
+    .max(120),
+  businessName: z.string().trim().max(160).optional(),
+  source: opportunitySourceSchema.optional(),
+  valueCents: valueCentsSchema,
+});
+
+export const moveOpportunitySchema = z.object({
+  oppId: uuidSchema,
+  stageId: uuidSchema,
+  sortOrder: z.number().int().min(0).max(1_000_000),
+});
+
+export const updateOpportunityFieldsSchema = z
+  .object({
+    contactName: z.string().trim().min(1).max(120).optional(),
+    businessName: z.string().trim().max(160).nullish(),
+    source: opportunitySourceSchema.nullish(),
+    valueCents: valueCentsSchema.optional(),
+    notes: z.string().max(4000).nullish(),
+  })
+  .refine((d) => Object.keys(d).length > 0, "No fields to update");
+
+export const updateOpportunitySchema = z.object({
+  oppId: uuidSchema,
+  fields: updateOpportunityFieldsSchema,
+});
+
 export const bookingSchema = z.object({
   // Cal.com slot starts include tz offsets (e.g. "...-04:00"), not just "Z",
   // so allow offsets. `local` would also match naive strings; we want a
@@ -174,3 +227,9 @@ export type TrackViewInput = z.infer<typeof trackViewSchema>;
 export type BookingInput = z.infer<typeof bookingSchema>;
 export type StageKind = z.infer<typeof stageKindSchema>;
 export type ReorderStagesInput = z.infer<typeof reorderStagesSchema>;
+export type OpportunitySource = z.infer<typeof opportunitySourceSchema>;
+export type CreateOpportunityInput = z.infer<typeof createOpportunitySchema>;
+export type MoveOpportunityInput = z.infer<typeof moveOpportunitySchema>;
+export type UpdateOpportunityFields = z.infer<
+  typeof updateOpportunityFieldsSchema
+>;

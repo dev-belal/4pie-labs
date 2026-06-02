@@ -241,6 +241,72 @@ export async function getPipelinesWithStages(): Promise<PipelineWithStages[]> {
   }));
 }
 
+/* ============================================================
+ * Opportunities (Phase 3).
+ *
+ * Cards on the kanban. lead_id is nullable — Phase 4 will populate it for
+ * the lead → opportunity promotion flow. status mirrors the destination
+ * stage's kind ('open' | 'won' | 'lost'); won_at / lost_at carry the
+ * transition timestamps for win-rate math.
+ * ============================================================ */
+
+export type OpportunityStatus = "open" | "won" | "lost";
+
+export interface Opportunity {
+  id: string;
+  pipeline_id: string;
+  stage_id: string;
+  lead_id: string | null;
+  contact_name: string | null;
+  business_name: string | null;
+  source: string | null;
+  value_cents: number;
+  status: OpportunityStatus;
+  notes: string | null;
+  sort_order: number;
+  expected_close_at: string | null;
+  won_at: string | null;
+  lost_at: string | null;
+  lost_reason: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+const OPPORTUNITY_COLUMNS =
+  "id, pipeline_id, stage_id, lead_id, contact_name, business_name, source, value_cents, status, notes, sort_order, expected_close_at, won_at, lost_at, lost_reason, created_at, updated_at";
+
+/**
+ * Opportunities for a single pipeline, ordered by (stage sort_order asc,
+ * sort_order asc within stage). The board groups by stage_id client-side.
+ */
+export async function getOpportunitiesByPipeline(
+  pipelineId: string,
+): Promise<Opportunity[]> {
+  const supabase = createServiceClient();
+  const { data } = await supabase
+    .from("opportunities")
+    .select(OPPORTUNITY_COLUMNS)
+    .eq("pipeline_id", pipelineId)
+    .order("stage_id", { ascending: true })
+    .order("sort_order", { ascending: true });
+  return (data ?? []) as Opportunity[];
+}
+
+/**
+ * Every opportunity, across every pipeline. Used by the admin page to
+ * hydrate the kanban with one round-trip; the client filters per active
+ * pipeline.
+ */
+export async function getAllOpportunities(): Promise<Opportunity[]> {
+  const supabase = createServiceClient();
+  const { data } = await supabase
+    .from("opportunities")
+    .select(OPPORTUNITY_COLUMNS)
+    .order("pipeline_id", { ascending: true })
+    .order("sort_order", { ascending: true });
+  return (data ?? []) as Opportunity[];
+}
+
 /** Fetch the full message thread for a single conversation. */
 export async function getConversationMessages(
   conversationId: string,

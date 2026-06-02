@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { readAdminSession } from "@/lib/admin-session";
-import { getDashboardData, getPipelinesWithStages } from "@/lib/admin-data";
+import {
+  getAllOpportunities,
+  getDashboardData,
+  getPipelinesWithStages,
+} from "@/lib/admin-data";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const metadata: Metadata = {
@@ -15,12 +19,18 @@ export default async function AdminPage() {
   const session = await readAdminSession();
   if (!session) redirect("/admin/login");
 
-  const [data, pipelines] = await Promise.all([
+  const [data, pipelines, opportunities] = await Promise.all([
     getDashboardData(),
     getPipelinesWithStages(),
+    getAllOpportunities(),
   ]);
 
   return (
-    <AdminShell data={data} pipelines={pipelines} userEmail={session.sub} />
+    <AdminShell
+      data={data}
+      pipelines={pipelines}
+      opportunities={opportunities}
+      userEmail={session.sub}
+    />
   );
 }
