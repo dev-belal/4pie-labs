@@ -6,13 +6,19 @@ import { requireAdminSession } from "@/lib/admin-session";
 import {
   createOpportunitySchema,
   moveOpportunitySchema,
+  promoteLeadSchema,
   updateOpportunitySchema,
   uuidSchema,
   type CreateOpportunityInput,
   type MoveOpportunityInput,
+  type PromoteLeadInput,
   type UpdateOpportunityFields,
 } from "@/lib/schemas";
-import type { OpportunityStatus, StageKind } from "@/lib/admin-data";
+import type {
+  LeadType,
+  OpportunityStatus,
+  StageKind,
+} from "@/lib/admin-data";
 
 /**
  * Server actions for opportunities (Phase 3 — kanban + drag-to-promote).
@@ -284,6 +290,158 @@ export async function updateOpportunity(
 
   revalidatePath("/admin");
   return { ok: true };
+}
+
+/* ------------------------------------------------------------------ */
+/*  Promote lead → opportunity                                        */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Map a lead's (type, source) to one of the opportunity source badges
+ * shown on the kanban. Free-text on the DB side; constrained here so the
+ * card paints in the right hue per Phase 6a's --src-* tokens.
+ *
+ * The mapping mirrors the lead-capture wiring in src/lib/actions.ts:
+ *   - "Free AI audit" submissions land as type='contact' + source='Free AI audit'
+ *   - "Marketing Budget Calculator" lands as type='roi'    + source='Marketing Budget Calculator'
+ *   - Chatbot intent lands as type='chat'
+ *   - Anything else (contact / custom_request) falls back to "Contact".
+ */
+function deriveOpportunitySource(
+  type: LeadType,
+  source: string | null,
+): "Audit" | "Budget" | "Contact" | "Chat" {
+  if (type === "chat") return "Chat";
+  if (type === "roi") return "Budget";
+  if (source === "Marketing Budget Calculator") return "Budget";
+  if (type === "contact" && source === "Free AI audit") return "Audit";
+  return "Contact";
+}
+
+/**
+ * Promote a lead into an opportunity at the top of the chosen stage.
+ *
+ * Snapshot semantics: contact_name / business_name / source are COPIED from
+ * the lead at promotion time. Renaming or deleting the lead later does not
+ * change the card; lead_id remains as a back-link for navigation only.
+ *
+ * Side effect: sets leads.status = 'in_progress' on the source lead.
+ *
+ * Multi-pipeline is allowed by design — the UI shows a soft warning when
+ * the lead is already in a pipeline, but the action does not refuse.
+ *
+ * Returns { ok: true, opportunityId, pipelineId } so the toast can deep-link
+ * the user into the destination pipeline.
+ */
+export async function promoteLeadToOpportunity(
+  input: PromoteLeadInput,
+): Promise<WithPayload<{ opportunityId: string; pipelineId: string }>> {
+  const parsed = promoteLeadSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid input" };
+  }
+
+  let supabase;
+  try {
+    supabase = await adminClient();
+  } catch {
+    return authError();
+  }
+
+  const { leadId, pipelineId, stageId, valueCents } = parsed.data;
+
+  // Fetch the lead — we need its name + payload + (type, source) for the
+  // snapshot and source-badge derivation.
+  const { data: lead, error: leadErr } = await supabase
+    .from("leads")
+    .select("id, type, source, name, payload")
+    .eq("id", leadId)
+    .maybeSingle();
+  if (leadErr) return { ok: false, error: leadErr.message };
+  if (!lead) return { ok: false, error: "Lead not found" };
+
+  // Stage must exist AND belong to the named pipeline.
+  const { data: stage, error: stageErr } = await supabase
+    .from("pipeline_stages")
+    .select("id, pipeline_id, kind")
+    .eq("id", stageId)
+    .maybeSingle();
+  if (stageErr) return { ok: false, error: stageErr.message };
+  if (!stage) return { ok: false, error: "Stage not found" };
+  if (stage.pipeline_id !== pipelineId) {
+    return { ok: false, error: "Stage does not belong to this pipeline" };
+  }
+
+  const payload = (lead.payload ?? {}) as Record<string, unknown>;
+  const businessName =
+    typeof payload.businessName === "string"
+      ? (payload.businessName as string).trim() || null
+      : null;
+  const source = deriveOpportunitySource(
+    lead.type as LeadType,
+    (lead.source as string | null) ?? null,
+  );
+  const contactName =
+    typeof lead.name === "string" && lead.name.trim().length > 0
+      ? (lead.name as string).trim()
+      : "(no name)";
+
+  const transition = deriveStatus(stage.kind as StageKind);
+
+  // Insert at TOP of column: shift existing opps in this stage +1, then
+  // insert the new opp with sort_order=0. New promotions are most-recent
+  // action; surface them first.
+  const { data: existing, error: existingErr } = await supabase
+    .from("opportunities")
+    .select("id, sort_order")
+    .eq("stage_id", stageId)
+    .order("sort_order", { ascending: true });
+  if (existingErr) return { ok: false, error: existingErr.message };
+  for (const row of (existing ?? []) as { id: string; sort_order: number }[]) {
+    const { error } = await supabase
+      .from("opportunities")
+      .update({ sort_order: row.sort_order + 1 })
+      .eq("id", row.id);
+    if (error) return { ok: false, error: error.message };
+  }
+
+  const { data: created, error: insertErr } = await supabase
+    .from("opportunities")
+    .insert({
+      pipeline_id: pipelineId,
+      stage_id: stageId,
+      lead_id: leadId,
+      contact_name: contactName,
+      business_name: businessName,
+      source,
+      value_cents: valueCents,
+      sort_order: 0,
+      status: transition.status,
+      won_at: transition.won_at,
+      lost_at: transition.lost_at,
+    })
+    .select("id")
+    .single();
+  if (insertErr || !created) {
+    return {
+      ok: false,
+      error: insertErr?.message ?? "Could not create opportunity",
+    };
+  }
+
+  // Bump the source lead to in_progress. Failure here is non-fatal — the
+  // opportunity is already written; log silently rather than tear down.
+  await supabase
+    .from("leads")
+    .update({ status: "in_progress" })
+    .eq("id", leadId);
+
+  revalidatePath("/admin");
+  return {
+    ok: true,
+    opportunityId: created.id as string,
+    pipelineId,
+  };
 }
 
 /* ------------------------------------------------------------------ */

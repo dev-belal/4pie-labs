@@ -33,6 +33,10 @@ export interface Lead {
   notes: string | null;
   created_at: string;
   updated_at: string;
+  // Denormalized from a join in getDashboardData(). Name of the FIRST non-
+  // lost pipeline this lead has been promoted into, or null if not promoted.
+  // Used by LeadsPanel to render an "In <pipeline>" pill in place of status.
+  inPipelineName?: string | null;
 }
 
 export interface ConversationSummary {
@@ -109,7 +113,49 @@ export const getDashboardData = cache(async (): Promise<DashboardData> => {
 
   const blogStats = (blogs ?? []) as BlogStat[];
   const totalViews = blogStats.reduce((sum, b) => sum + (b.views ?? 0), 0);
-  const leads = (leadsData ?? []) as Lead[];
+  let leads = (leadsData ?? []) as Lead[];
+
+  // Enrich leads with the name of the first non-lost pipeline they appear
+  // in, so LeadsPanel can show an "In <pipeline>" pill. Two small extra
+  // queries; both indexed (opportunities_lead_idx + pipelines pk).
+  if (leads.length > 0) {
+    const leadIds = leads.map((l) => l.id);
+    const { data: oppLinks } = await supabase
+      .from("opportunities")
+      .select("lead_id, pipeline_id, status, created_at")
+      .in("lead_id", leadIds)
+      .neq("status", "lost")
+      .order("created_at", { ascending: true });
+
+    const links = (oppLinks ?? []) as Array<{
+      lead_id: string | null;
+      pipeline_id: string;
+    }>;
+
+    if (links.length > 0) {
+      const pipelineIds = Array.from(new Set(links.map((l) => l.pipeline_id)));
+      const { data: pipelineRows } = await supabase
+        .from("pipelines")
+        .select("id, name")
+        .in("id", pipelineIds);
+      const nameById = new Map(
+        ((pipelineRows ?? []) as Array<{ id: string; name: string }>).map(
+          (p) => [p.id, p.name],
+        ),
+      );
+      const inPipelineByLead = new Map<string, string>();
+      for (const link of links) {
+        if (!link.lead_id) continue;
+        if (inPipelineByLead.has(link.lead_id)) continue;
+        const name = nameById.get(link.pipeline_id);
+        if (name) inPipelineByLead.set(link.lead_id, name);
+      }
+      leads = leads.map((l) => ({
+        ...l,
+        inPipelineName: inPipelineByLead.get(l.id) ?? null,
+      }));
+    }
+  }
   const conversationRows = (conversationsData ?? []) as Array<{
     id: string;
     session_id: string;

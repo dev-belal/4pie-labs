@@ -201,6 +201,16 @@ export const updateOpportunitySchema = z.object({
   fields: updateOpportunityFieldsSchema,
 });
 
+// Lead → opportunity promotion (Phase 4). leadId references the originating
+// lead row; pipelineId + stageId identify the destination column; valueCents
+// is the monthly retainer the admin sized in the modal.
+export const promoteLeadSchema = z.object({
+  leadId: uuidSchema,
+  pipelineId: uuidSchema,
+  stageId: uuidSchema,
+  valueCents: valueCentsSchema,
+});
+
 export const bookingSchema = z.object({
   // Cal.com slot starts include tz offsets (e.g. "...-04:00"), not just "Z",
   // so allow offsets. `local` would also match naive strings; we want a
@@ -233,3 +243,4 @@ export type MoveOpportunityInput = z.infer<typeof moveOpportunitySchema>;
 export type UpdateOpportunityFields = z.infer<
   typeof updateOpportunityFieldsSchema
 >;
+export type PromoteLeadInput = z.infer<typeof promoteLeadSchema>;

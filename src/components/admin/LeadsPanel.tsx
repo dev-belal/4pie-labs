@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   AlertCircle,
@@ -10,6 +10,7 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
+  GitBranch,
   Mail,
   MessageCircle,
   Phone,
@@ -23,7 +24,14 @@ import {
   updateLeadNotes,
   updateLeadStatus,
 } from "@/lib/admin-actions";
-import type { Lead, LeadStatus, LeadType } from "@/lib/admin-data";
+import { promoteLeadToOpportunity } from "@/lib/opportunity-actions";
+import type {
+  Lead,
+  LeadStatus,
+  LeadType,
+  PipelineWithStages,
+} from "@/lib/admin-data";
+import { AddToPipelineModal } from "./AddToPipelineModal";
 
 const TYPE_META: Record<LeadType, { label: string; icon: LucideIcon; color: string }> = {
   contact: {
@@ -107,11 +115,65 @@ function formatDate(iso: string) {
   });
 }
 
-export function LeadsPanel({ leads }: { leads: Lead[] }) {
+interface PromoteToast {
+  message: string;
+  pipelineId: string;
+}
+
+export function LeadsPanel({
+  leads,
+  pipelines,
+  gotoPipeline,
+}: {
+  leads: Lead[];
+  pipelines: PipelineWithStages[];
+  gotoPipeline: (pipelineId: string) => void;
+}) {
   const [typeFilter, setTypeFilter] = useState<LeadType | "all">("all");
   const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [promoteLead, setPromoteLead] = useState<Lead | null>(null);
+  const [promoting, setPromoting] = useState(false);
+  const [promoteError, setPromoteError] = useState<string | null>(null);
+  const [toast, setToast] = useState<PromoteToast | null>(null);
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = window.setTimeout(() => setToast(null), 6000);
+    return () => window.clearTimeout(t);
+  }, [toast]);
+
+  const handlePromote = (input: {
+    pipelineId: string;
+    stageId: string;
+    valueCents: number;
+  }) => {
+    if (!promoteLead) return;
+    setPromoting(true);
+    setPromoteError(null);
+    startTransition(async () => {
+      const res = await promoteLeadToOpportunity({
+        leadId: promoteLead.id,
+        pipelineId: input.pipelineId,
+        stageId: input.stageId,
+        valueCents: input.valueCents,
+      });
+      setPromoting(false);
+      if (!res.ok) {
+        setPromoteError(res.error);
+        return;
+      }
+      const pipelineName =
+        pipelines.find((p) => p.id === res.pipelineId)?.name ?? "pipeline";
+      const leadName = promoteLead.name ?? promoteLead.email ?? "Lead";
+      setPromoteLead(null);
+      setToast({
+        message: `${leadName} added to ${pipelineName}.`,
+        pipelineId: res.pipelineId,
+      });
+    });
+  };
 
   const filtered = useMemo(() => {
     return leads.filter(
@@ -184,10 +246,55 @@ export function LeadsPanel({ leads }: { leads: Lead[] }) {
               }
               isPending={isPending}
               onAction={(fn) => startTransition(fn)}
+              onPromote={() => setPromoteLead(lead)}
             />
           ))
         )}
       </div>
+
+      {promoteLead && (
+        <AddToPipelineModal
+          lead={promoteLead}
+          pipelines={pipelines}
+          alreadyInPipeline={promoteLead.inPipelineName ?? null}
+          busy={promoting}
+          onClose={() => {
+            setPromoteLead(null);
+            setPromoteError(null);
+          }}
+          onConfirm={handlePromote}
+        />
+      )}
+
+      {promoteError && (
+        <div
+          role="status"
+          className="fixed bottom-8 right-8 z-50 px-5 py-3 rounded-xl shadow-xl flex items-center gap-3 text-sm font-medium bg-red-500 text-white"
+        >
+          <AlertCircle className="w-4 h-4" />
+          {promoteError}
+        </div>
+      )}
+
+      {toast && (
+        <div
+          role="status"
+          className="fixed bottom-8 right-8 z-50 px-5 py-3 rounded-xl shadow-xl flex items-center gap-3 text-sm font-medium bg-emerald-500 text-white"
+        >
+          <Check className="w-4 h-4" />
+          <span>{toast.message}</span>
+          <button
+            type="button"
+            onClick={() => {
+              gotoPipeline(toast.pipelineId);
+              setToast(null);
+            }}
+            className="ml-2 inline-flex items-center gap-1 font-semibold underline-offset-2 hover:underline"
+          >
+            View →
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -255,12 +362,14 @@ function LeadRow({
   onToggle,
   isPending,
   onAction,
+  onPromote,
 }: {
   lead: Lead;
   expanded: boolean;
   onToggle: () => void;
   isPending: boolean;
   onAction: (fn: () => void) => void;
+  onPromote: () => void;
 }) {
   const meta = TYPE_META[lead.type];
   const Icon = meta.icon;
@@ -284,8 +393,16 @@ function LeadRow({
       <button
         type="button"
         onClick={onToggle}
+        onDoubleClick={(e) => {
+          // Prevent the second click of the double-click from toggling the
+          // row open/closed underneath the modal.
+          e.preventDefault();
+          e.stopPropagation();
+          onPromote();
+        }}
         aria-expanded={expanded}
-        className="w-full flex items-center gap-4 p-4 md:p-5 text-left hover:bg-[var(--surface-hover)] focus-visible:bg-[var(--surface-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset transition-colors"
+        title="Click to expand · double-click to add to a pipeline"
+        className="w-full flex items-center gap-4 p-4 md:p-5 text-left hover:bg-[var(--surface-hover)] focus-visible:bg-[var(--surface-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset transition-colors select-none"
       >
         <div
           className={`w-10 h-10 rounded-lg bg-[var(--surface-hover)] border border-[var(--border)] flex items-center justify-center flex-shrink-0 ${meta.color}`}
@@ -297,11 +414,18 @@ function LeadRow({
             <span className="font-semibold text-sm text-[var(--fg)] truncate">
               {lead.name ?? lead.email ?? "(no name)"}
             </span>
-            <span
-              className={`text-xs font-medium px-2 py-0.5 rounded-full ${status.bg} ${status.text}`}
-            >
-              {status.label}
-            </span>
+            {lead.inPipelineName ? (
+              <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-[var(--accent-soft)] text-[var(--on-soft)]">
+                <GitBranch className="w-3 h-3" />
+                In {lead.inPipelineName}
+              </span>
+            ) : (
+              <span
+                className={`text-xs font-medium px-2 py-0.5 rounded-full ${status.bg} ${status.text}`}
+              >
+                {status.label}
+              </span>
+            )}
           </div>
           <div className="text-xs text-[var(--muted)] truncate flex items-center gap-2">
             <span className="font-medium text-[var(--faint)]">{meta.label}</span>
@@ -414,9 +538,18 @@ function LeadRow({
                 )}
                 <button
                   type="button"
+                  onClick={onPromote}
+                  disabled={isPending}
+                  className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-[var(--accent-soft)] text-[var(--on-soft)] hover:opacity-90 transition-colors disabled:opacity-50"
+                >
+                  <GitBranch className="w-3.5 h-3.5" />
+                  {lead.inPipelineName ? "Add to another pipeline" : "Add to Pipeline"}
+                </button>
+                <button
+                  type="button"
                   onClick={handleDelete}
                   disabled={isPending}
-                  className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-red-400/70 hover:text-red-400 hover:bg-red-400/10 transition-colors disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-red-400/70 hover:text-red-400 hover:bg-red-400/10 transition-colors disabled:opacity-50"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   Delete

@@ -49,9 +49,14 @@ const KIND_DOT: Record<StageKind, string> = {
 export function PipelinesPanel({
   pipelines: initialPipelines,
   opportunities: initialOpportunities,
+  pipelineFocus,
 }: {
   pipelines: PipelineWithStages[];
   opportunities: Opportunity[];
+  // Deep-link from a lead-promotion toast: { pipelineId, token }. Token
+  // changes on every call so the effect below re-fires even when the same
+  // pipeline is targeted twice.
+  pipelineFocus: { pipelineId: string; token: number } | null;
 }) {
   // Local state seeded from server props. We intentionally do NOT re-sync
   // from props on poll-refresh so a user's mid-edit work is not clobbered
@@ -65,6 +70,16 @@ export function PipelinesPanel({
   );
   const [view, setView] = useState<"builder" | "opportunities">("builder");
   const [toast, setToast] = useState<Toast | null>(null);
+
+  // Consume a deep-link from LeadsPanel: switch to the requested pipeline
+  // and the Opportunities sub-view. Effect depends on pipelineFocus by
+  // reference; AdminShell creates a fresh object on each gotoPipeline call
+  // so this fires even when the same pipeline is targeted twice.
+  useEffect(() => {
+    if (!pipelineFocus) return;
+    setActiveId(pipelineFocus.pipelineId);
+    setView("opportunities");
+  }, [pipelineFocus]);
   const [, startTransition] = useTransition();
 
   // Auto-dismiss toasts.

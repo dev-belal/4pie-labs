@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -91,6 +91,21 @@ export function AdminShell({
   userEmail: string;
 }) {
   const [tab, setTab] = useState<Tab>("overview");
+  // Focus ticket: any time the user clicks "View →" on a promotion toast,
+  // gotoPipeline bumps the token AND sets the destination id. PipelinesPanel
+  // watches the whole object (which is a fresh reference each call) and
+  // syncs its active pipeline + view. Re-firing with the same pipelineId
+  // still works because the token changes every time.
+  const focusTokenRef = useRef(0);
+  const [pipelineFocus, setPipelineFocus] = useState<{
+    pipelineId: string;
+    token: number;
+  } | null>(null);
+  const gotoPipeline = useCallback((pipelineId: string) => {
+    focusTokenRef.current += 1;
+    setPipelineFocus({ pipelineId, token: focusTokenRef.current });
+    setTab("pipelines");
+  }, []);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const { theme, toggle } = useTheme();
@@ -268,7 +283,11 @@ export function AdminShell({
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.15 }}
               >
-                <LeadsPanel leads={data.leads} />
+                <LeadsPanel
+                leads={data.leads}
+                pipelines={pipelines}
+                gotoPipeline={gotoPipeline}
+              />
               </motion.div>
             )}
             {tab === "pipelines" && (
@@ -282,6 +301,7 @@ export function AdminShell({
                 <PipelinesPanel
                   pipelines={pipelines}
                   opportunities={opportunities}
+                  pipelineFocus={pipelineFocus}
                 />
               </motion.div>
             )}
