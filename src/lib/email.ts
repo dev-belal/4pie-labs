@@ -34,8 +34,20 @@ function replyToAddress(): string {
   return process.env.EMAIL_REPLY_TO ?? "team@fourpielabs.com";
 }
 
-function alertRecipient(): string {
-  return process.env.LEAD_ALERT_TO ?? "team@fourpielabs.com";
+/**
+ * Internal recipients for the "new lead" alert email. `LEAD_ALERT_TO` is
+ * read as a comma-separated list, then trimmed + de-empty'd. A single
+ * address still works (yields a one-element array). Unset / all-empty
+ * yields [] and the caller skips the send with a warning instead of
+ * defaulting silently to one address.
+ */
+function alertRecipients(): string[] {
+  const raw = process.env.LEAD_ALERT_TO;
+  if (!raw) return [];
+  return raw
+    .split(",")
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
 }
 
 // Escape user-provided values before embedding in HTML.
@@ -72,8 +84,23 @@ export async function sendLeadAlert(
       return { ok: false, reason: "no_key" };
     }
 
+    const recipients = alertRecipients();
+    if (recipients.length === 0) {
+      console.warn(
+        "[email] LEAD_ALERT_TO is unset or empty, skipping lead alert",
+      );
+      return { ok: false, reason: "no_recipients" };
+    }
+
     const subjectName = input.name ? `: ${input.name}` : "";
     const subject = `New ${input.type} lead${subjectName}`;
+
+    // Log the recipient set so it's easy to confirm in dev / Vercel logs
+    // that the comma-split produced the addresses we expected. Internal
+    // addresses, not customer data, so safe to log.
+    console.info(
+      `[email] lead alert: ${input.type} -> ${recipients.length} recipient(s): ${recipients.join(", ")}`,
+    );
 
     // Render every payload field as a row so the team sees the full submission
     // without us having to keep the template in sync with each form schema.
@@ -107,7 +134,7 @@ export async function sendLeadAlert(
 
     const { data, error } = await c.emails.send({
       from: fromAddress(),
-      to: alertRecipient(),
+      to: recipients,
       replyTo: replyToAddress(),
       subject,
       html,
