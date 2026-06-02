@@ -62,8 +62,9 @@ export function AuditForm() {
       <Field
         id="audit-url"
         name="businessUrl"
-        label="Website URL (optional)"
-        placeholder="acmepainting.com"
+        label="Website URL"
+        required
+        placeholder="example.com or https://example.com"
         error={state.errors?.businessUrl?.[0]}
       />
 

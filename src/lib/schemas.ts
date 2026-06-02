@@ -95,11 +95,22 @@ export const trackViewSchema = z.object({
 
 // Free AI marketing audit form on /audit. Stored in the leads table under
 // type "contact" (closest existing enum value) with source "Free AI audit".
+// businessUrl is required and lenient: n8n normalizes the URL itself, so we
+// don't force https:// or z.string().url() here. We only reject the obvious
+// junk (empty, contains whitespace after trim, no dot).
 export const auditLeadSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100),
   email: z.string().email("Enter a valid email address").max(200),
   businessName: z.string().min(1, "Enter your business name").max(200),
-  businessUrl: z.string().max(300).optional(),
+  businessUrl: z
+    .string()
+    .trim()
+    .min(1, "Enter your website (e.g. example.com or https://example.com)")
+    .max(300, "Enter your website (e.g. example.com or https://example.com)")
+    .refine(
+      (v) => !/\s/.test(v) && v.includes("."),
+      "Enter your website (e.g. example.com or https://example.com)",
+    ),
   industry: z
     .enum(["Painting contractor", "Tour operator", "Other local service"])
     .optional(),
