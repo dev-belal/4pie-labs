@@ -11,6 +11,7 @@ import {
   Building2,
   Calculator,
   Check,
+  CheckCircle2,
   Mail,
   User,
   X,
@@ -67,7 +68,16 @@ export function ROICalculator() {
   const [industry, setIndustry] = useState<Industry>("Painting Contractor");
   const [goalLabel, setGoalLabel] = useState<GrowthGoal>("Grow steadily");
   const [currentSpend, setCurrentSpend] = useState(5_000);
-  const [modalOpen, setModalOpen] = useState(false);
+
+  // Inline name + email collection. submitBudgetLead saves them on the lead
+  // row (top-level columns) and forwards them to both Resend sends inside
+  // its after() block. The previous modal-based collection (BudgetLeadModal
+  // function below) is dead code kept for reference; the form here calls
+  // submitBudgetLead directly.
+  const [state, formAction, pending] = useActionState(
+    submitBudgetLead,
+    initialFormState,
+  );
 
   const goal = GROWTH_GOALS.find((g) => g.label === goalLabel)!;
   const midpointPct = (goal.lo + goal.hi) / 2;
@@ -257,14 +267,82 @@ export function ROICalculator() {
                   </li>
                 </ul>
 
-                <button
-                  type="button"
-                  onClick={() => setModalOpen(true)}
-                  className="group w-full font-semibold py-3.5 rounded-lg transition-all flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-on-primary shadow-[var(--shadow-cta)] hover:shadow-[var(--shadow-cta-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                >
-                  Get the full breakdown
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
+                {state.status === "success" ? (
+                  <div className="text-center pt-2">
+                    <div className="w-12 h-12 rounded-2xl bg-success/15 grid place-items-center mx-auto mb-4">
+                      <CheckCircle2 className="w-6 h-6 text-success" />
+                    </div>
+                    <h3 className="text-base font-semibold mb-1 tracking-tight text-foreground">
+                      You&apos;re all set.
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {state.message}
+                    </p>
+                  </div>
+                ) : (
+                  <form action={formAction} className="space-y-3 pt-2">
+                    <Field
+                      id="budget-name"
+                      name="name"
+                      label="Name"
+                      required
+                      placeholder="Jane Doe"
+                      error={state.errors?.name?.[0]}
+                    />
+                    <Field
+                      id="budget-email"
+                      name="email"
+                      type="email"
+                      label="Email"
+                      required
+                      placeholder="jane@acme.com"
+                      error={state.errors?.email?.[0]}
+                    />
+
+                    {/* Calculator state, carried as hidden inputs so the
+                        lead row stores the full context (revenue, industry,
+                        goal, recommended budget, current spend). */}
+                    <input
+                      type="hidden"
+                      name="monthlyRevenue"
+                      value={monthlyRevenue}
+                    />
+                    <input type="hidden" name="industry" value={industry} />
+                    <input type="hidden" name="growthGoal" value={goalLabel} />
+                    <input
+                      type="hidden"
+                      name="recommendedBudget"
+                      value={recommendedBudget}
+                    />
+                    <input
+                      type="hidden"
+                      name="currentSpend"
+                      value={currentSpend}
+                    />
+
+                    {state.status === "error" && state.message && (
+                      <p
+                        aria-live="polite"
+                        className="text-sm text-error bg-error/10 border border-error/20 rounded-lg px-4 py-2.5"
+                      >
+                        {state.message}
+                      </p>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={pending}
+                      className="group w-full font-semibold py-3.5 rounded-lg transition-all flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-on-primary shadow-[var(--shadow-cta)] hover:shadow-[var(--shadow-cta-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-70 disabled:cursor-not-allowed"
+                    >
+                      {pending ? "Submitting..." : "Get the full breakdown"}
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                    <p className="text-xs text-subtle-foreground text-center pt-1">
+                      You will receive your breakdown from the 4Pie Labs team
+                      within 24 hours.
+                    </p>
+                  </form>
+                )}
               </div>
 
               <Link
@@ -280,16 +358,53 @@ export function ROICalculator() {
         </div>
       </div>
 
-      <BudgetLeadModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        monthlyRevenue={monthlyRevenue}
-        industry={industry}
-        growthGoal={goalLabel}
-        recommendedBudget={recommendedBudget}
-        currentSpend={currentSpend}
-      />
+      {/* BudgetLeadModal is no longer mounted; the form above submits to
+          submitBudgetLead directly. The modal function below is kept as
+          dead reference code in case a future change wants to bring it
+          back as a separate flow. */}
     </section>
+  );
+}
+
+// Lightweight Field helper that mirrors AuditForm's styling exactly:
+// stacked label above input, red-tinted asterisk for required, error
+// message under the input. No icons (audit form has none).
+function Field({
+  id,
+  name,
+  label,
+  type = "text",
+  required,
+  placeholder,
+  error,
+}: {
+  id: string;
+  name: string;
+  label: string;
+  type?: string;
+  required?: boolean;
+  placeholder?: string;
+  error?: string;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <label
+        htmlFor={id}
+        className="block text-sm font-medium text-foreground"
+      >
+        {label}
+        {required && <span className="text-primary"> *</span>}
+      </label>
+      <input
+        id={id}
+        name={name}
+        type={type}
+        required={required}
+        placeholder={placeholder}
+        className="w-full bg-surface border border-border rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-subtle-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
+      />
+      {error && <p className="text-xs text-error">{error}</p>}
+    </div>
   );
 }
 
