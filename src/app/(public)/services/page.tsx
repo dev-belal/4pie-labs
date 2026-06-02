@@ -2,15 +2,16 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ServicesBrowser } from "@/components/ServicesBrowser";
 
+const SERVICES_DESCRIPTION =
+  "Explore 4Pie Labs marketing services: AI-first SEO and AEO, performance ads, and custom AI systems built for local service businesses.";
+
 export const metadata: Metadata = {
   title: "Services",
-  description:
-    "Local SEO, Maps pack, AEO, paid ads, and conversion engineering - the full local-growth catalog for painting contractors, tour operators, and service businesses.",
+  description: SERVICES_DESCRIPTION,
   alternates: { canonical: "/services" },
   openGraph: {
     title: "Services - 4Pie Labs",
-    description:
-      "Local SEO, Maps pack, AEO, paid ads, and conversion engineering - built for local service businesses.",
+    description: SERVICES_DESCRIPTION,
     url: "/services",
     type: "website",
   },

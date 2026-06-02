@@ -43,7 +43,7 @@ const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:th
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name} | AI Automation & Digital Marketing Agency`,
+    default: "4Pie Labs | AI-First Marketing for Local Service Businesses",
     template: `%s | ${SITE.name}`,
   },
   description: SITE.description,
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: `${SITE.name} | AI Automation & Digital Marketing Agency`,
+    title: "4Pie Labs | AI-First Marketing for Local Service Businesses",
     description: SITE.description,
     url: SITE.url,
     siteName: SITE.name,
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE.name} | AI Automation & Digital Marketing Agency`,
+    title: "4Pie Labs | AI-First Marketing for Local Service Businesses",
     description: SITE.description,
     creator: SITE.twitter,
   },

@@ -35,7 +35,12 @@ type CategoryMeta = {
   eyebrow: string;
   headlinePrefix: string;
   headlineAccent: string;
+  /** Long-form value-prop rendered on the page hero. */
   subhead: string;
+  /** Short (<160 char) version used by generateMetadata so search snippets
+   *  don't truncate. Kept distinct from `subhead` because the on-page copy
+   *  benefits from the longer pitch. */
+  metaDescription: string;
   Icon: LucideIcon;
   bullets: string[];
   faqs: { q: string; a: string }[];
@@ -48,6 +53,8 @@ const CATEGORY_META: Record<ServiceCategory, CategoryMeta> = {
     headlineAccent: "first.",
     subhead:
       "Local SEO + Google Business Profile + Answer Engine Optimization across ChatGPT, Perplexity, Gemini, and Google AI Overviews. We engineer your site to be the source those engines cite, not the link they skip.",
+    metaDescription:
+      "Get cited by ChatGPT, Perplexity, and Google AI Overviews. 4Pie Labs builds AI-first SEO and answer engine optimization for local service businesses.",
     Icon: MessageCircle,
     bullets: [
       "Top-3 Maps pack rankings for your 50 highest-intent buyer queries",
@@ -76,6 +83,8 @@ const CATEGORY_META: Record<ServiceCategory, CategoryMeta> = {
     headlineAccent: "pays.",
     subhead:
       "Google Search + Maps, Meta + Instagram, YouTube + TikTok, and the conversion path that ties every click to revenue. Predictable lead flow, every channel measured, no agency theatre.",
+    metaDescription:
+      "Performance ads that turn clicks into booked jobs. 4Pie Labs runs Google, Maps, and paid campaigns built for local service businesses.",
     Icon: Search,
     bullets: [
       "AI-optimized bidding + ad copy + targeting per channel",
@@ -104,6 +113,8 @@ const CATEGORY_META: Record<ServiceCategory, CategoryMeta> = {
     headlineAccent: "can't build.",
     subhead:
       "AI operating systems, autonomous agents, workflow automation, CRM integration, custom dashboards. The back-office layer that makes the rest of your marketing actually work - and that gives you data nobody else in your market has.",
+    metaDescription:
+      "Custom AI systems for local service businesses: lead scoring, attribution, and automation wired into one accountable funnel by 4Pie Labs.",
     Icon: Cpu,
     bullets: [
       "Custom AI agents that answer inquiries 24/7 + book appointments",
@@ -161,11 +172,11 @@ export async function generateMetadata({
   const meta = CATEGORY_META[category];
   return {
     title: meta.eyebrow,
-    description: meta.subhead,
+    description: meta.metaDescription,
     alternates: { canonical: `/services/${slug}` },
     openGraph: {
       title: `${meta.eyebrow} - 4Pie Labs`,
-      description: meta.subhead,
+      description: meta.metaDescription,
       url: `/services/${slug}`,
       type: "website",
     },
