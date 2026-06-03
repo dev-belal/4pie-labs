@@ -85,6 +85,29 @@ function renderInline(text: string): React.ReactNode[] {
 const IMAGE_LINE = /^!\[([^\]]*)\]\(([^)]+)\)$/;
 
 /**
+ * A markdown table row starts and ends with a `|`. The separator row
+ * (between the header and body) contains only `|`, `-`, `:`, and spaces.
+ * We use these to detect the boundaries of a table block.
+ */
+function isTableRow(line: string): boolean {
+  return line.startsWith("|") && line.length > 1;
+}
+function isTableSeparator(line: string): boolean {
+  return /^\|[\s:|-]+\|$/.test(line) && line.includes("-");
+}
+
+/**
+ * Split `| a | b | c |` into ["a", "b", "c"]. Trims each cell. Drops the
+ * leading and trailing empty cells produced by the boundary pipes.
+ */
+function splitTableRow(line: string): string[] {
+  return line
+    .split("|")
+    .slice(1, -1)
+    .map((cell) => cell.trim());
+}
+
+/**
  * Tiny line-based Markdown renderer. Handles:
  *   - `# ` skipped (page already renders post.title as <h1>)
  *   - `## ` -> <h2>   (section heads)
@@ -120,6 +143,67 @@ function renderContent(content: string): React.ReactNode[] {
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i];
     const line = raw.replace(/\s+$/, ""); // strip trailing whitespace
+
+    // Detect a markdown table: header row + separator + 1+ body rows. We
+    // consume the whole block at once and skip the consumed lines via the
+    // outer loop variable. Sits BEFORE the heading / list / image branches
+    // because nothing else starts with `|`.
+    if (
+      isTableRow(line) &&
+      i + 1 < lines.length &&
+      isTableSeparator(lines[i + 1].trim())
+    ) {
+      flushList();
+      const headers = splitTableRow(line);
+      const bodyRows: string[][] = [];
+      let j = i + 2; // skip header + separator
+      while (j < lines.length && isTableRow(lines[j].trim())) {
+        bodyRows.push(splitTableRow(lines[j].trim()));
+        j++;
+      }
+      out.push(
+        <div
+          key={i}
+          className="my-10 -mx-4 md:mx-0 overflow-x-auto rounded-2xl border border-card-border shadow-[var(--shadow-card)]"
+        >
+          <table className="w-full text-sm md:text-base border-collapse min-w-[640px]">
+            <thead>
+              <tr className="bg-surface-2 border-b border-card-border">
+                {headers.map((h, k) => (
+                  <th
+                    key={k}
+                    className="px-4 py-3 text-left font-semibold text-foreground"
+                  >
+                    {renderInline(h)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {bodyRows.map((row, rIdx) => (
+                <tr
+                  key={rIdx}
+                  className="border-b border-border last:border-b-0 align-top"
+                >
+                  {row.map((cell, cIdx) => (
+                    <td
+                      key={cIdx}
+                      className={`px-4 py-3 text-foreground/85 leading-snug ${
+                        cIdx === 0 ? "font-medium text-foreground" : ""
+                      }`}
+                    >
+                      {renderInline(cell)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>,
+      );
+      i = j - 1; // outer loop will i++ to land on the next non-table line
+      continue;
+    }
 
     if (line.startsWith("# ")) {
       flushList();
