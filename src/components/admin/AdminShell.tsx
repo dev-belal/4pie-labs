@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Bell,
+  CalendarDays,
   GitBranch,
   Inbox,
   LayoutDashboard,
@@ -20,6 +21,7 @@ import {
 import { signOut } from "@/lib/auth-actions";
 import { useTheme } from "@/lib/use-theme";
 import type {
+  Appointment,
   DashboardData,
   Opportunity,
   PipelineWithStages,
@@ -30,11 +32,13 @@ import { TestimonialPublisher } from "./TestimonialPublisher";
 import { LeadsPanel } from "./LeadsPanel";
 import { ConversationsPanel } from "./ConversationsPanel";
 import { PipelinesPanel } from "./PipelinesPanel";
+import { CalendarPanel } from "./CalendarPanel";
 
 type Tab =
   | "overview"
   | "leads"
   | "pipelines"
+  | "calendar"
   | "conversations"
   | "testimonials"
   | "blogs";
@@ -47,6 +51,7 @@ const NAV: Array<{
   { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "leads", label: "Leads", icon: Inbox },
   { id: "pipelines", label: "Pipelines", icon: GitBranch },
+  { id: "calendar", label: "Calendar", icon: CalendarDays },
   { id: "conversations", label: "Conversations", icon: MessageCircle },
   { id: "testimonials", label: "Testimonials", icon: MessageSquarePlus },
   { id: "blogs", label: "Blogs", icon: PenTool },
@@ -64,6 +69,10 @@ const HEADINGS: Record<Tab, { title: string; sub: string }> = {
   pipelines: {
     title: "Pipelines",
     sub: "Build and manage your sales stages",
+  },
+  calendar: {
+    title: "Calendar",
+    sub: "Appointments synced from Cal.com",
   },
   conversations: {
     title: "Conversations",
@@ -83,11 +92,15 @@ export function AdminShell({
   data,
   pipelines,
   opportunities,
+  appointments,
+  monthStartISO,
   userEmail,
 }: {
   data: DashboardData;
   pipelines: PipelineWithStages[];
   opportunities: Opportunity[];
+  appointments: Appointment[];
+  monthStartISO: string;
   userEmail: string;
 }) {
   const [tab, setTab] = useState<Tab>("overview");
@@ -302,6 +315,20 @@ export function AdminShell({
                   pipelines={pipelines}
                   opportunities={opportunities}
                   pipelineFocus={pipelineFocus}
+                />
+              </motion.div>
+            )}
+            {tab === "calendar" && (
+              <motion.div
+                key="calendar"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.15 }}
+              >
+                <CalendarPanel
+                  appointments={appointments}
+                  monthStartISO={monthStartISO}
                 />
               </motion.div>
             )}

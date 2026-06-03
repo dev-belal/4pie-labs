@@ -353,6 +353,60 @@ export async function getAllOpportunities(): Promise<Opportunity[]> {
   return (data ?? []) as Opportunity[];
 }
 
+/* ============================================================
+ * Appointments (Phase 5 — local Cal.com mirror).
+ *
+ * Rows in this table are owned by the admin shell: cal_booking_id / cal_uid
+ * dedupe against Cal.com, but `category` and `notes` are admin-edited and
+ * never sent back to Cal. The public /book flow writes a row via the
+ * after()-wrapped mirror in booking-actions.ts; the syncAppointmentsFromCal
+ * action backfills history.
+ * ============================================================ */
+
+export type AppointmentStatus = "confirmed" | "cancelled" | "rescheduled";
+
+export interface Appointment {
+  id: string;
+  cal_booking_id: number | null;
+  cal_uid: string | null;
+  title: string | null;
+  attendee_name: string | null;
+  attendee_email: string | null;
+  attendee_tz: string | null;
+  channel: string | null;
+  starts_at: string;
+  ends_at: string;
+  category: string | null;
+  notes: string | null;
+  status: AppointmentStatus;
+  lead_id: string | null;
+  opportunity_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+const APPOINTMENT_COLUMNS =
+  "id, cal_booking_id, cal_uid, title, attendee_name, attendee_email, attendee_tz, channel, starts_at, ends_at, category, notes, status, lead_id, opportunity_id, created_at, updated_at";
+
+/**
+ * Local appointments in a date window. Both bounds are ISO; the window is
+ * inclusive on starts_at. Used by the admin calendar to render either a
+ * month or a week without pulling the full history each render.
+ */
+export async function getAppointments(
+  rangeStartISO: string,
+  rangeEndISO: string,
+): Promise<Appointment[]> {
+  const supabase = createServiceClient();
+  const { data } = await supabase
+    .from("appointments")
+    .select(APPOINTMENT_COLUMNS)
+    .gte("starts_at", rangeStartISO)
+    .lte("starts_at", rangeEndISO)
+    .order("starts_at", { ascending: true });
+  return (data ?? []) as Appointment[];
+}
+
 /** Fetch the full message thread for a single conversation. */
 export async function getConversationMessages(
   conversationId: string,
