@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Free AI marketing audit",
   description:
     "12-point audit of your local visibility across Google, Maps, and AI answer engines. No pitch, no pressure - you leave with a plan.",
+  alternates: { canonical: "/audit" },
 };
 
 const POINTS = [

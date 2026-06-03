@@ -4,9 +4,14 @@ import { ArrowRight, Plus } from "lucide-react";
 import { ProgramsCarousel } from "@/components/ProgramsCarousel";
 
 export const metadata: Metadata = {
-  title: "Programs",
+  // Keyword-bearing title - replaces the bland "Programs" so the page
+  // ranks for the buyer query, not a category label.
+  title: {
+    absolute: "Marketing Programs for Local Service Businesses | 4Pie Labs",
+  },
   description:
     "Four programs from foundation to full-stack - Core, Pipeline, Operating System, Pulse. AEO is included in every tier. No pricing on the site - book a call.",
+  alternates: { canonical: "/programs" },
 };
 
 const FAQS = [

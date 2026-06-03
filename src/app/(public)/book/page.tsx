@@ -4,7 +4,7 @@ import { BookingFlow } from "@/components/BookingFlow";
 export const metadata: Metadata = {
   title: "Book a Strategy Call",
   description:
-    "Pick a 30-minute slot. We'll talk through your local market, your top competitors, and the AEO + ads plan that gets you the next customer. Calendar invite + Google Meet link sent automatically.",
+    "Book a free 30-minute strategy call with 4Pie Labs. No pitch deck, no pressure. You leave with a clear plan for your local business.",
   alternates: { canonical: "/book" },
   openGraph: {
     title: "Book a strategy call - 4Pie Labs",

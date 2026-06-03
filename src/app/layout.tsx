@@ -47,9 +47,11 @@ export const metadata: Metadata = {
     template: `%s | ${SITE.name}`,
   },
   description: SITE.description,
-  alternates: {
-    canonical: "/",
-  },
+  // Intentionally NO alternates.canonical here. Setting it on the root
+  // layout would bleed into every child route that does not explicitly
+  // override it, causing Next to emit <link rel="canonical" href="/">
+  // on pages like /audit and /programs and signalling them as duplicates
+  // of the homepage. Every page sets its own canonical in its metadata.
   openGraph: {
     title: "4Pie Labs | AI-First Marketing for Local Service Businesses",
     description: SITE.description,
@@ -57,12 +59,23 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     locale: "en_US",
     type: "website",
+    // Default social card. Per-page openGraph.images can override this.
+    // Without it, summary_large_image below would render blank on Twitter.
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "4Pie Labs - AI-first marketing for local service businesses",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "4Pie Labs | AI-First Marketing for Local Service Businesses",
     description: SITE.description,
     creator: SITE.twitter,
+    images: ["/og-image.png"],
   },
   icons: {
     icon: "/favicon.svg",

@@ -15,7 +15,12 @@ const SERVICES_DESCRIPTION =
   "Explore 4Pie Labs marketing services: AI-first SEO and AEO, performance ads, and custom AI systems built for local service businesses.";
 
 export const metadata: Metadata = {
-  title: "Services",
+  // Keyword-bearing title - replaces the bland "Services" so search
+  // listings carry the three pillars in the title rather than a generic
+  // category label.
+  title: {
+    absolute: "Local SEO, AEO & Performance Ads Services | 4Pie Labs",
+  },
   description: SERVICES_DESCRIPTION,
   alternates: { canonical: "/services" },
   openGraph: {

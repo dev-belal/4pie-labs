@@ -21,7 +21,8 @@ const FOUNDER = {
 } as const;
 
 export const metadata: Metadata = {
-  title: "About",
+  // Plain hyphen with spaces (brand voice: no em-dashes).
+  title: { absolute: "About 4Pie Labs - AI-First Marketing Agency" },
   description:
     "We help painting contractors, tour operators, and local service businesses dominate Google, Maps, and AI answer engines. Meet the team behind 4Pie Labs.",
   alternates: { canonical: "/about" },
