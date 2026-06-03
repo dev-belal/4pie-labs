@@ -26,26 +26,20 @@ export interface BlogPost {
 // order shown in the BlogBrowser filter strip.
 export const blogCategories = ["ALL", "AEO", "Local SEO"];
 
-// PLACEHOLDER IMAGE.
-// All three new posts ship with the brand OG image until topic-fitting
-// Pixabay direct CDN URLs are supplied. Each post's `image` is replaced
-// with one of those URLs as soon as they arrive.
-//   Article 1 (local-business-chatgpt-visibility)
-//     -> wants: small business owner at a laptop / phone with chat UI;
-//        clean bright office. Pixabay search: "small business owner laptop"
-//        or "person typing laptop office".
-//   Article 2 (painting-contractor-google-leads)
-//     -> wants: professional painter at work or freshly painted home
-//        exterior. Pixabay search: "house painter" or "painting house
-//        exterior".
-//   Article 3 (aeo-vs-seo-local-business)
-//     -> wants: search-results-vs-AI-answer comparison visual, or a clean
-//        desk with laptop showing search. Pixabay search: "search engine
-//        laptop" or "laptop search results".
-// Format MUST be the direct CDN form:
-//   https://cdn.pixabay.com/photo/<yyyy>/<mm>/<dd>/<hh>/<mm>/<file>_1280.jpg
-// (cdn.pixabay.com is already in next.config.ts remotePatterns.)
-const PLACEHOLDER_IMAGE = "/og-image.png";
+// Direct Pixabay CDN images per post. cdn.pixabay.com is already in
+// next.config.ts remotePatterns, so Next's image optimizer can fetch and
+// re-serve these. Each URL is the 1280px-wide variant; Next will resize
+// down as needed per the <Image sizes=...> hint in the rendering
+// components. Each image is also the post's OG image (set in the post
+// page's generateMetadata via openGraph.images).
+//
+// Source page references (for swap-in later if any image needs replacing):
+//   local-business-chatgpt-visibility ->
+//     https://pixabay.com/photos/student-typing-keyboard-text-849826/
+//   painting-contractor-google-leads ->
+//     https://pixabay.com/photos/painter-to-brush-work-figure-1537421/
+//   aeo-vs-seo-local-business ->
+//     https://pixabay.com/photos/freelance-laptop-google-macbook-6051356/
 
 export const blogs: BlogPost[] = [
   {
@@ -58,7 +52,8 @@ export const blogs: BlogPost[] = [
     date: "May 28, 2026",
     datePublishedISO: "2026-05-28",
     readTime: "6 min read",
-    image: PLACEHOLDER_IMAGE,
+    image:
+      "https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849826_1280.jpg",
     excerpt:
       "If ChatGPT and Perplexity never mention your business, it's usually because your site isn't structured for AI to read, trust, and cite. Here's what to fix first.",
     content: `
@@ -124,7 +119,8 @@ Be your own customer. Open ChatGPT, Perplexity, and Google's AI results and ask 
     date: "May 19, 2026",
     datePublishedISO: "2026-05-19",
     readTime: "7 min read",
-    image: PLACEHOLDER_IMAGE,
+    image:
+      "https://cdn.pixabay.com/photo/2016/07/23/19/36/painter-1537421_1280.jpg",
     excerpt:
       "For painting contractors, most online leads come from three places: the Google Maps pack, a complete Google Business Profile, and pages that answer what homeowners actually search. Here's how to win all three.",
     content: `
@@ -186,7 +182,8 @@ Track three numbers monthly: your position in the Maps pack for your top three s
     date: "May 8, 2026",
     datePublishedISO: "2026-05-08",
     readTime: "5 min read",
-    image: PLACEHOLDER_IMAGE,
+    image:
+      "https://cdn.pixabay.com/photo/2021/02/26/10/47/freelance-6051356_1280.jpg",
     excerpt:
       "SEO gets you into Google's list of results. AEO gets you cited as the single answer in ChatGPT, Perplexity, and Google AI Overviews. Local businesses need both, and they share the same foundation.",
     content: `
