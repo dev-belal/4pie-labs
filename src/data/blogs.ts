@@ -1,123 +1,244 @@
+export interface BlogFAQ {
+  q: string;
+  a: string;
+}
+
 export interface BlogPost {
   id: string;
   slug: string;
   title: string;
   category: string;
   author: string;
+  // Human-readable display date, e.g. "May 28, 2026". Shown in headers.
   date: string;
+  // ISO 8601 form of the same date (YYYY-MM-DD). Used for the
+  // BlogPosting JSON-LD schema's datePublished property where Schema.org
+  // expects a Date type. Keep both in sync.
+  datePublishedISO: string;
   readTime: string;
   image: string;
   excerpt: string;
   content: string;
+  faqs?: BlogFAQ[];
 }
 
-export const blogCategories = ["ALL", "GUIDE", "STRATEGY", "INSIGHTS", "NEWS"];
+// Categories the editorial pipeline actually uses, post-pivot. Order is the
+// order shown in the BlogBrowser filter strip.
+export const blogCategories = ["ALL", "AEO", "Local SEO"];
+
+// PLACEHOLDER IMAGE.
+// All three new posts ship with the brand OG image until topic-fitting
+// Pixabay direct CDN URLs are supplied. Each post's `image` is replaced
+// with one of those URLs as soon as they arrive.
+//   Article 1 (local-business-chatgpt-visibility)
+//     -> wants: small business owner at a laptop / phone with chat UI;
+//        clean bright office. Pixabay search: "small business owner laptop"
+//        or "person typing laptop office".
+//   Article 2 (painting-contractor-google-leads)
+//     -> wants: professional painter at work or freshly painted home
+//        exterior. Pixabay search: "house painter" or "painting house
+//        exterior".
+//   Article 3 (aeo-vs-seo-local-business)
+//     -> wants: search-results-vs-AI-answer comparison visual, or a clean
+//        desk with laptop showing search. Pixabay search: "search engine
+//        laptop" or "laptop search results".
+// Format MUST be the direct CDN form:
+//   https://cdn.pixabay.com/photo/<yyyy>/<mm>/<dd>/<hh>/<mm>/<file>_1280.jpg
+// (cdn.pixabay.com is already in next.config.ts remotePatterns.)
+const PLACEHOLDER_IMAGE = "/og-image.png";
 
 export const blogs: BlogPost[] = [
   {
-    id: "roi-ai-automation",
-    slug: "roi-ai-automation",
-    title: "How to calculate ROI for AI automation projects.",
-    category: "GUIDE",
+    id: "local-business-chatgpt-visibility",
+    slug: "local-business-chatgpt-visibility",
+    title:
+      "Why Your Local Business Isn't Showing Up in ChatGPT (And How to Fix It)",
+    category: "AEO",
     author: "Syed Belal",
-    date: "Feb 24, 2026",
-    readTime: "8 min read",
-    image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1280&q=80",
-    excerpt:
-      "Learn the exact framework for measuring the financial impact of AI integration in your agency operations.",
-    content: `
-# How to calculate ROI for AI automation projects
-
-Integrating AI into your business isn't just about being "modern"-it's about the bottom line. But how do you measure the success of an automation project?
-
-## The Core Framework
-
-To calculate ROI, you need to look at three main pillars:
-
-### 1. Direct Time Savings
-This is the most obvious metric. Calculate the hours spent on manual tasks before and after automation.
-**Formula:** (Manual Hours - Automated Hours) x Hourly Labor Rate.
-
-### 2. Error Reduction Costs
-Human error is expensive. AI systems operate with consistent precision once programmed correctly. Estimate the cost of re-work or lost opportunities due to human errors.
-
-### 3. Scalability Gains
-Automation allows you to handle 10x the volume without 10x the staff. This "capacity expansion" is often where the true ROI lies for growing agencies.
-
-## Beyond the Numbers
-
-While the math is important, don't ignore the "Soft ROI":
-- Improved employee morale (less grunt work)
-- Faster client delivery times
-- Enhanced data accuracy for strategic decisions
-
-By following this framework, you can present a clear, data-backed case for AI investment to any stakeholder.
-    `,
-  },
-  {
-    id: "5-processes-automate",
-    slug: "5-processes-automate",
-    title: "5 processes you can automate today without set-up.",
-    category: "STRATEGY",
-    author: "4Pie Architect",
-    date: "Feb 20, 2026",
-    readTime: "5 min read",
-    image:
-      "https://cdn.pixabay.com/photo/2017/05/04/16/37/meeting-2284501_1280.jpg",
-    excerpt:
-      "Discover the low-hanging fruit in your workflow that can be handled by simple AI agents immediately.",
-    content: `
-# 5 processes you can automate today without set-up
-
-Many agencies believe they need a 6-month digital transformation to see results. The truth? You can start today.
-
-## 1. Meeting Summarization
-Stop taking notes. Use AI to transcribe and extract action items from your Zoom calls instantly.
-
-## 2. Email Triage
-Let a simple LLM-based agent categorize your inbox and draft preliminary responses based on your historical data.
-
-## 3. Social Media Ideation
-Input your core pillars and let AI generate a month's worth of content hooks and outlines in seconds.
-
-## 4. Lead Scraping
-Automate the discovery of new prospects using AI tools that find contact info based on LinkedIn profiles.
-
-## 5. Report Documentation
-Transform raw data into client-ready narratives using structured prompts.
-
-Start with one, master it, and move to the next. High-impact automation is about momentum.
-    `,
-  },
-  {
-    id: "ai-automation-fails",
-    slug: "ai-automation-fails",
-    title: "When AI automation fails: 3 common mistakes.",
-    category: "INSIGHTS",
-    author: "Senior AI Strategist",
-    date: "Feb 15, 2026",
+    date: "May 28, 2026",
+    datePublishedISO: "2026-05-28",
     readTime: "6 min read",
-    image:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1280&q=80",
+    image: PLACEHOLDER_IMAGE,
     excerpt:
-      "Avoid the pitfalls that drain budgets and frustrate teams during AI implementation.",
+      "If ChatGPT and Perplexity never mention your business, it's usually because your site isn't structured for AI to read, trust, and cite. Here's what to fix first.",
     content: `
-# When AI automation fails: 3 common mistakes
+## The short answer
 
-AI is powerful, but it's not magic. Here are the three most common reasons automation projects fail to deliver.
+If your local business doesn't appear when someone asks ChatGPT or Perplexity for a recommendation, the most common reason is that your website isn't structured for AI to extract and trust your information. AI answer engines don't rank ten blue links. They pull a single, synthesized answer from sources they can read clearly and verify. If your pages bury key facts in images, client-side popups, or vague copy, the AI skips you and cites a competitor instead.
 
-## 1. Automating a Broken Process
-If your manual workflow is messy, automating it just makes it messy *faster*. Fix the logic before you apply the code.
+The fix is rarely "write more." It's making the facts about your business unmissable and machine-readable: clear headings, plain answers to the questions buyers actually ask, structured data, and a consistent presence across the web that tells the AI you're a real, trusted business.
 
-## 2. Lack of Human-in-the-loop (HITL)
-Expecting AI to handle 100% of the nuance in human communication or creative work is a recipe for disaster. Design systems where AI does the heavy lifting but humans provide the final check.
+## Why AI answer engines ignore most local businesses
 
-## 3. Poor Data Quality
-AI is only as good as the data it feeds on. If your CRM is a mess, your "AI Insights" will be a mess too.
+Traditional Google search shows a list and lets the user choose. Answer engines do the choosing for the user. When someone asks "who's the best painting contractor near me" or "how do I get my business found online," the engine retrieves a handful of sources, decides which it trusts, and writes one answer that cites them.
 
-Avoid these, and you're already ahead of 90% of the competition.
+Three things get a business skipped:
+
+**1. The information isn't on the page in plain text.** AI crawlers read HTML text. They don't click buttons, expand popups, or watch videos. If your services, service area, and answers live inside a click-to-open modal or a slideshow, the engine never sees them.
+
+**2. The content doesn't answer a real question.** AI engines match intent, not keywords. A page that says "premium solutions for discerning clients" tells the AI nothing. A page that says "we repaint a 3-bedroom home exterior in 2 to 4 days, starting around $4,000" gives it a fact it can quote.
+
+**3. There's no trust signal.** AI weighs whether a business is real and consistent. Mismatched name, address, and phone number across directories, no reviews, and no structured data all lower the confidence an engine has in citing you.
+
+## What actually moves the needle
+
+**Answer the question in the first sentence.** Research on AI citations consistently finds that answer-first formatting is one of the strongest signals for getting pulled into a generated answer. Lead every important page with a direct, quotable statement, then explain.
+
+**Add structured data (schema).** Schema markup is a machine-readable label that tells search engines and AI exactly what your business does, where it operates, and how to categorize you. Organization, Service, and FAQPage schema are the highest-value types for a service business.
+
+**Build a clean FAQ section on every key page.** FAQ content written as real questions and direct answers is among the most-cited formats in AI search, because it maps exactly to how people ask questions.
+
+**Fix your local consistency.** Make sure your business name, address, and phone are identical everywhere, including Google Business Profile, directories, and your site. Inconsistency reads as risk to an AI.
+
+**Keep it fresh.** Studies of AI citations found that the large majority of cited pages for commercial queries were updated within the past year. Stale pages get passed over. Update your cornerstone pages regularly.
+
+## How to check where you stand right now
+
+Be your own customer. Open ChatGPT, Perplexity, and Google's AI results and ask the questions your buyers would ask: "best [your service] in [your city]," "how do I choose a [your service] provider," "is [your business name] any good." Note who gets cited. If it's never you, that's your baseline. Perplexity is the fastest place to test changes, since its citations update within days.
     `,
+    faqs: [
+      {
+        q: "Why doesn't my business show up in ChatGPT?",
+        a: "Usually because your website content isn't structured for AI to read and trust. AI answer engines extract facts from clear page text and structured data. If your key information is hidden in images, popups, or vague marketing copy, the engine skips you and cites a competitor.",
+      },
+      {
+        q: "How long does it take to start appearing in AI search?",
+        a: "Structural changes like adding FAQ content and clearer answers can show up in Perplexity within days and in ChatGPT within a few weeks. Building lasting trust and consistent citations takes months of steady work.",
+      },
+      {
+        q: "Is showing up in ChatGPT different from ranking on Google?",
+        a: "Yes. Google ranks you in a list of links. AI answer engines cite you as the single source in a written answer. They share the same technical foundation, but AI citation rewards clear answers, structured data, and freshness more heavily than traditional rankings reward keywords and backlinks.",
+      },
+      {
+        q: "Do I need to be on every AI platform?",
+        a: "Citation overlap between engines is low, so appearing in one doesn't guarantee the others. Start with the platforms your customers actually use, structure your content well, and you'll improve your odds across all of them at once.",
+      },
+    ],
+  },
+  {
+    id: "painting-contractor-google-leads",
+    slug: "painting-contractor-google-leads",
+    title: "How Painting Contractors Get More Leads From Google in 2026",
+    category: "Local SEO",
+    author: "Syed Belal",
+    date: "May 19, 2026",
+    datePublishedISO: "2026-05-19",
+    readTime: "7 min read",
+    image: PLACEHOLDER_IMAGE,
+    excerpt:
+      "For painting contractors, most online leads come from three places: the Google Maps pack, a complete Google Business Profile, and pages that answer what homeowners actually search. Here's how to win all three.",
+    content: `
+## The short answer
+
+For painting contractors, the fastest path to more leads from Google in 2026 is to dominate local search in three specific places: the Google Maps pack (the map with three businesses that appears for "painters near me"), a fully completed Google Business Profile with steady reviews, and website pages that directly answer what homeowners search before they hire. Paid ads can accelerate this, but the contractors who win consistently are the ones who show up first in the map pack and answer real questions on their site.
+
+## Where painting leads actually come from
+
+When a homeowner needs their house painted, they rarely scroll past the first few results. The lead flow concentrates in a few high-intent moments:
+
+- **The Maps pack.** Searches like "exterior painters near me" or "house painting [city]" surface a map with three local businesses. Most clicks and calls go to these three. Getting in is about proximity, profile completeness, review volume and recency, and local relevance.
+- **The Google Business Profile.** Before calling, homeowners read your profile: photos of real work, recent reviews, response to reviews, services listed, service area. A thin profile loses to a complete one even if you're the better painter.
+- **Question-answering pages.** Homeowners search things like "how much does it cost to paint a house exterior" and "how long does interior painting take." If your site answers these clearly, you capture the buyer at the research stage, and increasingly, AI answer engines cite those same pages.
+
+## The playbook
+
+**1. Complete and optimize your Google Business Profile.** Fill every field. Add your service area, hours, and services. Upload real photos of completed jobs regularly. Profiles with fresh photos perform better. List specific services (exterior, interior, cabinet refinishing, commercial) rather than a single generic "painting."
+
+**2. Make reviews a system, not an afterthought.** Review volume and recency are among the strongest factors for the Maps pack. Ask every satisfied customer for a review the day you finish the job, with a direct link. Respond to every review, positive or negative. A steady trickle of recent reviews beats a pile of old ones.
+
+**3. Ensure NAP consistency everywhere.** Your business name, address, and phone number must be identical across your website, Google Business Profile, and every directory. Inconsistencies confuse both Google and AI engines and quietly suppress your ranking.
+
+**4. Build pages that answer buyer questions.** Create pages or sections that answer the real questions homeowners ask: cost ranges, timelines, prep work, paint types, warranty. Lead each with a direct answer. These pages capture research-stage buyers and are exactly what AI answer engines pull from when someone asks about painting.
+
+**5. Add local and service schema.** Structured data tells Google and AI what you do and where. For a service business this means Organization and Service schema, plus FAQ schema on your question-answering pages.
+
+**6. Layer in paid ads once the foundation is set.** Google Search and Local Services Ads can put you at the top immediately, and Local Services Ads bill per lead rather than per click. But ads amplify a strong profile and weak ads can't fix a thin one. Get the organic foundation right first.
+
+## How to measure it
+
+Track three numbers monthly: your position in the Maps pack for your top three search terms, your call and form volume from Google, and your review count and average rating. If the Maps position improves and reviews climb, the leads follow.
+    `,
+    faqs: [
+      {
+        q: "How do painting contractors rank higher in the Google Maps pack?",
+        a: "The biggest factors are a complete Google Business Profile, consistent name/address/phone across the web, proximity to the searcher, and a steady stream of recent reviews. Upload real job photos regularly and ask every happy customer for a review the day the job finishes.",
+      },
+      {
+        q: "Are Google ads worth it for painters?",
+        a: "They can be, especially Local Services Ads, which charge per lead instead of per click and show a Google Guaranteed badge. Ads work best layered on top of a strong Business Profile and review base, not as a replacement for them.",
+      },
+      {
+        q: "How long does it take to see more leads from Google?",
+        a: "Profile and review improvements can lift Maps visibility within weeks. Content and organic ranking build over a few months. Paid ads produce leads immediately but stop when you stop paying.",
+      },
+      {
+        q: "What website pages help painting contractors get leads?",
+        a: "Pages that answer real homeowner questions: cost to paint a home, how long a job takes, interior vs exterior prep, and paint durability. Clear, direct answers on these pages capture research-stage buyers and get cited by AI search engines.",
+      },
+    ],
+  },
+  {
+    id: "aeo-vs-seo-local-business",
+    slug: "aeo-vs-seo-local-business",
+    title: "AEO vs SEO: What Local Service Businesses Need to Know",
+    category: "AEO",
+    author: "Syed Belal",
+    date: "May 8, 2026",
+    datePublishedISO: "2026-05-08",
+    readTime: "5 min read",
+    image: PLACEHOLDER_IMAGE,
+    excerpt:
+      "SEO gets you into Google's list of results. AEO gets you cited as the single answer in ChatGPT, Perplexity, and Google AI Overviews. Local businesses need both, and they share the same foundation.",
+    content: `
+## The short answer
+
+SEO (search engine optimization) gets your business into Google's ranked list of links. AEO (answer engine optimization) gets your business cited as the single, synthesized answer that AI engines like ChatGPT, Perplexity, and Google AI Overviews deliver before any list appears. For local service businesses, the two aren't competing strategies. They share the same technical foundation, and the smartest approach in 2026 is to do both at once.
+
+## The core difference
+
+Traditional search shows the user ten options and lets them pick. An answer engine picks for them. When a homeowner asks an AI "what's the best way to find a reliable contractor," the engine doesn't return links. It writes an answer and cites a few trusted sources. SEO is about being one of the ten links. AEO is about being the cited answer.
+
+The shift matters because AI search is growing fast. Google's AI Overviews now appear on a large share of searches, and a meaningful and rising portion of buyers form an opinion from an AI answer before they ever click through to a website.
+
+## What's the same, and what's different
+
+**Shared foundation:** Both reward a fast, well-structured site with clear content and proper schema markup. A page that loads quickly, uses clear headings, answers questions directly, and carries structured data performs well in both traditional and AI search. You do not maintain two separate websites.
+
+**Where AEO differs:** AEO weights a few signals more heavily than classic SEO does:
+
+- **Answer-first formatting.** Leading with a direct, quotable answer matters more for citation than it does for ranking.
+- **FAQ and Q&A structure.** Content framed as real questions and direct answers maps to how people query AI, and is among the most-cited formats.
+- **Freshness.** AI engines strongly favor recently updated pages for commercial questions.
+- **Entity clarity and trust.** Consistent business information and structured data tell the AI you're a real, categorizable business worth citing.
+
+Classic SEO leans harder on keyword targeting and backlinks. Those still matter, but they're not the levers that decide whether an AI extracts your paragraph.
+
+## Why local service businesses should care
+
+For a local business, AEO is often more winnable than broad SEO. Competing for a generic high-volume keyword means fighting national brands with huge authority. But a specific, local, intent-rich question, like "how do I get my [business type] found online in [city]," has little competition, and a clear, well-structured answer on your site can get cited quickly. AEO lets a smaller local business punch above its weight by being the clearest answer rather than the biggest brand.
+
+## The practical takeaway
+
+Don't choose between AEO and SEO. Build one strong foundation: a fast site, clear answers, FAQ content, structured data, consistent local presence. The same foundation serves both. Then test: ask the AI engines the questions your customers ask, see who gets cited, and refine. Perplexity shows results fastest; use it as your feedback loop.
+    `,
+    faqs: [
+      {
+        q: "What's the difference between AEO and SEO?",
+        a: "SEO optimizes to rank in a list of search results. AEO optimizes to be cited as the single answer AI engines generate. SEO gets you into the conversation; AEO makes you the answer. They share the same technical foundation.",
+      },
+      {
+        q: "Do local businesses need AEO if they already do SEO?",
+        a: "Increasingly, yes. A growing share of buyers get answers from AI before clicking any link. If your business isn't cited in those answers, you're invisible in a fast-growing discovery channel, even if you rank on traditional Google.",
+      },
+      {
+        q: "Is AEO harder than SEO for a small business?",
+        a: "In some ways it's easier. AEO rewards clear, well-structured answers over raw domain authority and backlinks, so a small local business with sharp, specific content can get cited for niche questions where it could never outrank national brands in classic search.",
+      },
+      {
+        q: "Can I do AEO and SEO with one website?",
+        a: "Yes. They share the same foundation: a fast, clearly structured site with direct answers and schema markup. You optimize once and benefit in both traditional and AI search.",
+      },
+    ],
   },
 ];
 

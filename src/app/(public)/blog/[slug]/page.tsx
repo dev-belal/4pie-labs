@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, ChevronLeft, Clock, User } from "lucide-react";
-import { blogs as staticBlogs } from "@/data/blogs";
+import { ArrowRight, ChevronLeft, Clock, Plus, User } from "lucide-react";
+import { blogs as staticBlogs, type BlogFAQ } from "@/data/blogs";
 import { getPostBySlug } from "@/lib/blog";
 import { JsonLd } from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
@@ -28,6 +28,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPostBySlug(slug);
   if (!post) return { title: "Post not found" };
 
+  // Per-post social card. Falls back to the root layout's /og-image.png
+  // automatically when post.image is the placeholder (same file). When
+  // post.image is a real Pixabay/Unsplash URL it overrides cleanly.
+  const ogImage = post.image;
+
   return {
     title: post.title,
     description: post.excerpt,
@@ -39,56 +44,116 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       url: `/blog/${slug}`,
       authors: [post.author],
+      images: [
+        { url: ogImage, width: 1200, height: 630, alt: post.title },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.excerpt,
+      images: [ogImage],
     },
   };
 }
 
-function renderContent(content: string) {
-  return content.split("\n").map((line, i) => {
-    const key = `${i}-${line.slice(0, 20)}`;
-    if (line.startsWith("# ")) return null;
-    if (line.startsWith("## ")) {
+/**
+ * Tiny inline-Markdown helper for **bold** runs inside otherwise-plain
+ * text. The renderer treats any line that starts with `**` AND contains
+ * non-bold trailing text as a paragraph with a bold lead-in, not as a
+ * fully-bold line.
+ */
+function renderInline(text: string): React.ReactNode[] {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
       return (
-        <h2
-          key={key}
-          className="text-2xl md:text-3xl font-semibold tracking-tight text-foreground pt-6 mb-3"
-        >
-          {line.replace("## ", "")}
-        </h2>
+        <strong key={i} className="font-semibold text-foreground">
+          {part.slice(2, -2)}
+        </strong>
       );
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
+
+/**
+ * Tiny line-based Markdown renderer. Handles:
+ *   - `# ` skipped (page already renders post.title as <h1>)
+ *   - `## ` -> <h2>   (section heads)
+ *   - `### ` -> <h3>  (subsection heads)
+ *   - `- ` lines -> collected into a single <ul>
+ *   - Blank lines -> flush the current list / break paragraph
+ *   - Everything else -> <p> with inline `**bold**` support
+ * Not a full Markdown parser. It's tuned to the prose pattern the editorial
+ * pipeline uses in src/data/blogs.ts.
+ */
+function renderContent(content: string): React.ReactNode[] {
+  const lines = content.split("\n");
+  const out: React.ReactNode[] = [];
+  let listBuffer: string[] = [];
+
+  const flushList = () => {
+    if (listBuffer.length === 0) return;
+    const items = listBuffer;
+    listBuffer = [];
+    out.push(
+      <ul
+        key={`list-${out.length}`}
+        className="my-4 ml-6 list-disc space-y-2 text-foreground/85"
+      >
+        {items.map((item, j) => (
+          <li key={j}>{renderInline(item)}</li>
+        ))}
+      </ul>,
+    );
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const raw = lines[i];
+    const line = raw.replace(/\s+$/, ""); // strip trailing whitespace
+
+    if (line.startsWith("# ")) {
+      flushList();
+      continue; // post title is rendered separately in the header
+    }
+    if (line.startsWith("## ")) {
+      flushList();
+      out.push(
+        <h2
+          key={i}
+          className="text-2xl md:text-3xl font-semibold tracking-tight text-foreground pt-8 mb-3"
+        >
+          {line.slice(3)}
+        </h2>,
+      );
+      continue;
     }
     if (line.startsWith("### ")) {
-      return (
+      flushList();
+      out.push(
         <h3
-          key={key}
-          className="text-xl md:text-2xl font-semibold tracking-tight text-foreground pt-4 mb-2"
+          key={i}
+          className="text-xl md:text-2xl font-semibold tracking-tight text-foreground pt-5 mb-2"
         >
-          {line.replace("### ", "")}
-        </h3>
+          {line.slice(4)}
+        </h3>,
       );
-    }
-    if (line.startsWith("**")) {
-      return (
-        <p key={key} className="font-semibold text-foreground">
-          {line.replace(/\*\*/g, "")}
-        </p>
-      );
+      continue;
     }
     if (line.startsWith("- ")) {
-      return (
-        <li key={key} className="ml-6 list-disc text-muted-foreground">
-          {line.replace("- ", "")}
-        </li>
-      );
+      listBuffer.push(line.slice(2));
+      continue;
     }
-    if (line.trim() === "") return <br key={key} />;
-    return <p key={key}>{line}</p>;
-  });
+    if (line.trim() === "") {
+      flushList();
+      continue;
+    }
+    flushList();
+    out.push(<p key={i}>{renderInline(line)}</p>);
+  }
+  flushList();
+  return out;
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -102,7 +167,9 @@ export default async function BlogPostPage({ params }: Props) {
     headline: post.title,
     description: post.excerpt,
     image: [post.image],
-    datePublished: post.date,
+    // ISO 8601 for Schema.org Date type. Display string "May 28, 2026"
+    // would not validate; datePublishedISO is the canonical form.
+    datePublished: post.datePublishedISO ?? post.date,
     author: { "@type": "Person", name: post.author },
     publisher: {
       "@type": "Organization",
@@ -136,10 +203,24 @@ export default async function BlogPostPage({ params }: Props) {
     ],
   };
 
+  const faqSchema =
+    post.faqs && post.faqs.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: post.faqs.map((f: BlogFAQ) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }
+      : null;
+
   return (
     <div className="overflow-x-hidden">
       <JsonLd data={article} />
       <JsonLd data={breadcrumb} />
+      {faqSchema && <JsonLd data={faqSchema} />}
       <TrackView slug={slug} />
       <ReadingProgress />
 
@@ -156,7 +237,12 @@ export default async function BlogPostPage({ params }: Props) {
           <div className="flex items-center gap-3 text-[11px] font-medium text-primary uppercase tracking-widest mb-5">
             <span>{post.category}</span>
             <span className="w-1 h-1 rounded-full bg-border" />
-            <span className="text-subtle-foreground">{post.date}</span>
+            <time
+              dateTime={post.datePublishedISO}
+              className="text-subtle-foreground"
+            >
+              {post.date}
+            </time>
           </div>
 
           <h1 className="text-[clamp(32px,5vw,52px)] font-semibold tracking-tight leading-[1.1] text-foreground mb-8 [text-wrap:balance]">
@@ -214,6 +300,40 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="text-foreground/85 leading-[1.75] space-y-5 text-base md:text-lg">
           {renderContent(post.content)}
         </div>
+
+        {post.faqs && post.faqs.length > 0 && (
+          <section
+            aria-labelledby="post-faq-heading"
+            className="mt-16 pt-10 border-t border-border"
+          >
+            <h2
+              id="post-faq-heading"
+              className="text-2xl md:text-3xl font-semibold tracking-tight text-foreground mb-6"
+            >
+              Frequently asked questions
+            </h2>
+            <div className="space-y-3">
+              {post.faqs.map((faq) => (
+                <details
+                  key={faq.q}
+                  className="group bg-surface border border-card-border rounded-xl p-5 md:p-6 [&_summary::-webkit-details-marker]:hidden"
+                >
+                  <summary className="flex items-start justify-between gap-4 cursor-pointer list-none">
+                    <span className="text-base font-semibold text-foreground tracking-tight pr-4">
+                      {faq.q}
+                    </span>
+                    <span className="shrink-0 w-7 h-7 rounded-full bg-surface-2 grid place-items-center text-muted-foreground group-open:bg-primary-muted group-open:text-primary transition-colors">
+                      <Plus className="w-3.5 h-3.5 group-open:rotate-45 transition-transform" />
+                    </span>
+                  </summary>
+                  <p className="mt-4 text-muted-foreground leading-relaxed text-sm md:text-base">
+                    {faq.a}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
 
         <div className="mt-20 pt-10 border-t border-border flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left">
