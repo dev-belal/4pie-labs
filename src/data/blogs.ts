@@ -24,7 +24,7 @@ export interface BlogPost {
 
 // Categories the editorial pipeline actually uses, post-pivot. Order is the
 // order shown in the BlogBrowser filter strip.
-export const blogCategories = ["ALL", "AEO", "Local SEO"];
+export const blogCategories = ["ALL", "AEO", "Local SEO", "SEO"];
 
 // Direct Pixabay CDN images per post. cdn.pixabay.com is already in
 // next.config.ts remotePatterns, so Next's image optimizer can fetch and
@@ -42,6 +42,109 @@ export const blogCategories = ["ALL", "AEO", "Local SEO"];
 //     https://pixabay.com/photos/freelance-laptop-google-macbook-6051356/
 
 export const blogs: BlogPost[] = [
+  {
+    id: "is-seo-still-important-2026",
+    slug: "is-seo-still-important-2026",
+    title:
+      "Is SEO Still Important in 2026? Here's What the Data Really Says",
+    category: "SEO",
+    author: "Syed Suqlain",
+    date: "June 1, 2026",
+    datePublishedISO: "2026-06-01",
+    readTime: "9 min read",
+    image: "/blog/seo-2026/header.jpg",
+    excerpt:
+      "SEO is not dead in 2026. AI Mode changed how answers appear, but search still drives revenue. Here is what the data shows local businesses should do.",
+    content: `
+"Is SEO still important?" became the question flooding inboxes and group chats the moment Google held its annual I/O developer conference and called AI Mode the biggest change to search in more than 25 years. The short answer, backed by the data: yes, SEO is still important in 2026. What changed is how answers are displayed, not whether search drives business. AI Mode reshaped the informational layer, but organic results, local search, and transactional queries still send real customers to real businesses every day.
+
+The headlines moved faster than the facts. "The era of the ten blue links is over." "SEO is dead." "Google just killed organic search." If you are about to make decisions based on those headlines, this is worth reading carefully, because the panic and the data point in opposite directions.
+
+## What Google actually announced (and what it didn't)
+
+Google announced that AI Mode, powered by its latest models, is becoming a default surface in Search for the first time in over 25 years, accepting text, images, files, and richer, multi-part questions. AI Overviews now answer follow-up questions inside the result, and the feature reaches well over a billion people.
+
+That is significant. But it is not the death of organic search. Google did not remove organic results, and it has set no date for deprecating classic ranking. What changed is that AI Mode is now the default answer surface for a growing category of informational queries. The blue links are still there. They are just no longer the first thing every user sees on every query.
+
+## Why the "SEO is dead" headline was wrong before the keynote ended
+
+Before the conference even wrapped, most SEO professionals were predicting coexistence with AI Mode, not replacement. That prediction held up. Google's consistent pattern since introducing AI features has been lateral expansion into more query types, more languages, more product integrations, not a shutdown of organic ranking. The panic that followed moved faster than the facts, and anyone who actually works in search was not surprised.
+
+It is worth remembering this the next time a headline tells you an industry you have invested in is suddenly irrelevant.
+
+![How AI Mode and traditional search work together](/blog/seo-2026/inline-1.jpg)
+
+## Are keywords still important after AI Mode?
+
+Yes, arguably more than before. Keywords are the signal that connects what a person is searching for to what a piece of content contains. That is true whether the result is a blue link, an AI Overview, or a citation inside an AI-generated answer. Language models do not select sources at random. They evaluate which content is most relevant, most authoritative, and most directly answers the question, and keyword alignment between the search and the content is still how that relevance gets established.
+
+What changed is the target. The advantage of appearing as a cited source inside an AI Overview is large and growing. The goal is no longer simply ranking in a position, it is being the source the AI trusts. So keyword research now matters for which queries trigger AI Overviews, what specific questions those queries represent, and how to structure content to answer them directly enough to earn a citation. That is more demanding work, not less of it.
+
+## Is link building still important for SEO in 2026?
+
+Yes, and it is arguably more important than before. AI platforms cite authoritative sources, and authority on the web is still substantially determined by the quality and relevance of the sites that link to your content. A business with strong backlinks from credible, relevant sources has a higher likelihood of being recognized as a trustworthy entity by both traditional ranking systems and the AI systems that generate cited answers.
+
+## What about business listings and press coverage?
+
+Think about what AI systems are actually doing when they decide which businesses to recommend. They are not pulling from a random list. They are looking for entities that appear consistently across credible sources: industry publications, local news sites, business directories, press features, and reviews. A business that earns coverage across those sources looks trustworthy to an AI system, for the same reason it looks trustworthy to a human reader.
+
+Business listings, in the traditional local SEO sense, are mentions of your business name, address, and phone number across directories and local data sources. That consistency is a foundation stage for both Google Maps rankings and AI-generated local recommendations.
+
+Press releases and media coverage go further. When a publication, an industry blog, or a regional news outlet runs a story that mentions your business and links back to your site, that mention carries weight. It tells Google and every AI platform reading that page that your business was deemed worth writing about by a source that other people trust. Over time, a business with a trail of genuine press coverage and earned citations builds the kind of authority that shows up in AI answers, not because it gamed a system, but because it exists in the web of references that AI systems read to understand who is credible.
+
+Link building, business listings, and press coverage are all part of the same discipline: building a presence on the web that is consistent and too well-referenced to ignore.
+
+## Is content marketing still important when AI answers most questions directly?
+
+This needs a more nuanced answer than a simple yes or no. For purely informational queries, AI Mode now absorbs traffic at very high rates. If someone asks a question that AI can fully answer in the result, they are less likely to click through to a link. So content targeting those queries will see reduced click-through.
+
+But "buy," "best," and "price" queries tell a completely different story. The searches that drive booked jobs and revenue for a local service business are less likely to be absorbed by a generic how-to answer. Someone searching "best painters near me" or "cost to repaint a 3-bedroom house" is making a buying decision, and those searches still drive clicks, and still result in bookings, calls, and revenue.
+
+The strategic move for content is to shift away from generic informational topics that AI now handles, and toward original content with specific data, direct answers to commercial questions, clear structure, and proper schema markup. That content serves two purposes: it ranks in traditional results for the queries where clicks still happen, and it gets cited inside AI answers as a trusted source.
+
+## Is traditional SEO still important, or has AI search replaced it?
+
+They are not competing approaches. AI search builds on top of traditional SEO, it does not replace it. Clean site structure, proper header hierarchy, fast mobile load times, correct schema markup, and strong technical foundations are the same signals that determine whether a site appears in traditional results and whether an AI system trusts it enough to cite it. A business that neglects traditional SEO fundamentals will not appear in AI-generated answers regardless of how much AEO-specific optimization sits on top of a weak technical foundation.
+
+The path to AI visibility runs through traditional SEO first. Technical and on-page foundations come first, then the AI visibility layer is built on top.
+
+![Local service business owner reviewing search performance outdoors](/blog/seo-2026/inline-2.jpg)
+
+## Is SEO still important for local service businesses specifically?
+
+For local service businesses, the answer is even clearer than for the web at large. The queries that drive revenue, "best painter near me," "tour operator in my area," "emergency plumber open now," are mostly local and transactional. Those searches still drive traditional clicks and Maps results, and they have very low AI Overview absorption compared to informational queries. People making a same-day buying decision want phone numbers, reviews, and a way to book now, and that behavior produces high-intent, click-through traffic that AI Mode has not absorbed.
+
+The practical impact of the I/O announcement on a local service business is far smaller than the headlines suggested. The fundamentals that drive bookings and leads for these businesses are still working. What changed is that AI citation visibility is now an additional layer of opportunity that did not exist before, and the businesses investing in it now are building an advantage that will be harder to close later.
+
+## The businesses that stop investing in SEO now will pay for it later
+
+Here is the takeaway, stated plainly. SEO and AI citation authority both compound over time. A business that has been investing in SEO for the last two years has more authority, more indexed content, more backlinks, and more citation opportunities than one that started last month. A business that pauses SEO investment while competitors keep building does not simply stay in place. It falls behind, and catching up later costs more than continuing would have.
+
+The window to build authority, before AI Mode becomes even more dominant, is open right now, and it is unlikely to stay open indefinitely. The businesses asking "is SEO still important?" and deciding the answer is no are making a decision their competitors will quietly benefit from.
+
+The I/O announcement was not a signal to stop investing in SEO. It was a signal to pay more attention: to technical foundations, to citation-ready content, and to working with a team that understands the difference between hype and strategy.
+
+If you want to understand what an updated strategy looks like for your specific business and market, that is exactly the kind of work we do at 4Pie Labs. We build SEO and AI citation visibility together, so local service businesses get found first in both traditional search and the AI answers that are quietly reshaping how customers choose who to call.
+    `,
+    faqs: [
+      {
+        q: "Is SEO still important in 2026?",
+        a: "Yes. AI Mode changed how answers are displayed, but traditional blue-link results and organic search still drive significant revenue, especially for transactional and local queries. SEO and answer engine optimization now work together rather than one replacing the other.",
+      },
+      {
+        q: "Did AI search kill SEO?",
+        a: "No. AI Overviews became the default answer surface for many informational queries, but Google did not remove organic results and never announced any plan to deprecate classic ranking. The signals that win in AI search are an extension of strong SEO, not a replacement for it.",
+      },
+      {
+        q: "Should local businesses still invest in SEO?",
+        a: "Yes. SEO and AI citation authority compound over time. A business that keeps investing builds more authority, indexed content, and citation opportunities, while one that stops falls behind and pays more to catch up later.",
+      },
+      {
+        q: "What is the difference between SEO and AEO in 2026?",
+        a: "SEO ranks your page in a list of results users click. AEO, answer engine optimization, structures your content so AI engines cite it directly in their answers. Both share the same technical foundation, so the strongest sites win in search and AI answers at once.",
+      },
+    ],
+  },
   {
     id: "local-business-chatgpt-visibility",
     slug: "local-business-chatgpt-visibility",

@@ -78,11 +78,19 @@ function renderInline(text: string): React.ReactNode[] {
 }
 
 /**
+ * Match a Markdown image line: `![alt text](path)`. Whole-line match only
+ * so it never collides with inline links inside prose paragraphs.
+ * Capture groups: 1 = alt, 2 = src.
+ */
+const IMAGE_LINE = /^!\[([^\]]*)\]\(([^)]+)\)$/;
+
+/**
  * Tiny line-based Markdown renderer. Handles:
  *   - `# ` skipped (page already renders post.title as <h1>)
  *   - `## ` -> <h2>   (section heads)
  *   - `### ` -> <h3>  (subsection heads)
  *   - `- ` lines -> collected into a single <ul>
+ *   - `![alt](path)` on its own line -> next/image in a 16/9 wrapper
  *   - Blank lines -> flush the current list / break paragraph
  *   - Everything else -> <p> with inline `**bold**` support
  * Not a full Markdown parser. It's tuned to the prose pattern the editorial
@@ -138,6 +146,26 @@ function renderContent(content: string): React.ReactNode[] {
         >
           {line.slice(4)}
         </h3>,
+      );
+      continue;
+    }
+    const imgMatch = line.match(IMAGE_LINE);
+    if (imgMatch) {
+      flushList();
+      const [, alt, src] = imgMatch;
+      out.push(
+        <figure
+          key={i}
+          className="relative aspect-[16/9] rounded-2xl overflow-hidden my-10 border border-card-border shadow-[var(--shadow-card)]"
+        >
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes="(max-width: 1024px) 100vw, 768px"
+            className="object-cover"
+          />
+        </figure>,
       );
       continue;
     }
