@@ -15,12 +15,12 @@ export function LoginForm({ next }: { next?: string }) {
       <div className="space-y-2">
         <label
           htmlFor="login-email"
-          className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
+          className="text-xs font-medium text-[var(--muted)] ml-1"
         >
           Admin Email
         </label>
         <div className="relative">
-          <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/20" />
+          <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)]" />
           <input
             id="login-email"
             name="email"
@@ -28,7 +28,7 @@ export function LoginForm({ next }: { next?: string }) {
             required
             placeholder="admin@4pielabs.com"
             autoComplete="email"
-            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 pl-12 pr-4 text-foreground focus:outline-none focus:border-primary/50 transition-all placeholder:text-foreground/10"
+            className="w-full bg-[var(--surface-hover)] border border-[var(--border)] rounded-lg py-3 pl-11 pr-4 text-[var(--fg)] focus:outline-none focus:border-primary/50 transition-all placeholder:text-[var(--muted)]"
           />
         </div>
       </div>
@@ -36,12 +36,12 @@ export function LoginForm({ next }: { next?: string }) {
       <div className="space-y-2">
         <label
           htmlFor="login-password"
-          className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
+          className="text-xs font-medium text-[var(--muted)] ml-1"
         >
           Password
         </label>
         <div className="relative">
-          <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/20" />
+          <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)]" />
           <input
             id="login-password"
             name="password"
@@ -49,7 +49,7 @@ export function LoginForm({ next }: { next?: string }) {
             required
             placeholder="••••••••"
             autoComplete="current-password"
-            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 pl-12 pr-4 text-foreground focus:outline-none focus:border-primary/50 transition-all placeholder:text-foreground/10"
+            className="w-full bg-[var(--surface-hover)] border border-[var(--border)] rounded-lg py-3 pl-11 pr-4 text-[var(--fg)] focus:outline-none focus:border-primary/50 transition-all placeholder:text-[var(--muted)]"
           />
         </div>
       </div>
@@ -63,7 +63,7 @@ export function LoginForm({ next }: { next?: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="w-full bg-primary text-on-primary py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
+        className="w-full bg-primary text-on-primary py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.99] transition-all disabled:opacity-50"
       >
         {pending ? "Authenticating..." : "Access Portal"}
         {!pending && <ArrowRight className="w-4 h-4" />}

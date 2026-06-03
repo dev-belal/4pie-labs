@@ -45,13 +45,13 @@ export function TestimonialPublisher() {
       <form
         id="testimonial-form"
         action={formAction}
-        className="space-y-6 glass-morphism p-10 rounded-[40px] border-foreground/5"
+        className="space-y-5 bg-[var(--surface)] border border-[var(--border)] p-6 md:p-8 rounded-2xl"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label
               htmlFor="t-name"
-              className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
+              className="text-xs font-medium text-[var(--muted)] ml-1"
             >
               Client Name
             </label>
@@ -60,7 +60,7 @@ export function TestimonialPublisher() {
               name="name"
               type="text"
               required
-              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all"
+              className="w-full bg-[var(--surface-hover)] border border-[var(--border)] rounded-lg py-3 px-4 text-[var(--fg)] focus:outline-none focus:border-primary/50 transition-all placeholder:text-[var(--muted)]"
               placeholder="John Doe"
             />
             {state.errors?.name && (
@@ -72,7 +72,7 @@ export function TestimonialPublisher() {
           <div className="space-y-2">
             <label
               htmlFor="t-role"
-              className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
+              className="text-xs font-medium text-[var(--muted)] ml-1"
             >
               Role / Company
             </label>
@@ -81,7 +81,7 @@ export function TestimonialPublisher() {
               name="role"
               type="text"
               required
-              className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all"
+              className="w-full bg-[var(--surface-hover)] border border-[var(--border)] rounded-lg py-3 px-4 text-[var(--fg)] focus:outline-none focus:border-primary/50 transition-all placeholder:text-[var(--muted)]"
               placeholder="CEO, TechCo"
             />
             {state.errors?.role && (
@@ -94,7 +94,7 @@ export function TestimonialPublisher() {
         <div className="space-y-2">
           <label
             htmlFor="t-headline"
-            className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
+            className="text-xs font-medium text-[var(--muted)] ml-1"
           >
             Testimonial Headline
           </label>
@@ -103,7 +103,7 @@ export function TestimonialPublisher() {
             name="headline"
             type="text"
             required
-            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all"
+            className="w-full bg-[var(--surface-hover)] border border-[var(--border)] rounded-lg py-3 px-4 text-[var(--fg)] focus:outline-none focus:border-primary/50 transition-all placeholder:text-[var(--muted)]"
             placeholder="Impactful title..."
           />
           {state.errors?.headline && (
@@ -115,7 +115,7 @@ export function TestimonialPublisher() {
         <div className="space-y-2">
           <label
             htmlFor="t-quote"
-            className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1"
+            className="text-xs font-medium text-[var(--muted)] ml-1"
           >
             Quote Content
           </label>
@@ -124,7 +124,7 @@ export function TestimonialPublisher() {
             name="quote"
             rows={4}
             required
-            className="w-full bg-foreground/5 border border-foreground/10 rounded-2xl py-4 px-6 text-foreground focus:outline-none focus:border-primary/50 transition-all resize-none"
+            className="w-full bg-[var(--surface-hover)] border border-[var(--border)] rounded-lg py-3 px-4 text-[var(--fg)] focus:outline-none focus:border-primary/50 transition-all placeholder:text-[var(--muted)] resize-none"
             placeholder="Enter the client's words..."
           />
           {state.errors?.quote && (
@@ -134,7 +134,7 @@ export function TestimonialPublisher() {
           )}
         </div>
         <div className="space-y-2">
-          <div className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-1">
+          <div className="text-xs font-medium text-[var(--muted)] ml-1">
             Rating
           </div>
           <div className="flex gap-2" role="radiogroup" aria-label="Rating">
@@ -146,10 +146,10 @@ export function TestimonialPublisher() {
                 aria-checked={star === rating}
                 aria-label={`${star} star`}
                 onClick={() => setRating(star)}
-                className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-all ${
+                className={`w-10 h-10 rounded-lg flex items-center justify-center text-lg transition-all ${
                   star <= rating
-                    ? "bg-amber-400/20 text-amber-400"
-                    : "bg-foreground/5 text-foreground/20"
+                    ? "bg-[var(--accent-soft)] text-primary"
+                    : "bg-[var(--surface-hover)] text-[var(--muted)]"
                 }`}
               >
                 ★
@@ -162,7 +162,7 @@ export function TestimonialPublisher() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full bg-primary text-on-primary py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100"
+          className="w-full bg-primary text-on-primary py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.99] transition-all disabled:opacity-50"
         >
           {pending ? (
             <>
@@ -182,24 +182,20 @@ export function TestimonialPublisher() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className={`fixed bottom-12 right-12 z-50 px-8 py-4 rounded-3xl shadow-2xl flex items-center gap-4 ${
-              notice.type === "success"
-                ? "bg-emerald-500 text-foreground"
-                : "bg-red-500 text-foreground"
+            className={`fixed bottom-8 right-8 z-50 px-5 py-3 rounded-xl shadow-xl flex items-center gap-3 text-white ${
+              notice.type === "success" ? "bg-emerald-500" : "bg-red-500"
             }`}
           >
             {notice.type === "success" ? (
-              <CheckCircle2 className="w-6 h-6" />
+              <CheckCircle2 className="w-5 h-5" />
             ) : (
-              <AlertCircle className="w-6 h-6" />
+              <AlertCircle className="w-5 h-5" />
             )}
             <div>
-              <div className="font-bold">
-                {notice.type === "success" ? "Success!" : "Error"}
+              <div className="font-semibold text-sm">
+                {notice.type === "success" ? "Success" : "Error"}
               </div>
-              <div className="text-foreground/80 text-[10px] uppercase font-bold tracking-widest">
-                {notice.message}
-              </div>
+              <div className="opacity-90 text-xs">{notice.message}</div>
             </div>
           </motion.div>
         )}

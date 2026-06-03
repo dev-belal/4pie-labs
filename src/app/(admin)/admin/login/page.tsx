@@ -16,21 +16,21 @@ export default async function AdminLoginPage({ searchParams }: Props) {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 relative overflow-hidden">
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
 
-      <div className="w-full max-w-md glass-morphism rounded-[40px] border-foreground/5 p-10 relative z-10 shadow-2xl">
-        <div className="flex justify-center mb-8">
-          <div className="w-16 h-16 rounded-3xl bg-primary/20 flex items-center justify-center border border-primary/20">
-            <ShieldCheck className="w-8 h-8 text-primary" />
+      <div className="w-full max-w-md bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8 relative z-10 shadow-2xl">
+        <div className="flex justify-center mb-6">
+          <div className="w-14 h-14 rounded-xl bg-[var(--accent-soft)] flex items-center justify-center border border-primary/20">
+            <ShieldCheck className="w-7 h-7 text-primary" />
           </div>
         </div>
 
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-display font-bold text-foreground mb-2">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-semibold text-[var(--fg)] mb-1">
             Admin Portal
           </h1>
-          <p className="text-foreground/40 text-sm">
-            Nexus Internal Management System
+          <p className="text-[var(--muted)] text-sm">
+            4Pie Labs internal management
           </p>
         </div>
 
@@ -38,9 +38,9 @@ export default async function AdminLoginPage({ searchParams }: Props) {
 
         <Link
           href="/"
-          className="block w-full mt-6 text-foreground/20 hover:text-foreground/40 text-xs font-bold transition-colors uppercase tracking-[0.2em] text-center"
+          className="block w-full mt-5 text-[var(--muted)] hover:text-[var(--fg)] text-xs transition-colors text-center"
         >
-          Back to Mainframe
+          Back to site
         </Link>
       </div>
     </div>

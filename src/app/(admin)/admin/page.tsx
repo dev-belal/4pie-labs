@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { readAdminSession } from "@/lib/admin-session";
-import { getDashboardData } from "@/lib/admin-data";
+import {
+  getAllOpportunities,
+  getAppointments,
+  getDashboardData,
+  getPipelinesWithStages,
+} from "@/lib/admin-data";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const metadata: Metadata = {
@@ -15,7 +20,32 @@ export default async function AdminPage() {
   const session = await readAdminSession();
   if (!session) redirect("/admin/login");
 
-  const data = await getDashboardData();
+  // Calendar window: ~90 days back, ~90 days forward. The CalendarPanel
+  // filters per cursor month within this. Tight enough to keep the initial
+  // payload small; wide enough that month-paging across this period needs
+  // no extra round-trip.
+  const now = new Date();
+  const apptWindowStart = new Date(now.getTime() - 90 * 86_400_000)
+    .toISOString();
+  const apptWindowEnd = new Date(now.getTime() + 90 * 86_400_000)
+    .toISOString();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 
-  return <AdminShell data={data} userEmail={session.sub} />;
+  const [data, pipelines, opportunities, appointments] = await Promise.all([
+    getDashboardData(),
+    getPipelinesWithStages(),
+    getAllOpportunities(),
+    getAppointments(apptWindowStart, apptWindowEnd),
+  ]);
+
+  return (
+    <AdminShell
+      data={data}
+      pipelines={pipelines}
+      opportunities={opportunities}
+      appointments={appointments}
+      monthStartISO={monthStart}
+      userEmail={session.sub}
+    />
+  );
 }
