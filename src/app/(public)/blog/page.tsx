@@ -3,7 +3,9 @@ import { getAllPosts } from "@/lib/blog";
 import { BlogBrowser } from "@/components/BlogBrowser";
 
 export const metadata: Metadata = {
-  title: "Blog",
+  // Keyword-bearing title - "Blog" alone is generic; the buyer query is
+  // about playbooks for local marketing + AEO.
+  title: { absolute: "AEO + Local Marketing Playbooks | 4Pie Labs" },
   description:
     "AEO, local SEO, and AI-first marketing playbooks for painting contractors, tour operators, and local service businesses.",
   alternates: { canonical: "/blog" },
