@@ -58,23 +58,76 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * Tiny inline-Markdown helper for **bold** runs inside otherwise-plain
- * text. The renderer treats any line that starts with `**` AND contains
- * non-bold trailing text as a paragraph with a bold lead-in, not as a
- * fully-bold line.
+ * Inline-Markdown tokenizer. Splits a line on `**bold**` and `[text](url)`
+ * runs and renders each token as the right React node:
+ *   - `**...**`           -> <strong>
+ *   - `[text](/internal)` -> Next.js <Link> (client navigation)
+ *   - `[text](https://…)` -> <a target="_blank" rel="noopener noreferrer">
+ *   - everything else      -> plain text
+ *
+ * The split regex captures both patterns as alternatives so the array
+ * returned by .split() alternates between text and captured tokens.
+ * Pattern is greedy on the bold side (`[^*]+`) and link side (`[^\]]+`
+ * for the text, `[^)]+` for the href) which keeps it simple while
+ * matching the prose in src/data/blogs.ts. Not a full Markdown parser.
  */
+const INLINE_LINK_CLASS =
+  "text-primary underline underline-offset-4 decoration-primary/40 hover:decoration-primary transition-colors";
+
 function renderInline(text: string): React.ReactNode[] {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
-  return parts.map((part, i) => {
+  const pattern = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g;
+  const parts = text.split(pattern);
+  const out: React.ReactNode[] = [];
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (!part) continue;
+
     if (part.startsWith("**") && part.endsWith("**")) {
-      return (
+      out.push(
         <strong key={i} className="font-semibold text-foreground">
           {part.slice(2, -2)}
-        </strong>
+        </strong>,
       );
+      continue;
     }
-    return <span key={i}>{part}</span>;
-  });
+
+    const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (link) {
+      const [, label, href] = link;
+      // Internal site path -> Next/Link so navigation stays client-side and
+      // benefits from prefetch. Anything else (https://, mailto:, tel:,
+      // #anchor) renders as a plain <a> with safe rel attrs for external.
+      if (href.startsWith("/")) {
+        out.push(
+          <Link key={i} href={href} className={INLINE_LINK_CLASS}>
+            {label}
+          </Link>,
+        );
+      } else if (href.startsWith("#")) {
+        out.push(
+          <a key={i} href={href} className={INLINE_LINK_CLASS}>
+            {label}
+          </a>,
+        );
+      } else {
+        out.push(
+          <a
+            key={i}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={INLINE_LINK_CLASS}
+          >
+            {label}
+          </a>,
+        );
+      }
+      continue;
+    }
+
+    out.push(<span key={i}>{part}</span>);
+  }
+  return out;
 }
 
 /**
