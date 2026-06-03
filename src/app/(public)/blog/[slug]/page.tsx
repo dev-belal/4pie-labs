@@ -58,23 +58,106 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * Tiny inline-Markdown helper for **bold** runs inside otherwise-plain
- * text. The renderer treats any line that starts with `**` AND contains
- * non-bold trailing text as a paragraph with a bold lead-in, not as a
- * fully-bold line.
+ * Inline-Markdown tokenizer. Splits a line on `**bold**` and `[text](url)`
+ * runs and renders each token as the right React node:
+ *   - `**...**`           -> <strong>
+ *   - `[text](/internal)` -> Next.js <Link> (client navigation)
+ *   - `[text](https://…)` -> <a target="_blank" rel="noopener noreferrer">
+ *   - everything else      -> plain text
+ *
+ * The split regex captures both patterns as alternatives so the array
+ * returned by .split() alternates between text and captured tokens.
+ * Pattern is greedy on the bold side (`[^*]+`) and link side (`[^\]]+`
+ * for the text, `[^)]+` for the href) which keeps it simple while
+ * matching the prose in src/data/blogs.ts. Not a full Markdown parser.
  */
+const INLINE_LINK_CLASS =
+  "text-primary underline underline-offset-4 decoration-primary/40 hover:decoration-primary transition-colors";
+
 function renderInline(text: string): React.ReactNode[] {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
-  return parts.map((part, i) => {
+  const pattern = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g;
+  const parts = text.split(pattern);
+  const out: React.ReactNode[] = [];
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (!part) continue;
+
     if (part.startsWith("**") && part.endsWith("**")) {
-      return (
+      out.push(
         <strong key={i} className="font-semibold text-foreground">
           {part.slice(2, -2)}
-        </strong>
+        </strong>,
       );
+      continue;
     }
-    return <span key={i}>{part}</span>;
-  });
+
+    const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (link) {
+      const [, label, href] = link;
+      // Internal site path -> Next/Link so navigation stays client-side and
+      // benefits from prefetch. Anything else (https://, mailto:, tel:,
+      // #anchor) renders as a plain <a> with safe rel attrs for external.
+      if (href.startsWith("/")) {
+        out.push(
+          <Link key={i} href={href} className={INLINE_LINK_CLASS}>
+            {label}
+          </Link>,
+        );
+      } else if (href.startsWith("#")) {
+        out.push(
+          <a key={i} href={href} className={INLINE_LINK_CLASS}>
+            {label}
+          </a>,
+        );
+      } else {
+        out.push(
+          <a
+            key={i}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={INLINE_LINK_CLASS}
+          >
+            {label}
+          </a>,
+        );
+      }
+      continue;
+    }
+
+    out.push(<span key={i}>{part}</span>);
+  }
+  return out;
+}
+
+/**
+ * Match a Markdown image line: `![alt text](path)`. Whole-line match only
+ * so it never collides with inline links inside prose paragraphs.
+ * Capture groups: 1 = alt, 2 = src.
+ */
+const IMAGE_LINE = /^!\[([^\]]*)\]\(([^)]+)\)$/;
+
+/**
+ * A markdown table row starts and ends with a `|`. The separator row
+ * (between the header and body) contains only `|`, `-`, `:`, and spaces.
+ * We use these to detect the boundaries of a table block.
+ */
+function isTableRow(line: string): boolean {
+  return line.startsWith("|") && line.length > 1;
+}
+function isTableSeparator(line: string): boolean {
+  return /^\|[\s:|-]+\|$/.test(line) && line.includes("-");
+}
+
+/**
+ * Split `| a | b | c |` into ["a", "b", "c"]. Trims each cell. Drops the
+ * leading and trailing empty cells produced by the boundary pipes.
+ */
+function splitTableRow(line: string): string[] {
+  return line
+    .split("|")
+    .slice(1, -1)
+    .map((cell) => cell.trim());
 }
 
 /**
@@ -83,6 +166,7 @@ function renderInline(text: string): React.ReactNode[] {
  *   - `## ` -> <h2>   (section heads)
  *   - `### ` -> <h3>  (subsection heads)
  *   - `- ` lines -> collected into a single <ul>
+ *   - `![alt](path)` on its own line -> next/image in a 16/9 wrapper
  *   - Blank lines -> flush the current list / break paragraph
  *   - Everything else -> <p> with inline `**bold**` support
  * Not a full Markdown parser. It's tuned to the prose pattern the editorial
@@ -113,6 +197,67 @@ function renderContent(content: string): React.ReactNode[] {
     const raw = lines[i];
     const line = raw.replace(/\s+$/, ""); // strip trailing whitespace
 
+    // Detect a markdown table: header row + separator + 1+ body rows. We
+    // consume the whole block at once and skip the consumed lines via the
+    // outer loop variable. Sits BEFORE the heading / list / image branches
+    // because nothing else starts with `|`.
+    if (
+      isTableRow(line) &&
+      i + 1 < lines.length &&
+      isTableSeparator(lines[i + 1].trim())
+    ) {
+      flushList();
+      const headers = splitTableRow(line);
+      const bodyRows: string[][] = [];
+      let j = i + 2; // skip header + separator
+      while (j < lines.length && isTableRow(lines[j].trim())) {
+        bodyRows.push(splitTableRow(lines[j].trim()));
+        j++;
+      }
+      out.push(
+        <div
+          key={i}
+          className="my-10 -mx-4 md:mx-0 overflow-x-auto rounded-2xl border border-card-border shadow-[var(--shadow-card)]"
+        >
+          <table className="w-full text-sm md:text-base border-collapse min-w-[640px]">
+            <thead>
+              <tr className="bg-surface-2 border-b border-card-border">
+                {headers.map((h, k) => (
+                  <th
+                    key={k}
+                    className="px-4 py-3 text-left font-semibold text-foreground"
+                  >
+                    {renderInline(h)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {bodyRows.map((row, rIdx) => (
+                <tr
+                  key={rIdx}
+                  className="border-b border-border last:border-b-0 align-top"
+                >
+                  {row.map((cell, cIdx) => (
+                    <td
+                      key={cIdx}
+                      className={`px-4 py-3 text-foreground/85 leading-snug ${
+                        cIdx === 0 ? "font-medium text-foreground" : ""
+                      }`}
+                    >
+                      {renderInline(cell)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>,
+      );
+      i = j - 1; // outer loop will i++ to land on the next non-table line
+      continue;
+    }
+
     if (line.startsWith("# ")) {
       flushList();
       continue; // post title is rendered separately in the header
@@ -138,6 +283,26 @@ function renderContent(content: string): React.ReactNode[] {
         >
           {line.slice(4)}
         </h3>,
+      );
+      continue;
+    }
+    const imgMatch = line.match(IMAGE_LINE);
+    if (imgMatch) {
+      flushList();
+      const [, alt, src] = imgMatch;
+      out.push(
+        <figure
+          key={i}
+          className="relative aspect-[16/9] rounded-2xl overflow-hidden my-10 border border-card-border shadow-[var(--shadow-card)]"
+        >
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes="(max-width: 1024px) 100vw, 768px"
+            className="object-cover"
+          />
+        </figure>,
       );
       continue;
     }
