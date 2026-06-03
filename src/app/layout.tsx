@@ -47,9 +47,11 @@ export const metadata: Metadata = {
     template: `%s | ${SITE.name}`,
   },
   description: SITE.description,
-  alternates: {
-    canonical: "/",
-  },
+  // Intentionally NO alternates.canonical here. Setting it on the root
+  // layout would bleed into every child route that does not explicitly
+  // override it, causing Next to emit <link rel="canonical" href="/">
+  // on pages like /audit and /programs and signalling them as duplicates
+  // of the homepage. Every page sets its own canonical in its metadata.
   openGraph: {
     title: "4Pie Labs | AI-First Marketing for Local Service Businesses",
     description: SITE.description,

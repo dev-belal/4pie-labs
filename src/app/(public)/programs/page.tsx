@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Programs",
   description:
     "Four programs from foundation to full-stack - Core, Pipeline, Operating System, Pulse. AEO is included in every tier. No pricing on the site - book a call.",
+  alternates: { canonical: "/programs" },
 };
 
 const FAQS = [
