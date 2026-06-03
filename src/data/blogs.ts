@@ -62,13 +62,6 @@ export const blogs: BlogPost[] = [
     image: "/blog/ai-search-tours/header.jpg",
     excerpt:
       "Travelers now ask ChatGPT and Perplexity for tour recommendations before they ever reach Google. If AI never cites you, you lose the booking first.",
-    // NOTE: the article spec calls for two inline figures - inline-1 after
-    // "How AI search decides who to recommend" and inline-2 after "How to
-    // fix it". Only header.jpg arrived with this submission; the two
-    // abstract Gemini-generated illustrations weren't in the message
-    // attachments. The marker lines for them have been LEFT OUT of the
-    // body below intentionally - splice in `![alt](/blog/ai-search-tours/
-    // inline-N.jpg)` lines once the files land in the folder.
     content: `
 Tour businesses are losing customers to AI search because travelers now ask ChatGPT, Perplexity, and Google AI Overviews for recommendations before they ever reach a traditional search results page, and if those engines do not cite your business, the booking goes to a competitor that was cited. The traveler never sees your site, and you never see the lost booking. The fix is to structure your content so answer engines can extract, trust, and recommend you, a practice called [answer engine optimization](/services/aeo).
 
@@ -90,6 +83,8 @@ Second, trust signals across the web. AI engines weigh whether your business app
 
 Third, freshness. Pages updated recently earn the large majority of citations for the kind of "best of" and "recommend a" questions travelers ask. A site that has not been touched in two years reads as stale to an engine deciding who to trust right now.
 
+![How AI answer engines decide which businesses to recommend](/blog/ai-search-tours/inline-1.jpg)
+
 ## Why tour operators are especially exposed
 
 Travel is one of the categories where AI search is moving fastest, because travel questions are exactly the kind AI answers well: open-ended, recommendation-shaped, and research-heavy. Travelers ask for the "best," the "most family-friendly," the "hidden gem," and AI engines love to answer those with a curated short list.
@@ -107,6 +102,8 @@ Then restructure your key pages. Lead each one with a direct answer to the quest
 Keep it current. Freshness is one of the few signals you fully control, and it directly affects whether you are cited for the time-sensitive, planning-phase questions that drive tour bookings.
 
 Build presence beyond your own site. Reviews, consistent directory listings, and mentions on travel and local sites the engines already trust all increase the odds that an engine names you as the recommendation. AI engines weigh that web of references heavily.
+
+![Structured content and schema that AI engines can cite](/blog/ai-search-tours/inline-2.jpg)
 
 ## This is not a replacement for what you already do
 
