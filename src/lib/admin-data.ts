@@ -447,6 +447,36 @@ export async function getAllTestimonialsForAdmin(): Promise<TestimonialRow[]> {
   return (data ?? []) as TestimonialRow[];
 }
 
+/* ============================================================
+ * Notifications (Phase 2 of admin notifications).
+ *
+ * One row per surfaceable event (new lead / new chat session / new
+ * appointment), populated by AFTER INSERT triggers on the source tables
+ * (0009_notification_triggers.sql). Shared read_at means clearing read
+ * on one admin clears it for both. source_id is plain uuid pointing at
+ * the source row - intentionally not a FK so the audit trail survives
+ * source-row deletion.
+ * ============================================================ */
+
+export type NotificationKind = "lead" | "conversation" | "appointment";
+
+export interface Notification {
+  id: string;
+  kind: NotificationKind;
+  source_id: string;
+  title: string;
+  preview: string | null;
+  created_at: string;
+  read_at: string | null;
+}
+
+export interface UnreadCounts {
+  lead: number;
+  conversation: number;
+  appointment: number;
+  total: number;
+}
+
 /** Fetch the full message thread for a single conversation. */
 export async function getConversationMessages(
   conversationId: string,
