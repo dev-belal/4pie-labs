@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { readAdminSession } from "@/lib/admin-session";
 import {
   getAllOpportunities,
+  getAllTestimonialsForAdmin,
   getAppointments,
   getDashboardData,
   getPipelinesWithStages,
@@ -32,18 +33,29 @@ export default async function AdminPage() {
     .toISOString();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 
-  const [data, pipelines, opportunities, appointments, blogs] =
-    await Promise.all([
-      getDashboardData(),
-      getPipelinesWithStages(),
-      getAllOpportunities(),
-      getAppointments(apptWindowStart, apptWindowEnd),
-      // Blogs are read via the same getAllPosts() that powers the public
-      // site (Supabase-first, static fallback). Same data path, same
-      // ordering (created_at desc). The new BlogsListPanel uses this
-      // for the listing + edit-seed.
-      getAllPosts(),
-    ]);
+  const [
+    data,
+    pipelines,
+    opportunities,
+    appointments,
+    blogs,
+    testimonials,
+  ] = await Promise.all([
+    getDashboardData(),
+    getPipelinesWithStages(),
+    getAllOpportunities(),
+    getAppointments(apptWindowStart, apptWindowEnd),
+    // Blogs are read via the same getAllPosts() that powers the public
+    // site (Supabase-first, static fallback). Same data path, same
+    // ordering (created_at desc). The new BlogsListPanel uses this
+    // for the listing + edit-seed.
+    getAllPosts(),
+    // Testimonials use a separate admin-only fetch via the service-
+    // role client so drafts (is_published = false) show up too. The
+    // public component uses the anon client and is gated by RLS to
+    // published rows only.
+    getAllTestimonialsForAdmin(),
+  ]);
 
   return (
     <AdminShell
@@ -52,6 +64,7 @@ export default async function AdminPage() {
       opportunities={opportunities}
       appointments={appointments}
       blogs={blogs}
+      testimonials={testimonials}
       monthStartISO={monthStart}
       userEmail={session.sub}
     />

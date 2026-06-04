@@ -26,11 +26,12 @@ import type {
   DashboardData,
   Opportunity,
   PipelineWithStages,
+  TestimonialRow,
 } from "@/lib/admin-data";
 import type { BlogPost } from "@/data/blogs";
 import { OverviewPanel } from "./OverviewPanel";
 import { BlogsListPanel } from "./BlogsListPanel";
-import { TestimonialPublisher } from "./TestimonialPublisher";
+import { TestimonialsListPanel } from "./TestimonialsListPanel";
 import { LeadsPanel } from "./LeadsPanel";
 import { ConversationsPanel } from "./ConversationsPanel";
 import { PipelinesPanel } from "./PipelinesPanel";
@@ -96,6 +97,7 @@ export function AdminShell({
   opportunities,
   appointments,
   blogs,
+  testimonials,
   monthStartISO,
   userEmail,
 }: {
@@ -104,6 +106,7 @@ export function AdminShell({
   opportunities: Opportunity[];
   appointments: Appointment[];
   blogs: BlogPost[];
+  testimonials: TestimonialRow[];
   monthStartISO: string;
   userEmail: string;
 }) {
@@ -115,7 +118,11 @@ export function AdminShell({
   // ignore it and the input is dimmed when those tabs are active so it
   // doesn't look interactive.
   const [globalSearch, setGlobalSearch] = useState("");
-  const SEARCH_CONSUMERS: ReadonlySet<Tab> = new Set(["leads", "blogs"]);
+  const SEARCH_CONSUMERS: ReadonlySet<Tab> = new Set([
+    "leads",
+    "blogs",
+    "testimonials",
+  ]);
   const searchActive = SEARCH_CONSUMERS.has(tab);
 
   // Focus ticket: any time the user clicks "View →" on a promotion toast,
@@ -240,7 +247,9 @@ export function AdminShell({
                 searchActive
                   ? tab === "leads"
                     ? "Search leads…"
-                    : "Search blogs…"
+                    : tab === "blogs"
+                      ? "Search blogs…"
+                      : "Search testimonials…"
                   : "Search…"
               }
               className="bg-transparent outline-none text-sm flex-1 min-w-0 placeholder:text-[var(--muted)] disabled:cursor-not-allowed"
@@ -393,9 +402,11 @@ export function AdminShell({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.15 }}
-                className="max-w-2xl"
               >
-                <TestimonialPublisher />
+                <TestimonialsListPanel
+                  testimonials={testimonials}
+                  globalSearch={globalSearch}
+                />
               </motion.div>
             )}
             {tab === "blogs" && (
