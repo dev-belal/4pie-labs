@@ -127,6 +127,26 @@ export const testimonialInsertSchema = z.object({
   headline: z.string().min(5).max(200),
   quote: z.string().min(10).max(2000),
   rating: z.number().int().min(1).max(5),
+  // Same affordance as the blog `image` field: accept a site-relative
+  // path (e.g. "/testimonials/maria.jpeg" where you've shipped a real
+  // file under public/) OR a fully-qualified https URL (ui-avatars,
+  // Gravatar, Unsplash, etc.). Strict .url() would reject every
+  // relative path. Empty string is filtered out by the form before
+  // submission; we coerce to undefined in the action so the column
+  // stays null and the public component renders the ui-avatars
+  // initials chip.
+  avatar: z
+    .string()
+    .max(500)
+    .refine(
+      (v) => v.startsWith("/") || /^https?:\/\//.test(v),
+      "Avatar must be a site-relative path (/...) or an absolute http(s) URL",
+    )
+    .optional(),
+  // Whether the testimonial surfaces on the public homepage. Defaults
+  // to true so existing form submissions (which don't yet carry the
+  // checkbox) keep their current behavior of going live immediately.
+  isPublished: z.boolean().optional().default(true),
 });
 
 export const trackViewSchema = z.object({

@@ -328,6 +328,88 @@ export async function deleteBlog(
 }
 
 
+/**
+ * Shared by every testimonial mutation. Homepage is the only public
+ * surface; the admin tab needs to refresh too so any open list view
+ * sees the change without a hard reload.
+ */
+function revalidateTestimonialSurfaces(): void {
+  revalidatePath("/");
+  revalidatePath("/admin");
+}
+
+/**
+ * Parse + map a TestimonialEditor / TestimonialPublisher submission
+ * into the DB row shape. Shared so publishTestimonial (INSERT) and
+ * updateTestimonial (UPDATE) interpret the same FormData identically.
+ *
+ * Returns { ok: false, ... } on Zod validation failure so the caller
+ * can short-circuit and surface field errors. Otherwise { ok: true,
+ * row } with the snake_case columns the Supabase client expects.
+ */
+function parseTestimonialForm(
+  formData: FormData,
+):
+  | { ok: false; result: PublishState }
+  | {
+      ok: true;
+      row: {
+        name: string;
+        role: string;
+        headline: string;
+        quote: string;
+        rating: number;
+        avatar: string | null;
+        is_published: boolean;
+      };
+    } {
+  // The form sends a checkbox as "true" or "false" string in our
+  // BlogEditor-style serializer. Coerce here before Zod sees it.
+  const isPublishedRaw = formData.get("isPublished");
+  const isPublished =
+    isPublishedRaw === "false" || isPublishedRaw === "off" ? false : true;
+
+  const rawAvatar = (formData.get("avatar") as string | null) ?? "";
+  const avatar = rawAvatar.trim().length > 0 ? rawAvatar.trim() : undefined;
+
+  const parsed = testimonialInsertSchema.safeParse({
+    name: formData.get("name"),
+    role: formData.get("role"),
+    headline: formData.get("headline"),
+    quote: formData.get("quote"),
+    rating: Number(formData.get("rating")),
+    avatar,
+    isPublished,
+  });
+
+  if (!parsed.success) {
+    return {
+      ok: false,
+      result: {
+        status: "error",
+        message: "Please check the fields and try again.",
+        errors: parsed.error.flatten().fieldErrors,
+      },
+    };
+  }
+
+  return {
+    ok: true,
+    row: {
+      name: parsed.data.name,
+      role: parsed.data.role,
+      headline: parsed.data.headline,
+      quote: parsed.data.quote,
+      rating: parsed.data.rating,
+      // Schema returns undefined when the form left avatar blank; the
+      // DB column is nullable and the public carousel falls back to a
+      // ui-avatars chip when the value is null.
+      avatar: parsed.data.avatar ?? null,
+      is_published: parsed.data.isPublished ?? true,
+    },
+  };
+}
+
 export async function publishTestimonial(
   _prev: PublishState,
   formData: FormData,
@@ -339,30 +421,103 @@ export async function publishTestimonial(
     return { status: "error", message: "You must be signed in." };
   }
 
-  const parsed = testimonialInsertSchema.safeParse({
-    name: formData.get("name"),
-    role: formData.get("role"),
-    headline: formData.get("headline"),
-    quote: formData.get("quote"),
-    rating: Number(formData.get("rating")),
-  });
+  const parsed = parseTestimonialForm(formData);
+  if (!parsed.ok) return parsed.result;
 
-  if (!parsed.success) {
-    return {
-      status: "error",
-      message: "Please check the fields and try again.",
-      errors: parsed.error.flatten().fieldErrors,
-    };
-  }
-
-  const { error } = await supabase.from("testimonials").insert({
-    ...parsed.data,
-    is_published: true,
-  });
-
+  const { error } = await supabase.from("testimonials").insert(parsed.row);
   if (error) return { status: "error", message: error.message };
 
-  revalidatePath("/");
-  revalidatePath("/admin");
+  revalidateTestimonialSurfaces();
   return { status: "success", message: "Testimonial published." };
+}
+
+/**
+ * Edit an existing testimonial row. FormState shape matches
+ * publishTestimonial so a single TestimonialEditor component drives
+ * both create and edit modes (same pattern as BlogEditor + publishBlog
+ * / updateBlog).
+ */
+export async function updateTestimonial(
+  _prev: PublishState,
+  formData: FormData,
+): Promise<PublishState> {
+  let supabase;
+  try {
+    supabase = await requireAdmin();
+  } catch {
+    return { status: "error", message: "You must be signed in." };
+  }
+
+  // Hidden id field added by the editor in edit mode. UUIDs are not
+  // user-input so a strict Zod check is overkill, but a length sanity
+  // check prevents bizarre eq() queries from succeeding.
+  const id = (formData.get("id") as string | null) ?? "";
+  if (id.length < 32) {
+    return { status: "error", message: "Invalid testimonial id" };
+  }
+
+  const parsed = parseTestimonialForm(formData);
+  if (!parsed.ok) return parsed.result;
+
+  const { error } = await supabase
+    .from("testimonials")
+    .update(parsed.row)
+    .eq("id", id);
+  if (error) return { status: "error", message: error.message };
+
+  revalidateTestimonialSurfaces();
+  return { status: "success", message: "Testimonial updated." };
+}
+
+/**
+ * Delete a testimonial by id. Imperative call shape (returns
+ * { ok: true } / { ok: false, error }) so TestimonialsListPanel can
+ * call it inline from a row button without a useActionState wrapper -
+ * same pattern as deleteLead / deleteBlog.
+ */
+export async function deleteTestimonial(
+  id: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (typeof id !== "string" || id.length < 32) {
+    return { ok: false, error: "Invalid testimonial id" };
+  }
+  try {
+    const supabase = await requireAdmin();
+    const { error } = await supabase
+      .from("testimonials")
+      .delete()
+      .eq("id", id);
+    if (error) return { ok: false, error: error.message };
+    revalidateTestimonialSurfaces();
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "Unauthorized" };
+  }
+}
+
+/**
+ * Per-row publish-state toggle. Same imperative shape as
+ * deleteTestimonial so the BlogsListPanel-style row button can call it
+ * directly. The list view uses this to flip is_published without
+ * having to open the full editor.
+ */
+export async function setTestimonialPublished(
+  id: string,
+  value: boolean,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (typeof id !== "string" || id.length < 32) {
+    return { ok: false, error: "Invalid testimonial id" };
+  }
+  try {
+    const supabase = await requireAdmin();
+    const { error } = await supabase
+      .from("testimonials")
+      .update({ is_published: value })
+      .eq("id", id);
+    if (error) return { ok: false, error: error.message };
+    revalidateTestimonialSurfaces();
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "Unauthorized" };
+  }
 }

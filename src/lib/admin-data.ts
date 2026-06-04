@@ -407,6 +407,46 @@ export async function getAppointments(
   return (data ?? []) as Appointment[];
 }
 
+/* ============================================================
+ * Testimonials (admin management).
+ *
+ * Mirrors the BlogPost flow: TestimonialRow carries the FULL row shape
+ * (including unpublished drafts and the rating value the public
+ * carousel doesn't render), the admin fetcher uses the service-role
+ * client to bypass the public RLS read policy that hides drafts.
+ * ============================================================ */
+
+export interface TestimonialRow {
+  id: string;
+  name: string;
+  role: string;
+  headline: string;
+  quote: string;
+  rating: number;
+  avatar: string | null;
+  is_published: boolean;
+  created_at: string;
+}
+
+const TESTIMONIAL_COLUMNS =
+  "id, name, role, headline, quote, rating, avatar, is_published, created_at";
+
+/**
+ * Admin-facing fetch: every testimonial row, drafts included, newest
+ * first. The public component is gated by the
+ * `testimonials_public_read_published` RLS policy and only sees
+ * is_published=true; we bypass that via the service-role client here
+ * so the admin can manage drafts before they go live.
+ */
+export async function getAllTestimonialsForAdmin(): Promise<TestimonialRow[]> {
+  const supabase = createServiceClient();
+  const { data } = await supabase
+    .from("testimonials")
+    .select(TESTIMONIAL_COLUMNS)
+    .order("created_at", { ascending: false });
+  return (data ?? []) as TestimonialRow[];
+}
+
 /** Fetch the full message thread for a single conversation. */
 export async function getConversationMessages(
   conversationId: string,
