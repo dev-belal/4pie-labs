@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Bell,
   CalendarDays,
   GitBranch,
   Inbox,
@@ -17,22 +16,34 @@ import {
   PenTool,
   Search,
   Sun,
+  X,
 } from "lucide-react";
 import { signOut } from "@/lib/auth-actions";
 import { useTheme } from "@/lib/use-theme";
+import { getRecentNotifications } from "@/lib/notification-actions";
+import {
+  useNotificationStream,
+  type NotificationPayload,
+} from "@/lib/realtime-client";
 import type {
   Appointment,
   DashboardData,
+  Notification,
+  NotificationKind,
   Opportunity,
   PipelineWithStages,
+  TestimonialRow,
+  UnreadCounts,
 } from "@/lib/admin-data";
+import type { BlogPost } from "@/data/blogs";
 import { OverviewPanel } from "./OverviewPanel";
-import { BlogPublisher } from "./BlogPublisher";
-import { TestimonialPublisher } from "./TestimonialPublisher";
+import { BlogsListPanel } from "./BlogsListPanel";
+import { TestimonialsListPanel } from "./TestimonialsListPanel";
 import { LeadsPanel } from "./LeadsPanel";
 import { ConversationsPanel } from "./ConversationsPanel";
 import { PipelinesPanel } from "./PipelinesPanel";
 import { CalendarPanel } from "./CalendarPanel";
+import { NotificationsBell } from "./NotificationsBell";
 
 type Tab =
   | "overview"
@@ -93,6 +104,10 @@ export function AdminShell({
   pipelines,
   opportunities,
   appointments,
+  blogs,
+  testimonials,
+  notifications,
+  unreadCounts,
   monthStartISO,
   userEmail,
 }: {
@@ -100,10 +115,28 @@ export function AdminShell({
   pipelines: PipelineWithStages[];
   opportunities: Opportunity[];
   appointments: Appointment[];
+  blogs: BlogPost[];
+  testimonials: TestimonialRow[];
+  notifications: Notification[];
+  unreadCounts: UnreadCounts;
   monthStartISO: string;
   userEmail: string;
 }) {
   const [tab, setTab] = useState<Tab>("overview");
+  // Topbar search state lives at shell level. Each panel decides
+  // whether to consume it via a `globalSearch?: string` prop. Currently
+  // wired into LeadsPanel (matches name / email / business / notes)
+  // and BlogsListPanel (matches title / slug / category). Other panels
+  // ignore it and the input is dimmed when those tabs are active so it
+  // doesn't look interactive.
+  const [globalSearch, setGlobalSearch] = useState("");
+  const SEARCH_CONSUMERS: ReadonlySet<Tab> = new Set([
+    "leads",
+    "blogs",
+    "testimonials",
+  ]);
+  const searchActive = SEARCH_CONSUMERS.has(tab);
+
   // Focus ticket: any time the user clicks "View →" on a promotion toast,
   // gotoPipeline bumps the token AND sets the destination id. PipelinesPanel
   // watches the whole object (which is a fresh reference each call) and
@@ -119,12 +152,49 @@ export function AdminShell({
     setPipelineFocus({ pipelineId, token: focusTokenRef.current });
     setTab("pipelines");
   }, []);
+
+  // Cross-tab focus driven by the bell. Each click on a notification
+  // generates a fresh { id, token } ticket; the target panel watches the
+  // whole object reference (new object every fire so re-firing with the
+  // same id still triggers the effect).
+  const [leadFocus, setLeadFocus] = useState<{
+    id: string;
+    token: number;
+  } | null>(null);
+  const [conversationFocus, setConversationFocus] = useState<{
+    id: string;
+    token: number;
+  } | null>(null);
+  const [appointmentFocus, setAppointmentFocus] = useState<{
+    id: string;
+    token: number;
+  } | null>(null);
+
+  const gotoNotification = useCallback(
+    (kind: NotificationKind, sourceId: string) => {
+      focusTokenRef.current += 1;
+      const token = focusTokenRef.current;
+      if (kind === "lead") {
+        setLeadFocus({ id: sourceId, token });
+        setTab("leads");
+      } else if (kind === "conversation") {
+        setConversationFocus({ id: sourceId, token });
+        setTab("conversations");
+      } else if (kind === "appointment") {
+        setAppointmentFocus({ id: sourceId, token });
+        setTab("calendar");
+      }
+    },
+    [],
+  );
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const { theme, toggle } = useTheme();
 
   // Poll every 15s while the tab is visible. Server actions still force an
-  // immediate revalidate on explicit edits.
+  // immediate revalidate on explicit edits. Kept alongside the Realtime
+  // subscription as belt-and-suspenders: if a websocket ever drops, the
+  // poll catches missed events within 15s.
   useEffect(() => {
     const tick = () => {
       if (document.visibilityState === "visible") {
@@ -135,13 +205,87 @@ export function AdminShell({
     return () => window.clearInterval(id);
   }, [router]);
 
+  // Toast queue for live "new notification" pings. Each toast carries its
+  // own id (random) so multiple in-flight toasts can timeout independently.
+  // Auto-dismiss after 5s. Stacked bottom-right via the Tailwind classes
+  // in the render block at the end of the topbar column.
+  const [toasts, setToasts] = useState<NotifToast[]>([]);
+  const dismissToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+  const pushToast = useCallback(
+    (kind: NotificationKind, title: string) => {
+      const id =
+        typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `t-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      setToasts((prev) => [...prev, { id, kind, title }]);
+      window.setTimeout(() => dismissToast(id), 5000);
+    },
+    [dismissToast],
+  );
+
+  // Track which notification ids have already been toasted so a missed-then-
+  // delivered duplicate event (or the 15s poll catching up) doesn't double-
+  // toast. Seeded from the initial props so existing rows never toast
+  // retroactively.
+  const toastedIdsRef = useRef<Set<string>>(
+    new Set(notifications.map((n) => n.id)),
+  );
+
+  // Realtime: subscribe via the anon channel. On every INSERT event, refresh
+  // server state so badges + bell list update; also fire a toast.
+  //
+  // RLS-payload contingency: the notifications table is RLS-enabled with
+  // zero policies, so the anon channel can't SELECT and Supabase Realtime
+  // strips the row content from the broadcast (the realtime hook emits null
+  // in that case). We detect both shapes:
+  //   - If `payload` carries id+title, toast directly from it.
+  //   - If `payload` is null, fall back to a service-role server-action
+  //     refetch of the newest unread notification and toast that.
+  // In production this resolves at runtime; the actual path is reported
+  // back in commit 2.3 verification.
+  const handleNewNotification = useCallback(
+    (payload: NotificationPayload | null) => {
+      startTransition(() => router.refresh());
+      const direct =
+        payload &&
+        typeof payload.id === "string" &&
+        typeof payload.title === "string" &&
+        typeof payload.kind === "string";
+      if (direct && payload) {
+        if (toastedIdsRef.current.has(payload.id!)) return;
+        toastedIdsRef.current.add(payload.id!);
+        pushToast(payload.kind as NotificationKind, payload.title as string);
+        return;
+      }
+      void (async () => {
+        const recent = await getRecentNotifications(3);
+        for (const n of recent) {
+          if (toastedIdsRef.current.has(n.id)) continue;
+          toastedIdsRef.current.add(n.id);
+          pushToast(n.kind, n.title);
+          return; // newest unseen only
+        }
+      })();
+    },
+    [router, pushToast],
+  );
+  useNotificationStream(handleNewNotification);
+
   const heading = HEADINGS[tab];
   const initials = (userEmail?.[0] ?? "A").toUpperCase();
 
+  // Badges reflect *unread notifications*, not pipeline status or row
+  // totals. Three notification kinds map 1:1 to three tabs; the other
+  // tabs get no badge. Counts come from the server fetch; live updates
+  // arrive via Realtime → router.refresh in commit 2.3.
   const badgeFor = (id: Tab): number | undefined => {
-    if (id === "leads" && data.newLeads > 0) return data.newLeads;
-    if (id === "conversations" && data.totalConversations > 0)
-      return data.totalConversations;
+    if (id === "leads" && unreadCounts.lead > 0) return unreadCounts.lead;
+    if (id === "conversations" && unreadCounts.conversation > 0)
+      return unreadCounts.conversation;
+    if (id === "calendar" && unreadCounts.appointment > 0)
+      return unreadCounts.appointment;
     return undefined;
   };
 
@@ -207,13 +351,43 @@ export function AdminShell({
 
           <div className="flex-1" />
 
-          <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--surface-hover)] border border-[var(--border)] min-w-[200px] max-w-[280px]">
+          <div
+            className={`hidden md:flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--surface-hover)] border border-[var(--border)] min-w-[200px] max-w-[280px] transition-opacity ${
+              searchActive ? "opacity-100" : "opacity-40"
+            }`}
+            title={
+              searchActive
+                ? undefined
+                : "Search isn't available on this panel"
+            }
+          >
             <Search className="w-4 h-4 text-[var(--muted)] shrink-0" />
             <input
-              placeholder="Search…"
-              className="bg-transparent outline-none text-sm flex-1 min-w-0 placeholder:text-[var(--muted)]"
+              value={globalSearch}
+              onChange={(e) => setGlobalSearch(e.target.value)}
+              disabled={!searchActive}
+              placeholder={
+                searchActive
+                  ? tab === "leads"
+                    ? "Search leads…"
+                    : tab === "blogs"
+                      ? "Search blogs…"
+                      : "Search testimonials…"
+                  : "Search…"
+              }
+              className="bg-transparent outline-none text-sm flex-1 min-w-0 placeholder:text-[var(--muted)] disabled:cursor-not-allowed"
               aria-label="Search"
             />
+            {searchActive && globalSearch && (
+              <button
+                type="button"
+                onClick={() => setGlobalSearch("")}
+                className="text-[var(--muted)] hover:text-[var(--fg)]"
+                aria-label="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
           <SyncDot active={isPending} />
@@ -232,15 +406,12 @@ export function AdminShell({
             )}
           </button>
 
-          <button
-            type="button"
-            title="Notifications"
-            aria-label="Notifications"
-            className="relative p-2 rounded-lg text-[var(--muted)] hover:text-[var(--fg)] hover:bg-[var(--surface-hover)] transition-colors"
-          >
-            <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-primary" />
-          </button>
+          <NotificationsBell
+            notifications={notifications}
+            unreadTotal={unreadCounts.total}
+            onOpenNotification={gotoNotification}
+          />
+
 
           <div
             className="w-8 h-8 rounded-full bg-[var(--accent-soft)] text-[var(--on-soft)] flex items-center justify-center text-xs font-semibold shrink-0"
@@ -300,6 +471,8 @@ export function AdminShell({
                 leads={data.leads}
                 pipelines={pipelines}
                 gotoPipeline={gotoPipeline}
+                globalSearch={globalSearch}
+                focus={leadFocus}
               />
               </motion.div>
             )}
@@ -329,6 +502,7 @@ export function AdminShell({
                 <CalendarPanel
                   appointments={appointments}
                   monthStartISO={monthStartISO}
+                  focus={appointmentFocus}
                 />
               </motion.div>
             )}
@@ -340,7 +514,10 @@ export function AdminShell({
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.15 }}
               >
-                <ConversationsPanel conversations={data.conversations} />
+                <ConversationsPanel
+                  conversations={data.conversations}
+                  focus={conversationFocus}
+                />
               </motion.div>
             )}
             {tab === "testimonials" && (
@@ -350,9 +527,11 @@ export function AdminShell({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.15 }}
-                className="max-w-2xl"
               >
-                <TestimonialPublisher />
+                <TestimonialsListPanel
+                  testimonials={testimonials}
+                  globalSearch={globalSearch}
+                />
               </motion.div>
             )}
             {tab === "blogs" && (
@@ -362,16 +541,68 @@ export function AdminShell({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.15 }}
-                className="max-w-4xl"
               >
-                <BlogPublisher />
+                <BlogsListPanel blogs={blogs} globalSearch={globalSearch} />
               </motion.div>
             )}
           </AnimatePresence>
         </main>
       </div>
+
+      {/* Live notification toasts. Stacked bottom-right above the
+          OpportunitiesBoard toast slot (z-50 vs that toast's z-50 —
+          both kinds rarely fire together so the overlap is acceptable). */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none">
+        <AnimatePresence initial={false}>
+          {toasts.map((t) => (
+            <motion.div
+              key={t.id}
+              initial={{ opacity: 0, y: 16, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.95 }}
+              transition={{ duration: 0.18 }}
+              role="status"
+              className="pointer-events-auto min-w-[260px] max-w-sm flex items-start gap-3 px-4 py-3 rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-xl"
+            >
+              <div className="shrink-0 w-8 h-8 rounded-full bg-[var(--accent-soft)] text-[var(--on-soft)] flex items-center justify-center">
+                {t.kind === "lead" ? (
+                  <Inbox className="w-4 h-4" />
+                ) : t.kind === "conversation" ? (
+                  <MessageCircle className="w-4 h-4" />
+                ) : (
+                  <CalendarDays className="w-4 h-4" />
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-[11px] uppercase tracking-wide text-[var(--muted)] font-semibold">
+                  {t.kind === "lead"
+                    ? "New lead"
+                    : t.kind === "conversation"
+                      ? "New chat"
+                      : "New booking"}
+                </div>
+                <div className="text-sm font-medium truncate">{t.title}</div>
+              </div>
+              <button
+                type="button"
+                onClick={() => dismissToast(t.id)}
+                className="shrink-0 text-[var(--muted)] hover:text-[var(--fg)]"
+                aria-label="Dismiss"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
     </div>
   );
+}
+
+interface NotifToast {
+  id: string;
+  kind: NotificationKind;
+  title: string;
 }
 
 function SidebarItem({

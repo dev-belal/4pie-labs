@@ -23,10 +23,24 @@ function timeAgo(iso: string): string {
 
 export function ConversationsPanel({
   conversations,
+  focus,
 }: {
   conversations: ConversationSummary[];
+  // Cross-tab focus from the bell. When a conversation notification is
+  // clicked, AdminShell switches here AND sends { id, token }; we open
+  // the transcript modal for that session. Token bumps every click so
+  // re-firing on the same id re-opens after a close.
+  focus?: { id: string; token: number } | null;
 }) {
   const [openId, setOpenId] = useState<string | null>(null);
+  // Apply focus from the bell via the React 19 "store previous render"
+  // pattern (cheaper than an effect + avoids the cascading-render lint
+  // rule). Each click bumps the token; we only open when we see a new one.
+  const [lastFocusToken, setLastFocusToken] = useState<number | null>(null);
+  if (focus && focus.token !== lastFocusToken) {
+    setLastFocusToken(focus.token);
+    setOpenId(focus.id);
+  }
   const [thread, setThread] = useState<ConversationMessage[] | null>(null);
   const [loading, setLoading] = useState(false);
 

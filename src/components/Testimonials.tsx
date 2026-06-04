@@ -4,6 +4,19 @@ import {
   type Testimonial,
 } from "./TestimonialsCarousel";
 
+// Row shape returned by the SELECT below. avatar can be null (DB column is
+// nullable; we fall back to a ui-avatars chip in the map step), the other
+// four are NOT NULL in the schema. No `title` field - that was the pre-
+// rename column name that never made the migration; the carousel reads
+// `headline`.
+interface TestimonialRow {
+  headline: string;
+  quote: string;
+  name: string;
+  role: string;
+  avatar: string | null;
+}
+
 // Real client testimonials, adapted to refer to 4Pie Labs instead of the
 // original author. Roles assigned to match the three verticals we serve
 // (tour operator, local service, painting contractor). Avatars are
@@ -38,15 +51,6 @@ const STATIC_TESTIMONIALS: Testimonial[] = [
   },
 ];
 
-type TestimonialRow = {
-  headline?: string | null;
-  title?: string | null;
-  quote: string;
-  name: string;
-  role: string;
-  avatar: string | null;
-};
-
 export async function Testimonials() {
   let testimonials: Testimonial[] = STATIC_TESTIMONIALS;
 
@@ -54,23 +58,25 @@ export async function Testimonials() {
     const supabase = createPublicClient();
     const { data } = await supabase
       .from("testimonials")
-      .select("headline, title, quote, name, role, avatar")
+      .select("headline, quote, name, role, avatar")
       .eq("is_published", true)
       .order("created_at", { ascending: false });
 
     if (data && data.length > 0) {
       testimonials = (data as TestimonialRow[]).map((row) => ({
-        headline: row.headline ?? row.title ?? "",
+        headline: row.headline,
         quote: row.quote,
         name: row.name,
         role: row.role,
+        // Null avatar -> ui-avatars initials chip with the brand amber.
+        // ui-avatars.com is whitelisted in next.config.ts remotePatterns.
         avatar:
           row.avatar ??
           `https://ui-avatars.com/api/?name=${encodeURIComponent(row.name)}&background=d97706&color=fff&bold=true`,
       }));
     }
   } catch {
-    // Supabase unavailable, fall back to static testimonials
+    // Supabase unavailable, fall back to static testimonials.
   }
 
   return (

@@ -403,7 +403,7 @@ export default async function BlogPostPage({ params }: Props) {
             <span>{post.category}</span>
             <span className="w-1 h-1 rounded-full bg-border" />
             <time
-              dateTime={post.datePublishedISO}
+              dateTime={post.datePublishedISO ?? undefined}
               className="text-subtle-foreground"
             >
               {post.date}

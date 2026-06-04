@@ -126,9 +126,15 @@ interface Toast {
 export function CalendarPanel({
   appointments: initialAppointments,
   monthStartISO,
+  focus,
 }: {
   appointments: Appointment[];
   monthStartISO: string;
+  // Cross-tab focus from the bell. When an appointment notification is
+  // clicked, AdminShell switches here AND sends { id, token }; we move
+  // the cursor to the appointment's month and select it in the side
+  // panel. Token bumps every click so re-firing on the same id re-selects.
+  focus?: { id: string; token: number } | null;
 }) {
   const initialMonth = new Date(monthStartISO);
   const [view, setView] = useState<"month" | "week">("month");
@@ -148,6 +154,25 @@ export function CalendarPanel({
     const t = window.setTimeout(() => setToast(null), 4000);
     return () => window.clearTimeout(t);
   }, [toast]);
+
+  // Apply focus from the bell. Look up the appointment in the current local
+  // state, move the calendar cursor to that month, and select it. If the
+  // appointment isn't in the loaded window (>90d out), the click is a
+  // no-op — extremely rare given the notification fires at booking time.
+  //
+  // React 19 "previous render" pattern: only react when the token changes,
+  // otherwise an edit to notes/category (which mutates `appointments`)
+  // would re-fire and clobber the side panel state the user is editing.
+  const [lastFocusToken, setLastFocusToken] = useState<number | null>(null);
+  if (focus && focus.token !== lastFocusToken) {
+    setLastFocusToken(focus.token);
+    const target = appointments.find((a) => a.id === focus.id);
+    if (target) {
+      const at = new Date(target.starts_at);
+      setCursor(new Date(at.getFullYear(), at.getMonth(), 1));
+      setSelected(target);
+    }
+  }
 
   const monthLabel = `${MONTHS[cursor.getMonth()]} ${cursor.getFullYear()}`;
 
