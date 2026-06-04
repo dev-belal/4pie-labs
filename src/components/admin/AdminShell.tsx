@@ -20,6 +20,11 @@ import {
 } from "lucide-react";
 import { signOut } from "@/lib/auth-actions";
 import { useTheme } from "@/lib/use-theme";
+import { getRecentNotifications } from "@/lib/notification-actions";
+import {
+  useNotificationStream,
+  type NotificationPayload,
+} from "@/lib/realtime-client";
 import type {
   Appointment,
   DashboardData,
@@ -187,7 +192,9 @@ export function AdminShell({
   const { theme, toggle } = useTheme();
 
   // Poll every 15s while the tab is visible. Server actions still force an
-  // immediate revalidate on explicit edits.
+  // immediate revalidate on explicit edits. Kept alongside the Realtime
+  // subscription as belt-and-suspenders: if a websocket ever drops, the
+  // poll catches missed events within 15s.
   useEffect(() => {
     const tick = () => {
       if (document.visibilityState === "visible") {
@@ -197,6 +204,74 @@ export function AdminShell({
     const id = window.setInterval(tick, 15_000);
     return () => window.clearInterval(id);
   }, [router]);
+
+  // Toast queue for live "new notification" pings. Each toast carries its
+  // own id (random) so multiple in-flight toasts can timeout independently.
+  // Auto-dismiss after 5s. Stacked bottom-right via the Tailwind classes
+  // in the render block at the end of the topbar column.
+  const [toasts, setToasts] = useState<NotifToast[]>([]);
+  const dismissToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+  const pushToast = useCallback(
+    (kind: NotificationKind, title: string) => {
+      const id =
+        typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `t-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      setToasts((prev) => [...prev, { id, kind, title }]);
+      window.setTimeout(() => dismissToast(id), 5000);
+    },
+    [dismissToast],
+  );
+
+  // Track which notification ids have already been toasted so a missed-then-
+  // delivered duplicate event (or the 15s poll catching up) doesn't double-
+  // toast. Seeded from the initial props so existing rows never toast
+  // retroactively.
+  const toastedIdsRef = useRef<Set<string>>(
+    new Set(notifications.map((n) => n.id)),
+  );
+
+  // Realtime: subscribe via the anon channel. On every INSERT event, refresh
+  // server state so badges + bell list update; also fire a toast.
+  //
+  // RLS-payload contingency: the notifications table is RLS-enabled with
+  // zero policies, so the anon channel can't SELECT and Supabase Realtime
+  // strips the row content from the broadcast (the realtime hook emits null
+  // in that case). We detect both shapes:
+  //   - If `payload` carries id+title, toast directly from it.
+  //   - If `payload` is null, fall back to a service-role server-action
+  //     refetch of the newest unread notification and toast that.
+  // In production this resolves at runtime; the actual path is reported
+  // back in commit 2.3 verification.
+  const handleNewNotification = useCallback(
+    (payload: NotificationPayload | null) => {
+      startTransition(() => router.refresh());
+      const direct =
+        payload &&
+        typeof payload.id === "string" &&
+        typeof payload.title === "string" &&
+        typeof payload.kind === "string";
+      if (direct && payload) {
+        if (toastedIdsRef.current.has(payload.id!)) return;
+        toastedIdsRef.current.add(payload.id!);
+        pushToast(payload.kind as NotificationKind, payload.title as string);
+        return;
+      }
+      void (async () => {
+        const recent = await getRecentNotifications(3);
+        for (const n of recent) {
+          if (toastedIdsRef.current.has(n.id)) continue;
+          toastedIdsRef.current.add(n.id);
+          pushToast(n.kind, n.title);
+          return; // newest unseen only
+        }
+      })();
+    },
+    [router, pushToast],
+  );
+  useNotificationStream(handleNewNotification);
 
   const heading = HEADINGS[tab];
   const initials = (userEmail?.[0] ?? "A").toUpperCase();
@@ -473,8 +548,61 @@ export function AdminShell({
           </AnimatePresence>
         </main>
       </div>
+
+      {/* Live notification toasts. Stacked bottom-right above the
+          OpportunitiesBoard toast slot (z-50 vs that toast's z-50 —
+          both kinds rarely fire together so the overlap is acceptable). */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none">
+        <AnimatePresence initial={false}>
+          {toasts.map((t) => (
+            <motion.div
+              key={t.id}
+              initial={{ opacity: 0, y: 16, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.95 }}
+              transition={{ duration: 0.18 }}
+              role="status"
+              className="pointer-events-auto min-w-[260px] max-w-sm flex items-start gap-3 px-4 py-3 rounded-xl bg-[var(--surface)] border border-[var(--border)] shadow-xl"
+            >
+              <div className="shrink-0 w-8 h-8 rounded-full bg-[var(--accent-soft)] text-[var(--on-soft)] flex items-center justify-center">
+                {t.kind === "lead" ? (
+                  <Inbox className="w-4 h-4" />
+                ) : t.kind === "conversation" ? (
+                  <MessageCircle className="w-4 h-4" />
+                ) : (
+                  <CalendarDays className="w-4 h-4" />
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-[11px] uppercase tracking-wide text-[var(--muted)] font-semibold">
+                  {t.kind === "lead"
+                    ? "New lead"
+                    : t.kind === "conversation"
+                      ? "New chat"
+                      : "New booking"}
+                </div>
+                <div className="text-sm font-medium truncate">{t.title}</div>
+              </div>
+              <button
+                type="button"
+                onClick={() => dismissToast(t.id)}
+                className="shrink-0 text-[var(--muted)] hover:text-[var(--fg)]"
+                aria-label="Dismiss"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
     </div>
   );
+}
+
+interface NotifToast {
+  id: string;
+  kind: NotificationKind;
+  title: string;
 }
 
 function SidebarItem({
