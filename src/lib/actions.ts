@@ -8,6 +8,7 @@ import {
   budgetLeadSchema,
   contactSchema,
   customRequestSchema,
+  reviewSubmitSchema,
   roiSchema,
 } from "@/lib/schemas";
 import { createPublicClient } from "@/lib/supabase/public-client";
@@ -479,5 +480,115 @@ export async function submitAuditLead(
     status: "success",
     message:
       "Audit booked. Your report is on its way and will arrive by email shortly.",
+  };
+}
+
+/**
+ * Public /leave-a-review submission. Client-submitted testimonials ALWAYS
+ * land as drafts (is_published hardcoded false here AND enforced by the
+ * RLS policy from 0011). avatar is null - admin adds during review.
+ *
+ * Honeypot: if the hidden `website` field comes back non-empty, the
+ * caller is almost certainly a bot. We return a success state without
+ * inserting so the bot has no feedback signal to retry with adjusted
+ * payload. Real users never see the field (CSS-hidden).
+ *
+ * Notifications: the Phase 1 AFTER INSERT trigger
+ * (notify_on_testimonial_insert) handles fanning out to the admin bell +
+ * Realtime toast. Nothing to do here.
+ */
+export async function submitTestimonialReview(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const { allowed } = await guardAndIp("leave-a-review", 3, 60_000);
+  if (!allowed) {
+    return {
+      status: "error",
+      message: "Too many submissions. Please wait a minute and try again.",
+    };
+  }
+
+  const parsed = reviewSubmitSchema.safeParse({
+    name: formData.get("name"),
+    role: formData.get("role"),
+    quote: formData.get("quote"),
+    rating: formData.get("rating"),
+    headline: formData.get("headline"),
+    website: formData.get("website"),
+  });
+
+  if (!parsed.success) {
+    return {
+      status: "error",
+      message: "Please check the fields and try again.",
+      errors: parsed.error.flatten().fieldErrors,
+    };
+  }
+
+  // Honeypot trip: fake-succeed without writing.
+  if (parsed.data.website && parsed.data.website.length > 0) {
+    return {
+      status: "success",
+      message:
+        "Thanks! Your review has been received and will appear after we review it.",
+    };
+  }
+
+  // The headline column on the testimonials table is NOT NULL, so when
+  // the client leaves it blank we fall back to a quote-derived stub the
+  // admin can polish during review. Capped at 100 chars to stay short.
+  const headlineRaw = parsed.data.headline ?? "";
+  const fallbackHeadline = `Review from ${parsed.data.name}`;
+  const headline =
+    headlineRaw.length > 0
+      ? headlineRaw
+      : fallbackHeadline.length <= 100
+        ? fallbackHeadline
+        : fallbackHeadline.slice(0, 97) + "…";
+
+  try {
+    const supabase = createPublicClient();
+    // No .select() chain - same rule as the leads inserts. The anon
+    // INSERT policy from 0011 has WITH CHECK only; an implicit SELECT
+    // would be gated by the published-only read policy and fail.
+    const { error } = await supabase.from("testimonials").insert({
+      name: parsed.data.name,
+      role: parsed.data.role,
+      headline,
+      quote: parsed.data.quote,
+      rating: parsed.data.rating,
+      avatar: null,
+      // HARDCODED. Never trust the client. The RLS WITH CHECK in 0011
+      // also enforces this at the DB level as defense-in-depth.
+      is_published: false,
+    });
+    if (error) {
+      console.error("[leave-a-review] insert failed", {
+        error: `${error.code ?? ""} ${error.message ?? ""}`.trim(),
+        env: envPresence(),
+      });
+      return {
+        status: "error",
+        message:
+          "We couldn't submit your review right now. Please try again shortly.",
+      };
+    }
+  } catch (err) {
+    console.error("[leave-a-review] insert threw", {
+      error: err instanceof Error ? `${err.name}: ${err.message}` : String(err),
+      env: envPresence(),
+    });
+    return {
+      status: "error",
+      message:
+        "We couldn't submit your review right now. Please try again shortly.",
+    };
+  }
+
+  return {
+    status: "success",
+    message:
+      "Thanks! Your review has been received and will appear after we review it.",
   };
 }
