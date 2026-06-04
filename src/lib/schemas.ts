@@ -149,6 +149,47 @@ export const testimonialInsertSchema = z.object({
   isPublished: z.boolean().optional().default(true),
 });
 
+// Public /leave-a-review form. Client-submitted testimonials always land
+// as drafts (is_published is hardcoded in the action, never read from
+// here) and the new RLS policy in 0011 makes that physically guaranteed.
+// `website` is a honeypot - real users leave it blank; bots auto-fill
+// every input. A non-empty value here causes the action to silently
+// "succeed" without inserting (no signal back to the bot that it failed,
+// so it won't retry).
+export const reviewSubmitSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "Tell us your name")
+    .max(100, "Name is too long"),
+  role: z
+    .string()
+    .trim()
+    .min(2, "Add your role or company")
+    .max(160, "Role / company is too long"),
+  quote: z
+    .string()
+    .trim()
+    .min(20, "Write a little more — 20 characters minimum")
+    .max(2000, "That's plenty — keep it under 2000 characters"),
+  rating: z.coerce
+    .number()
+    .int("Pick a rating")
+    .min(1, "Pick a rating")
+    .max(5, "Pick a rating"),
+  // Optional. If blank the admin writes one during review; the existing
+  // admin testimonial form requires headline so an editor pass is the
+  // intended publishing path anyway.
+  headline: z
+    .string()
+    .trim()
+    .max(200, "Headline is too long")
+    .optional()
+    .or(z.literal("")),
+  // Honeypot. Bots fill it; humans don't (CSS hides the field).
+  website: z.string().max(200).optional().or(z.literal("")),
+});
+
 export const trackViewSchema = z.object({
   slug: z
     .string()
