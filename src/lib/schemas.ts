@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { BLOG_FORM_CATEGORIES } from "@/data/blogs";
 
 export const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100),
@@ -66,6 +67,13 @@ export const chatSchema = z.object({
     .default([]),
 });
 
+// One FAQ pair. Drives the FAQPage JSON-LD entries and the visible
+// <details> accordion on /blog/[slug].
+export const blogFAQSchema = z.object({
+  q: z.string().trim().min(3, "Question is too short").max(300),
+  a: z.string().trim().min(3, "Answer is too short").max(2000),
+});
+
 export const blogInsertSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters").max(200),
   slug: z
@@ -73,12 +81,44 @@ export const blogInsertSchema = z.object({
     .min(3, "Slug must be at least 3 characters")
     .max(120)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase, hyphen-separated"),
-  category: z.enum(["GUIDE", "STRATEGY", "INSIGHTS", "NEWS"]),
+  // Category is validated against the canonical post-pivot list in
+  // src/data/blogs.ts. Adding a category there makes it accepted here
+  // automatically. The legacy DB check constraint was dropped in
+  // migration 0008, so this Zod check is the only server-side guard.
+  category: z
+    .string()
+    .refine(
+      (c) => BLOG_FORM_CATEGORIES.includes(c),
+      `Pick a valid category (${BLOG_FORM_CATEGORIES.join(", ")})`,
+    ),
   author: z.string().min(2).max(100),
   readTime: z.string().max(40).optional().default("5 min read"),
-  image: z.string().url().max(500).optional(),
+  // Image accepts EITHER a site-relative path (e.g. "/blog/foo/header.jpg",
+  // which is how the 7 founder articles reference their locally-hosted
+  // images) OR a fully-qualified https URL (Pixabay, Unsplash, etc.).
+  // The previous .url() check would have rejected every relative path.
+  image: z
+    .string()
+    .max(500)
+    .refine(
+      (v) => v.startsWith("/") || /^https?:\/\//.test(v),
+      "Image must be a site-relative path (/...) or an absolute http(s) URL",
+    )
+    .optional(),
   excerpt: z.string().min(10, "Write a longer excerpt").max(500),
   content: z.string().min(50, "Write more content").max(50_000),
+  // FAQ pairs - optional. Empty array (the default) means no FAQ block
+  // on the rendered post, which matches the renderer's gate
+  // `post.faqs && post.faqs.length > 0`. Cap at 12 to keep the visible
+  // accordion scannable.
+  faqs: z.array(blogFAQSchema).max(12).optional().default([]),
+  // ISO 8601 publish date (YYYY-MM-DD). Optional - if omitted the
+  // BlogPosting JSON-LD's datePublished falls back to the human-readable
+  // `date` string which Google accepts loosely but doesn't fully validate.
+  datePublishedISO: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD")
+    .optional(),
 });
 
 export const testimonialInsertSchema = z.object({
@@ -232,6 +272,7 @@ export type BudgetLeadInput = z.infer<typeof budgetLeadSchema>;
 export type AuditLeadInput = z.infer<typeof auditLeadSchema>;
 export type ChatInput = z.infer<typeof chatSchema>;
 export type BlogInsertInput = z.infer<typeof blogInsertSchema>;
+export type BlogFAQInput = z.infer<typeof blogFAQSchema>;
 export type TestimonialInsertInput = z.infer<typeof testimonialInsertSchema>;
 export type TrackViewInput = z.infer<typeof trackViewSchema>;
 export type BookingInput = z.infer<typeof bookingSchema>;

@@ -7,11 +7,15 @@ import {
 import { createPublicClient } from "@/lib/supabase/public-client";
 
 /**
- * Column alias: map the snake_case Postgres column `read_time` to the
- * camelCase field `readTime` expected by the BlogPost type.
+ * Column alias mapping so Supabase returns rows in the camelCase BlogPost
+ * shape directly. Two snake_case -> camelCase aliases:
+ *   read_time          -> readTime
+ *   date_published_iso -> datePublishedISO
+ * Everything else uses the column name verbatim. `faqs` is jsonb and
+ * comes back as a parsed array of { q, a } objects matching BlogFAQ[].
  */
 const BLOG_SELECT =
-  "id, slug, title, category, author, date, readTime:read_time, image, excerpt, content, views, created_at";
+  "id, slug, title, category, author, date, readTime:read_time, image, excerpt, content, faqs, datePublishedISO:date_published_iso, views, created_at";
 
 export const getAllPosts = cache(async (): Promise<BlogPost[]> => {
   try {
