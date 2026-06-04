@@ -17,6 +17,7 @@ import {
   PenTool,
   Search,
   Sun,
+  X,
 } from "lucide-react";
 import { signOut } from "@/lib/auth-actions";
 import { useTheme } from "@/lib/use-theme";
@@ -107,6 +108,16 @@ export function AdminShell({
   userEmail: string;
 }) {
   const [tab, setTab] = useState<Tab>("overview");
+  // Topbar search state lives at shell level. Each panel decides
+  // whether to consume it via a `globalSearch?: string` prop. Currently
+  // wired into LeadsPanel (matches name / email / business / notes)
+  // and BlogsListPanel (matches title / slug / category). Other panels
+  // ignore it and the input is dimmed when those tabs are active so it
+  // doesn't look interactive.
+  const [globalSearch, setGlobalSearch] = useState("");
+  const SEARCH_CONSUMERS: ReadonlySet<Tab> = new Set(["leads", "blogs"]);
+  const searchActive = SEARCH_CONSUMERS.has(tab);
+
   // Focus ticket: any time the user clicks "View →" on a promotion toast,
   // gotoPipeline bumps the token AND sets the destination id. PipelinesPanel
   // watches the whole object (which is a fresh reference each call) and
@@ -210,13 +221,41 @@ export function AdminShell({
 
           <div className="flex-1" />
 
-          <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--surface-hover)] border border-[var(--border)] min-w-[200px] max-w-[280px]">
+          <div
+            className={`hidden md:flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--surface-hover)] border border-[var(--border)] min-w-[200px] max-w-[280px] transition-opacity ${
+              searchActive ? "opacity-100" : "opacity-40"
+            }`}
+            title={
+              searchActive
+                ? undefined
+                : "Search isn't available on this panel"
+            }
+          >
             <Search className="w-4 h-4 text-[var(--muted)] shrink-0" />
             <input
-              placeholder="Search…"
-              className="bg-transparent outline-none text-sm flex-1 min-w-0 placeholder:text-[var(--muted)]"
+              value={globalSearch}
+              onChange={(e) => setGlobalSearch(e.target.value)}
+              disabled={!searchActive}
+              placeholder={
+                searchActive
+                  ? tab === "leads"
+                    ? "Search leads…"
+                    : "Search blogs…"
+                  : "Search…"
+              }
+              className="bg-transparent outline-none text-sm flex-1 min-w-0 placeholder:text-[var(--muted)] disabled:cursor-not-allowed"
               aria-label="Search"
             />
+            {searchActive && globalSearch && (
+              <button
+                type="button"
+                onClick={() => setGlobalSearch("")}
+                className="text-[var(--muted)] hover:text-[var(--fg)]"
+                aria-label="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
           <SyncDot active={isPending} />
@@ -303,6 +342,7 @@ export function AdminShell({
                 leads={data.leads}
                 pipelines={pipelines}
                 gotoPipeline={gotoPipeline}
+                globalSearch={globalSearch}
               />
               </motion.div>
             )}
@@ -366,7 +406,7 @@ export function AdminShell({
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.15 }}
               >
-                <BlogsListPanel blogs={blogs} />
+                <BlogsListPanel blogs={blogs} globalSearch={globalSearch} />
               </motion.div>
             )}
           </AnimatePresence>

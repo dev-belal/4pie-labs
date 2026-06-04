@@ -124,10 +124,15 @@ export function LeadsPanel({
   leads,
   pipelines,
   gotoPipeline,
+  globalSearch,
 }: {
   leads: Lead[];
   pipelines: PipelineWithStages[];
   gotoPipeline: (pipelineId: string) => void;
+  // Topbar-driven free-text filter. Matches against name, email,
+  // payload.businessName, and notes. Undefined or empty = no extra
+  // filter, type/status pills still apply.
+  globalSearch?: string;
 }) {
   const [typeFilter, setTypeFilter] = useState<LeadType | "all">("all");
   const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");
@@ -176,12 +181,24 @@ export function LeadsPanel({
   };
 
   const filtered = useMemo(() => {
-    return leads.filter(
-      (l) =>
-        (typeFilter === "all" || l.type === typeFilter) &&
-        (statusFilter === "all" || l.status === statusFilter),
-    );
-  }, [leads, typeFilter, statusFilter]);
+    const q = (globalSearch ?? "").trim().toLowerCase();
+    return leads.filter((l) => {
+      if (typeFilter !== "all" && l.type !== typeFilter) return false;
+      if (statusFilter !== "all" && l.status !== statusFilter) return false;
+      if (!q) return true;
+      // Search target: name + email + payload.businessName + notes.
+      // payload.businessName is the standard slot the public-form
+      // captures put it in (see AuditForm + BudgetForm wiring); fall
+      // back to payload.business for older shapes if ever present.
+      const business =
+        (l.payload?.businessName as string | undefined) ??
+        (l.payload?.business as string | undefined) ??
+        "";
+      const hay = `${l.name ?? ""} ${l.email ?? ""} ${business} ${l.notes ?? ""}`
+        .toLowerCase();
+      return hay.includes(q);
+    });
+  }, [leads, typeFilter, statusFilter, globalSearch]);
 
   const counts = useMemo(() => {
     const all = leads.length;
