@@ -7,7 +7,15 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/admin", "/admin/", "/api/"],
+        // /leave-a-review is a share-by-link utility (the page itself has
+        // noindex in metadata too — belt-and-suspenders so well-behaved
+        // crawlers don't even fetch it). /admin and /api are admin-only.
+        disallow: [
+          "/admin",
+          "/admin/",
+          "/api/",
+          "/leave-a-review",
+        ],
       },
     ],
     sitemap: `${SITE.url}/sitemap.xml`,

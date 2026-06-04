@@ -29,10 +29,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPosts();
   const blogRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${SITE_URL}/blog/${post.slug}`,
-    lastModified: now,
+    // Use the post's actual publish date so a 2025 article doesn't
+    // claim "modified today" on every redeploy (a misleading freshness
+    // signal that crawlers can down-trust). Prefer the ISO column,
+    // fall back to the human-readable `date`, then to build time as a
+    // last resort.
+    lastModified: postLastModified(post.datePublishedISO, post.date, now),
     changeFrequency: "monthly",
     priority: 0.7,
   }));
 
   return [...staticRoutes, ...blogRoutes];
+}
+
+/**
+ * Resolve a stable lastModified for a blog post. Both inputs can be
+ * absent or malformed; we never throw, just degrade. Capped at `now` so
+ * a future-dated post doesn't surface a wrong lastmod to crawlers.
+ */
+function postLastModified(
+  iso: string | null | undefined,
+  human: string | null | undefined,
+  now: Date,
+): Date {
+  const candidates: Date[] = [];
+  if (iso) {
+    const d = new Date(iso);
+    if (!Number.isNaN(d.getTime())) candidates.push(d);
+  }
+  if (human) {
+    const d = new Date(human);
+    if (!Number.isNaN(d.getTime())) candidates.push(d);
+  }
+  for (const d of candidates) {
+    return d.getTime() > now.getTime() ? now : d;
+  }
+  return now;
 }
