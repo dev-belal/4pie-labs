@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Bell,
   CalendarDays,
   GitBranch,
   Inbox,
@@ -24,9 +23,12 @@ import { useTheme } from "@/lib/use-theme";
 import type {
   Appointment,
   DashboardData,
+  Notification,
+  NotificationKind,
   Opportunity,
   PipelineWithStages,
   TestimonialRow,
+  UnreadCounts,
 } from "@/lib/admin-data";
 import type { BlogPost } from "@/data/blogs";
 import { OverviewPanel } from "./OverviewPanel";
@@ -36,6 +38,7 @@ import { LeadsPanel } from "./LeadsPanel";
 import { ConversationsPanel } from "./ConversationsPanel";
 import { PipelinesPanel } from "./PipelinesPanel";
 import { CalendarPanel } from "./CalendarPanel";
+import { NotificationsBell } from "./NotificationsBell";
 
 type Tab =
   | "overview"
@@ -98,6 +101,8 @@ export function AdminShell({
   appointments,
   blogs,
   testimonials,
+  notifications,
+  unreadCounts,
   monthStartISO,
   userEmail,
 }: {
@@ -107,6 +112,8 @@ export function AdminShell({
   appointments: Appointment[];
   blogs: BlogPost[];
   testimonials: TestimonialRow[];
+  notifications: Notification[];
+  unreadCounts: UnreadCounts;
   monthStartISO: string;
   userEmail: string;
 }) {
@@ -140,6 +147,41 @@ export function AdminShell({
     setPipelineFocus({ pipelineId, token: focusTokenRef.current });
     setTab("pipelines");
   }, []);
+
+  // Cross-tab focus driven by the bell. Each click on a notification
+  // generates a fresh { id, token } ticket; the target panel watches the
+  // whole object reference (new object every fire so re-firing with the
+  // same id still triggers the effect).
+  const [leadFocus, setLeadFocus] = useState<{
+    id: string;
+    token: number;
+  } | null>(null);
+  const [conversationFocus, setConversationFocus] = useState<{
+    id: string;
+    token: number;
+  } | null>(null);
+  const [appointmentFocus, setAppointmentFocus] = useState<{
+    id: string;
+    token: number;
+  } | null>(null);
+
+  const gotoNotification = useCallback(
+    (kind: NotificationKind, sourceId: string) => {
+      focusTokenRef.current += 1;
+      const token = focusTokenRef.current;
+      if (kind === "lead") {
+        setLeadFocus({ id: sourceId, token });
+        setTab("leads");
+      } else if (kind === "conversation") {
+        setConversationFocus({ id: sourceId, token });
+        setTab("conversations");
+      } else if (kind === "appointment") {
+        setAppointmentFocus({ id: sourceId, token });
+        setTab("calendar");
+      }
+    },
+    [],
+  );
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const { theme, toggle } = useTheme();
@@ -159,10 +201,16 @@ export function AdminShell({
   const heading = HEADINGS[tab];
   const initials = (userEmail?.[0] ?? "A").toUpperCase();
 
+  // Badges reflect *unread notifications*, not pipeline status or row
+  // totals. Three notification kinds map 1:1 to three tabs; the other
+  // tabs get no badge. Counts come from the server fetch; live updates
+  // arrive via Realtime → router.refresh in commit 2.3.
   const badgeFor = (id: Tab): number | undefined => {
-    if (id === "leads" && data.newLeads > 0) return data.newLeads;
-    if (id === "conversations" && data.totalConversations > 0)
-      return data.totalConversations;
+    if (id === "leads" && unreadCounts.lead > 0) return unreadCounts.lead;
+    if (id === "conversations" && unreadCounts.conversation > 0)
+      return unreadCounts.conversation;
+    if (id === "calendar" && unreadCounts.appointment > 0)
+      return unreadCounts.appointment;
     return undefined;
   };
 
@@ -283,15 +331,12 @@ export function AdminShell({
             )}
           </button>
 
-          <button
-            type="button"
-            title="Notifications"
-            aria-label="Notifications"
-            className="relative p-2 rounded-lg text-[var(--muted)] hover:text-[var(--fg)] hover:bg-[var(--surface-hover)] transition-colors"
-          >
-            <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-primary" />
-          </button>
+          <NotificationsBell
+            notifications={notifications}
+            unreadTotal={unreadCounts.total}
+            onOpenNotification={gotoNotification}
+          />
+
 
           <div
             className="w-8 h-8 rounded-full bg-[var(--accent-soft)] text-[var(--on-soft)] flex items-center justify-center text-xs font-semibold shrink-0"
@@ -352,6 +397,7 @@ export function AdminShell({
                 pipelines={pipelines}
                 gotoPipeline={gotoPipeline}
                 globalSearch={globalSearch}
+                focus={leadFocus}
               />
               </motion.div>
             )}
@@ -381,6 +427,7 @@ export function AdminShell({
                 <CalendarPanel
                   appointments={appointments}
                   monthStartISO={monthStartISO}
+                  focus={appointmentFocus}
                 />
               </motion.div>
             )}
@@ -392,7 +439,10 @@ export function AdminShell({
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.15 }}
               >
-                <ConversationsPanel conversations={data.conversations} />
+                <ConversationsPanel
+                  conversations={data.conversations}
+                  focus={conversationFocus}
+                />
               </motion.div>
             )}
             {tab === "testimonials" && (

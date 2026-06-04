@@ -8,6 +8,10 @@ import {
   getDashboardData,
   getPipelinesWithStages,
 } from "@/lib/admin-data";
+import {
+  getRecentNotifications,
+  getUnreadCounts,
+} from "@/lib/notification-actions";
 import { getAllPosts } from "@/lib/blog";
 import { AdminShell } from "@/components/admin/AdminShell";
 
@@ -40,6 +44,8 @@ export default async function AdminPage() {
     appointments,
     blogs,
     testimonials,
+    notifications,
+    unreadCounts,
   ] = await Promise.all([
     getDashboardData(),
     getPipelinesWithStages(),
@@ -55,6 +61,11 @@ export default async function AdminPage() {
     // public component uses the anon client and is gated by RLS to
     // published rows only.
     getAllTestimonialsForAdmin(),
+    // Notifications + per-kind unread counts (Phase 2). Both reads hit
+    // the service-role client; both rely on the notifications_unread_idx
+    // partial index for cheap counting.
+    getRecentNotifications(20),
+    getUnreadCounts(),
   ]);
 
   return (
@@ -65,6 +76,8 @@ export default async function AdminPage() {
       appointments={appointments}
       blogs={blogs}
       testimonials={testimonials}
+      notifications={notifications}
+      unreadCounts={unreadCounts}
       monthStartISO={monthStart}
       userEmail={session.sub}
     />

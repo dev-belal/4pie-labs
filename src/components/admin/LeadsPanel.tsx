@@ -125,6 +125,7 @@ export function LeadsPanel({
   pipelines,
   gotoPipeline,
   globalSearch,
+  focus,
 }: {
   leads: Lead[];
   pipelines: PipelineWithStages[];
@@ -133,10 +134,41 @@ export function LeadsPanel({
   // payload.businessName, and notes. Undefined or empty = no extra
   // filter, type/status pills still apply.
   globalSearch?: string;
+  // Cross-tab focus ticket from AdminShell. When the user clicks a
+  // lead notification in the bell, AdminShell switches to this tab
+  // AND sends a focus { id, token } — we expand the row and scroll it
+  // into view. The token bumps every click so the effect re-runs even
+  // when the same lead is clicked twice.
+  focus?: { id: string; token: number } | null;
 }) {
   const [typeFilter, setTypeFilter] = useState<LeadType | "all">("all");
   const [statusFilter, setStatusFilter] = useState<LeadStatus | "all">("all");
   const [expanded, setExpanded] = useState<string | null>(null);
+
+  // Apply focus from the bell. Reset filters that might hide the target row
+  // (a "new"-only filter would hide a lead that's already in_progress, etc.)
+  // and expand + scroll. React 19 "previous render" pattern: comparing the
+  // last-applied focus token avoids both an effect AND the rule against
+  // cascading setState-in-effect. The DOM scroll is deferred to a frame
+  // since the row may not be mounted on the same render the filters reset.
+  const [lastFocusToken, setLastFocusToken] = useState<number | null>(null);
+  if (focus && focus.token !== lastFocusToken) {
+    setLastFocusToken(focus.token);
+    setTypeFilter("all");
+    setStatusFilter("all");
+    setExpanded(focus.id);
+  }
+  useEffect(() => {
+    if (!focus) return;
+    if (focus.token !== lastFocusToken) return;
+    const handle = window.requestAnimationFrame(() => {
+      const el = document.getElementById(`lead-row-${focus.id}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    });
+    return () => window.cancelAnimationFrame(handle);
+  }, [focus, lastFocusToken]);
   const [isPending, startTransition] = useTransition();
   const [promoteLead, setPromoteLead] = useState<Lead | null>(null);
   const [promoting, setPromoting] = useState(false);
@@ -406,7 +438,10 @@ function LeadRow({
   };
 
   return (
-    <div className="rounded-xl bg-[var(--surface)] border border-[var(--border)] overflow-hidden">
+    <div
+      id={`lead-row-${lead.id}`}
+      className="rounded-xl bg-[var(--surface)] border border-[var(--border)] overflow-hidden scroll-mt-24"
+    >
       <button
         type="button"
         onClick={onToggle}
