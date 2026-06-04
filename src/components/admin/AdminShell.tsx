@@ -26,8 +26,9 @@ import type {
   Opportunity,
   PipelineWithStages,
 } from "@/lib/admin-data";
+import type { BlogPost } from "@/data/blogs";
 import { OverviewPanel } from "./OverviewPanel";
-import { BlogPublisher } from "./BlogPublisher";
+import { BlogsListPanel } from "./BlogsListPanel";
 import { TestimonialPublisher } from "./TestimonialPublisher";
 import { LeadsPanel } from "./LeadsPanel";
 import { ConversationsPanel } from "./ConversationsPanel";
@@ -93,6 +94,7 @@ export function AdminShell({
   pipelines,
   opportunities,
   appointments,
+  blogs,
   monthStartISO,
   userEmail,
 }: {
@@ -100,6 +102,7 @@ export function AdminShell({
   pipelines: PipelineWithStages[];
   opportunities: Opportunity[];
   appointments: Appointment[];
+  blogs: BlogPost[];
   monthStartISO: string;
   userEmail: string;
 }) {
@@ -362,9 +365,8 @@ export function AdminShell({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.15 }}
-                className="max-w-4xl"
               >
-                <BlogPublisher />
+                <BlogsListPanel blogs={blogs} />
               </motion.div>
             )}
           </AnimatePresence>

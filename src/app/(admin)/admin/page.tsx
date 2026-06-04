@@ -7,6 +7,7 @@ import {
   getDashboardData,
   getPipelinesWithStages,
 } from "@/lib/admin-data";
+import { getAllPosts } from "@/lib/blog";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const metadata: Metadata = {
@@ -31,12 +32,18 @@ export default async function AdminPage() {
     .toISOString();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 
-  const [data, pipelines, opportunities, appointments] = await Promise.all([
-    getDashboardData(),
-    getPipelinesWithStages(),
-    getAllOpportunities(),
-    getAppointments(apptWindowStart, apptWindowEnd),
-  ]);
+  const [data, pipelines, opportunities, appointments, blogs] =
+    await Promise.all([
+      getDashboardData(),
+      getPipelinesWithStages(),
+      getAllOpportunities(),
+      getAppointments(apptWindowStart, apptWindowEnd),
+      // Blogs are read via the same getAllPosts() that powers the public
+      // site (Supabase-first, static fallback). Same data path, same
+      // ordering (created_at desc). The new BlogsListPanel uses this
+      // for the listing + edit-seed.
+      getAllPosts(),
+    ]);
 
   return (
     <AdminShell
@@ -44,6 +51,7 @@ export default async function AdminPage() {
       pipelines={pipelines}
       opportunities={opportunities}
       appointments={appointments}
+      blogs={blogs}
       monthStartISO={monthStart}
       userEmail={session.sub}
     />
