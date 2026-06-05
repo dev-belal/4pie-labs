@@ -13,6 +13,7 @@ import {
 import { deleteBlog } from "@/lib/admin-actions";
 import type { BlogPost } from "@/data/blogs";
 import { BlogEditor } from "./BlogEditor";
+import { ConfirmModal } from "./ConfirmModal";
 
 type Mode =
   | { kind: "list" }
@@ -32,6 +33,7 @@ export function BlogsListPanel({ blogs, globalSearch }: Props) {
   const [notice, setNotice] = useState<
     { type: "success" | "error"; message: string } | null
   >(null);
+  const [confirming, setConfirming] = useState<BlogPost | null>(null);
 
   const search = (globalSearch ?? "").trim().toLowerCase();
   const filtered = useMemo(() => {
@@ -42,16 +44,10 @@ export function BlogsListPanel({ blogs, globalSearch }: Props) {
     });
   }, [blogs, search]);
 
-  const handleDelete = (post: BlogPost) => {
-    if (
-      !window.confirm(
-        `Delete "${post.title}"? This removes it from /blog, the homepage strip, and the sitemap.`,
-      )
-    ) {
-      return;
-    }
+  const runDelete = (post: BlogPost) => {
     startTransition(async () => {
       const res = await deleteBlog(post.slug);
+      setConfirming(null);
       if (res.ok) {
         setNotice({ type: "success", message: `"${post.title}" deleted.` });
       } else {
@@ -194,7 +190,7 @@ export function BlogsListPanel({ blogs, globalSearch }: Props) {
                         </button>
                         <button
                           type="button"
-                          onClick={() => handleDelete(post)}
+                          onClick={() => setConfirming(post)}
                           disabled={isPending}
                           className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium text-red-400/80 hover:text-red-400 hover:bg-red-400/10 disabled:opacity-50"
                         >
@@ -226,6 +222,30 @@ export function BlogsListPanel({ blogs, globalSearch }: Props) {
           {notice.message}
         </div>
       )}
+
+      <ConfirmModal
+        open={confirming !== null}
+        title="Delete this article?"
+        message={
+          confirming ? (
+            <>
+              <span className="font-semibold text-[var(--fg)]">
+                {`"${confirming.title}"`}
+              </span>{" "}
+              will be removed from /blog, the homepage strip, and the sitemap.
+            </>
+          ) : (
+            ""
+          )
+        }
+        warning="This can't be undone."
+        confirmLabel="Delete article"
+        pendingLabel="Deleting…"
+        variant="destructive"
+        busy={isPending}
+        onConfirm={() => confirming && runDelete(confirming)}
+        onCancel={() => setConfirming(null)}
+      />
     </div>
   );
 }

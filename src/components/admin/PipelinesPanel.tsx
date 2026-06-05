@@ -28,6 +28,7 @@ import type {
   StageKind,
 } from "@/lib/admin-data";
 import { OpportunitiesBoard } from "./OpportunitiesBoard";
+import { ConfirmModal } from "./ConfirmModal";
 
 type ToastKind = "success" | "error";
 interface Toast {
@@ -70,6 +71,21 @@ export function PipelinesPanel({
   );
   const [view, setView] = useState<"builder" | "opportunities">("builder");
   const [toast, setToast] = useState<Toast | null>(null);
+  // Two confirm targets because the actions live in different parts of
+  // the tree and have different shapes. Combining into one discriminated
+  // union saved nothing readable.
+  const [archiveTarget, setArchiveTarget] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [stageDeleteTarget, setStageDeleteTarget] = useState<{
+    pipelineId: string;
+    pipelineName: string;
+    stageId: string;
+    stageName: string;
+  } | null>(null);
+  const [archiveBusy, setArchiveBusy] = useState(false);
+  const [stageDeleteBusy, setStageDeleteBusy] = useState(false);
 
   // Consume a deep-link from LeadsPanel: switch to the requested pipeline
   // and the Opportunities sub-view. Effect depends on pipelineFocus by
@@ -144,13 +160,21 @@ export function PipelinesPanel({
   };
 
   const handleArchivePipeline = (id: string) => {
-    if (!window.confirm("Archive this pipeline? It will be hidden from the admin.")) return;
+    const target = pipelines.find((p) => p.id === id);
+    if (!target) return;
+    setArchiveTarget({ id, name: target.name });
+  };
+
+  const runArchivePipeline = (id: string) => {
+    setArchiveBusy(true);
     const prev = pipelines;
     const remaining = pipelines.filter((p) => p.id !== id);
     setPipelines(remaining);
     setActiveId(remaining[0]?.id ?? null);
     startTransition(async () => {
       const res = await archivePipeline(id);
+      setArchiveBusy(false);
+      setArchiveTarget(null);
       if (!res.ok) {
         setPipelines(prev);
         setActiveId(id);
@@ -238,6 +262,10 @@ export function PipelinesPanel({
     });
   };
 
+  // Stage delete is a click-to-trash action on the stage card. Previously
+  // ran without confirmation — closes that silent-destructive gap. The
+  // >2-stages guard runs BEFORE opening the modal so a no-op delete
+  // doesn't show a confirm UI it would have to refuse anyway.
   const handleDeleteStage = (pipelineId: string, stageId: string) => {
     const pipeline = pipelines.find((p) => p.id === pipelineId);
     if (!pipeline) return;
@@ -245,13 +273,32 @@ export function PipelinesPanel({
       flashError("A pipeline needs at least 2 stages.");
       return;
     }
+    const stage = pipeline.stages.find((s) => s.id === stageId);
+    if (!stage) return;
+    setStageDeleteTarget({
+      pipelineId,
+      pipelineName: pipeline.name,
+      stageId,
+      stageName: stage.name,
+    });
+  };
+
+  const runDeleteStage = (
+    pipelineId: string,
+    stageId: string,
+  ) => {
+    const pipeline = pipelines.find((p) => p.id === pipelineId);
+    if (!pipeline) return;
     const prev = pipeline.stages;
+    setStageDeleteBusy(true);
     updatePipeline(pipelineId, (p) => ({
       ...p,
       stages: p.stages.filter((s) => s.id !== stageId),
     }));
     startTransition(async () => {
       const res = await deleteStage(stageId);
+      setStageDeleteBusy(false);
+      setStageDeleteTarget(null);
       if (!res.ok) {
         updatePipeline(pipelineId, (p) => ({ ...p, stages: prev }));
         flashError(res.error);
@@ -394,6 +441,69 @@ export function PipelinesPanel({
           {toast.message}
         </div>
       )}
+
+      <ConfirmModal
+        open={archiveTarget !== null}
+        title="Archive this pipeline?"
+        message={
+          archiveTarget ? (
+            <>
+              <span className="font-semibold text-[var(--fg)]">
+                {archiveTarget.name}
+              </span>{" "}
+              will be hidden from the admin. Its opportunities stay in the
+              database and you can restore the pipeline later.
+            </>
+          ) : (
+            ""
+          )
+        }
+        warning="The pipeline is hidden, not destroyed — this is reversible."
+        confirmLabel="Archive pipeline"
+        pendingLabel="Archiving…"
+        variant="warning"
+        busy={archiveBusy}
+        onConfirm={() =>
+          archiveTarget && runArchivePipeline(archiveTarget.id)
+        }
+        onCancel={() => setArchiveTarget(null)}
+      />
+
+      <ConfirmModal
+        open={stageDeleteTarget !== null}
+        title="Delete this stage?"
+        message={
+          stageDeleteTarget ? (
+            <>
+              <span className="font-semibold text-[var(--fg)]">
+                {stageDeleteTarget.stageName}
+              </span>{" "}
+              will be removed from{" "}
+              <span className="font-semibold text-[var(--fg)]">
+                {stageDeleteTarget.pipelineName}
+              </span>
+              . Any opportunities currently in this stage will need to be
+              moved first by the server action — if you have cards here,
+              cancel and move them.
+            </>
+          ) : (
+            ""
+          )
+        }
+        warning="This can't be undone."
+        confirmLabel="Delete stage"
+        pendingLabel="Deleting…"
+        variant="destructive"
+        busy={stageDeleteBusy}
+        onConfirm={() =>
+          stageDeleteTarget &&
+          runDeleteStage(
+            stageDeleteTarget.pipelineId,
+            stageDeleteTarget.stageId,
+          )
+        }
+        onCancel={() => setStageDeleteTarget(null)}
+      />
     </div>
   );
 }
