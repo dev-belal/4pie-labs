@@ -96,12 +96,13 @@ export default function RootLayout({
     logo: `${SITE.url}/logo.png`,
     description:
       "4Pie Labs helps painting contractors, tour operators, and local service businesses dominate Google, Maps, and AI answer engines. AI-first marketing built by a tech company - not a traditional agency.",
-    sameAs: [
-      "https://www.linkedin.com/company/4-pie-labs/",
-      "https://www.instagram.com/devbelaal",
-      "https://www.x.com/devbelaal",
-      "https://www.youtube.com/@devbelaal",
-    ],
+    // Company sameAs only. The founder's personal IG / X / YT
+    // (@devbelaal) used to live here too, but Organization.sameAs is the
+    // Knowledge Graph signal for *who the brand is*, and listing a
+    // personal handle there tells Google the brand == the person. Those
+    // accounts belong on the Person schema for Syed Belal at /about
+    // (FOUNDER.sameAs there), which they already do.
+    sameAs: ["https://www.linkedin.com/company/4-pie-labs/"],
     contactPoint: {
       "@type": "ContactPoint",
       email: "team@fourpielabs.com",

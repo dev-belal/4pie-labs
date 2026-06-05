@@ -32,6 +32,7 @@ import type {
   PipelineWithStages,
 } from "@/lib/admin-data";
 import { AddToPipelineModal } from "./AddToPipelineModal";
+import { ConfirmModal } from "./ConfirmModal";
 
 const TYPE_META: Record<LeadType, { label: string; icon: LucideIcon; color: string }> = {
   contact: {
@@ -174,6 +175,19 @@ export function LeadsPanel({
   const [promoting, setPromoting] = useState(false);
   const [promoteError, setPromoteError] = useState<string | null>(null);
   const [toast, setToast] = useState<PromoteToast | null>(null);
+  // Delete confirmation lifted from LeadRow so the modal stays mounted
+  // even if the row collapses or the user scrolls during the round-trip.
+  const [confirmingDelete, setConfirmingDelete] = useState<Lead | null>(null);
+  const [deletingBusy, setDeletingBusy] = useState(false);
+
+  const runDeleteLead = (lead: Lead) => {
+    setDeletingBusy(true);
+    startTransition(async () => {
+      await deleteLead(lead.id);
+      setDeletingBusy(false);
+      setConfirmingDelete(null);
+    });
+  };
 
   useEffect(() => {
     if (!toast) return;
@@ -296,6 +310,7 @@ export function LeadsPanel({
               isPending={isPending}
               onAction={(fn) => startTransition(fn)}
               onPromote={() => setPromoteLead(lead)}
+              onDelete={() => setConfirmingDelete(lead)}
             />
           ))
         )}
@@ -344,6 +359,40 @@ export function LeadsPanel({
           </button>
         </div>
       )}
+
+      <ConfirmModal
+        open={confirmingDelete !== null}
+        title="Delete this lead?"
+        message={
+          confirmingDelete ? (
+            <>
+              {confirmingDelete.name ||
+              confirmingDelete.email ||
+              confirmingDelete.phone ? (
+                <>
+                  <span className="font-semibold text-[var(--fg)]">
+                    {confirmingDelete.name ||
+                      confirmingDelete.email ||
+                      confirmingDelete.phone}
+                  </span>{" "}
+                  will be removed permanently.
+                </>
+              ) : (
+                "The lead will be removed permanently."
+              )}
+            </>
+          ) : (
+            ""
+          )
+        }
+        warning="This can't be undone. Any pipeline opportunities derived from this lead will lose the back-link."
+        confirmLabel="Delete lead"
+        pendingLabel="Deleting…"
+        variant="destructive"
+        busy={deletingBusy}
+        onConfirm={() => confirmingDelete && runDeleteLead(confirmingDelete)}
+        onCancel={() => setConfirmingDelete(null)}
+      />
     </div>
   );
 }
@@ -412,6 +461,7 @@ function LeadRow({
   isPending,
   onAction,
   onPromote,
+  onDelete,
 }: {
   lead: Lead;
   expanded: boolean;
@@ -419,6 +469,8 @@ function LeadRow({
   isPending: boolean;
   onAction: (fn: () => void) => void;
   onPromote: () => void;
+  // Lifted to LeadsPanel so the ConfirmModal survives a row collapse.
+  onDelete: () => void;
 }) {
   const meta = TYPE_META[lead.type];
   const Icon = meta.icon;
@@ -427,13 +479,6 @@ function LeadRow({
   const handleStatus = (next: LeadStatus) => {
     onAction(async () => {
       await updateLeadStatus(lead.id, next);
-    });
-  };
-
-  const handleDelete = () => {
-    if (!confirm("Delete this lead permanently?")) return;
-    onAction(async () => {
-      await deleteLead(lead.id);
     });
   };
 
@@ -599,7 +644,7 @@ function LeadRow({
                 </button>
                 <button
                   type="button"
-                  onClick={handleDelete}
+                  onClick={onDelete}
                   disabled={isPending}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-red-400/70 hover:text-red-400 hover:bg-red-400/10 transition-colors disabled:opacity-50"
                 >

@@ -18,6 +18,7 @@ import {
 } from "@/lib/admin-actions";
 import type { TestimonialRow } from "@/lib/admin-data";
 import { TestimonialEditor } from "./TestimonialEditor";
+import { ConfirmModal } from "./ConfirmModal";
 
 type Mode =
   | { kind: "list" }
@@ -52,6 +53,7 @@ export function TestimonialsListPanel({ testimonials, globalSearch }: Props) {
   const [optimisticPublished, setOptimisticPublished] = useState<
     Record<string, boolean>
   >({});
+  const [confirming, setConfirming] = useState<TestimonialRow | null>(null);
 
   const search = (globalSearch ?? "").trim().toLowerCase();
   const filtered = useMemo(() => {
@@ -89,16 +91,10 @@ export function TestimonialsListPanel({ testimonials, globalSearch }: Props) {
     });
   };
 
-  const handleDelete = (t: TestimonialRow) => {
-    if (
-      !window.confirm(
-        `Delete the testimonial from "${t.name}"? This cannot be undone.`,
-      )
-    ) {
-      return;
-    }
+  const runDelete = (t: TestimonialRow) => {
     startTransition(async () => {
       const res = await deleteTestimonial(t.id);
+      setConfirming(null);
       if (res.ok) {
         setNotice({
           type: "success",
@@ -290,7 +286,7 @@ export function TestimonialsListPanel({ testimonials, globalSearch }: Props) {
                           </button>
                           <button
                             type="button"
-                            onClick={() => handleDelete(t)}
+                            onClick={() => setConfirming(t)}
                             disabled={isPending}
                             className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium text-red-400/80 hover:text-red-400 hover:bg-red-400/10 disabled:opacity-50"
                           >
@@ -323,6 +319,31 @@ export function TestimonialsListPanel({ testimonials, globalSearch }: Props) {
           {notice.message}
         </div>
       )}
+
+      <ConfirmModal
+        open={confirming !== null}
+        title="Delete this testimonial?"
+        message={
+          confirming ? (
+            <>
+              The review from{" "}
+              <span className="font-semibold text-[var(--fg)]">
+                {confirming.name}
+              </span>{" "}
+              will be removed permanently.
+            </>
+          ) : (
+            ""
+          )
+        }
+        warning="This can't be undone."
+        confirmLabel="Delete testimonial"
+        pendingLabel="Deleting…"
+        variant="destructive"
+        busy={isPending}
+        onConfirm={() => confirming && runDelete(confirming)}
+        onCancel={() => setConfirming(null)}
+      />
     </div>
   );
 }

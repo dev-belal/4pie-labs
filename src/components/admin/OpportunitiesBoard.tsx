@@ -26,6 +26,7 @@ import type {
   PipelineWithStages,
   PipelineStage,
 } from "@/lib/admin-data";
+import { ConfirmModal } from "./ConfirmModal";
 
 /* ============================================================
  * Helpers
@@ -122,6 +123,8 @@ export function OpportunitiesBoard({
   const [editing, setEditing] = useState<Opportunity | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [overStageId, setOverStageId] = useState<string | null>(null);
+  const [confirming, setConfirming] = useState<Opportunity | null>(null);
+  const [deleteBusy, setDeleteBusy] = useState(false);
 
   useEffect(() => {
     if (!toast) return;
@@ -393,13 +396,19 @@ export function OpportunitiesBoard({
     });
   };
 
-  const handleDelete = (oppId: string) => {
-    if (!window.confirm("Delete this opportunity? This cannot be undone.")) return;
+  const handleDelete = (opp: Opportunity) => {
+    setConfirming(opp);
+  };
+
+  const runDelete = (opp: Opportunity) => {
     const snapshot = opportunities;
-    setOpportunities((prev) => prev.filter((o) => o.id !== oppId));
+    setDeleteBusy(true);
+    setOpportunities((prev) => prev.filter((o) => o.id !== opp.id));
     setEditing(null);
     startTransition(async () => {
-      const res = await deleteOpportunity(oppId);
+      const res = await deleteOpportunity(opp.id);
+      setDeleteBusy(false);
+      setConfirming(null);
       if (!res.ok) {
         setOpportunities(snapshot);
         flashError(res.error);
@@ -509,7 +518,7 @@ export function OpportunitiesBoard({
             handleUpdate(editing.id, fields);
             setEditing(null);
           }}
-          onDelete={() => handleDelete(editing.id)}
+          onDelete={() => handleDelete(editing)}
         />
       )}
 
@@ -529,6 +538,39 @@ export function OpportunitiesBoard({
           {toast.message}
         </div>
       )}
+
+      <ConfirmModal
+        open={confirming !== null}
+        title="Delete this opportunity?"
+        message={
+          confirming ? (
+            <>
+              {confirming.contact_name || confirming.business_name ? (
+                <>
+                  The opportunity for{" "}
+                  <span className="font-semibold text-[var(--fg)]">
+                    {confirming.contact_name ||
+                      confirming.business_name ||
+                      "this contact"}
+                  </span>{" "}
+                  will be removed from the board.
+                </>
+              ) : (
+                "The opportunity will be removed from the board."
+              )}
+            </>
+          ) : (
+            ""
+          )
+        }
+        warning="This can't be undone."
+        confirmLabel="Delete opportunity"
+        pendingLabel="Deleting…"
+        variant="destructive"
+        busy={deleteBusy}
+        onConfirm={() => confirming && runDelete(confirming)}
+        onCancel={() => setConfirming(null)}
+      />
     </div>
   );
 }

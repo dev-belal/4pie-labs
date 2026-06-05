@@ -335,7 +335,18 @@ export default async function BlogPostPage({ params }: Props) {
     // ISO 8601 for Schema.org Date type. Display string "May 28, 2026"
     // would not validate; datePublishedISO is the canonical form.
     datePublished: post.datePublishedISO ?? post.date,
-    author: { "@type": "Person", name: post.author },
+    // Anchor every byline to the Person entity declared on /about so the
+    // article connects to the real founder (currently Syed Belal) in
+    // Google's Knowledge Graph instead of standing as an isolated Person
+    // record per post. All posts point at /about for now — when Syed
+    // Suqlain gets his own visible card and Person block there, we'll
+    // switch this to per-author anchors (e.g. /about#syed-belal vs
+    // /about#syed-suqlain).
+    author: {
+      "@type": "Person",
+      name: post.author,
+      url: `${SITE.url}/about`,
+    },
     publisher: {
       "@type": "Organization",
       name: SITE.name,

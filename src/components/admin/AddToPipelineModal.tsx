@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertCircle, Plus, X } from "lucide-react";
 import type { Lead, PipelineWithStages } from "@/lib/admin-data";
+import { Modal } from "./Modal";
 
 /**
  * Parse a usable dollar amount out of a lead's payload, in priority order:
@@ -84,13 +85,7 @@ export function AddToPipelineModal({
     firstFieldRef.current?.focus();
   }, []);
 
-  useEffect(() => {
-    const h = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", h);
-    return () => document.removeEventListener("keydown", h);
-  }, [onClose]);
+  // Esc handling lives in <Modal> now.
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,47 +101,43 @@ export function AddToPipelineModal({
 
   if (pipelines.length === 0) {
     return (
-      <ModalScrim onClose={onClose}>
-        <div
-          className="w-full max-w-md bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xl p-6 space-y-4 text-sm"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex items-start justify-between">
-            <h3 className="text-base font-semibold">Add to Pipeline</h3>
-            <button
-              type="button"
-              onClick={onClose}
-              className="p-1.5 rounded-md text-[var(--muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--fg)]"
-              aria-label="Close"
-            >
-              <X className="w-4 h-4" />
-            </button>
+      <Modal open onClose={onClose}>
+        <Modal.Card ariaLabel="Add to pipeline">
+          <div className="p-6 space-y-4 text-sm">
+            <div className="flex items-start justify-between">
+              <h3 className="text-base font-semibold">Add to Pipeline</h3>
+              <button
+                type="button"
+                onClick={onClose}
+                className="p-1.5 rounded-md text-[var(--muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--fg)]"
+                aria-label="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-[var(--muted)]">
+              No pipelines yet. Create one in the Pipelines tab, then come back
+              here to promote leads.
+            </p>
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-3 py-2 text-sm font-medium rounded-lg text-[var(--muted)] hover:bg-[var(--surface-hover)]"
+              >
+                Close
+              </button>
+            </div>
           </div>
-          <p className="text-[var(--muted)]">
-            No pipelines yet. Create one in the Pipelines tab, then come back
-            here to promote leads.
-          </p>
-          <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-3 py-2 text-sm font-medium rounded-lg text-[var(--muted)] hover:bg-[var(--surface-hover)]"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </ModalScrim>
+        </Modal.Card>
+      </Modal>
     );
   }
 
   return (
-    <ModalScrim onClose={onClose}>
-      <form
-        onSubmit={submit}
-        className="w-full max-w-md bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xl p-6 space-y-4"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <Modal open onClose={onClose}>
+      <Modal.Card ariaLabel="Add to pipeline">
+        <form onSubmit={submit} className="p-6 space-y-4">
         <div className="flex items-start justify-between">
           <div>
             <h3 className="text-base font-semibold">Add to Pipeline</h3>
@@ -299,25 +290,9 @@ export function AddToPipelineModal({
             )}
           </button>
         </div>
-      </form>
-    </ModalScrim>
-  );
-}
-
-function ModalScrim({
-  onClose,
-  children,
-}: {
-  onClose: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <div
-      className="fixed inset-0 z-50 bg-background/70 backdrop-blur-sm flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      {children}
-    </div>
+        </form>
+      </Modal.Card>
+    </Modal>
   );
 }
 
