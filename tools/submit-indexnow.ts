@@ -60,14 +60,20 @@ async function main(): Promise<void> {
   console.log("");
   if (result.ok) {
     console.log(
-      `[submit-indexnow] done - HTTP ${result.status}, ${normalized.length} URL(s) accepted by IndexNow`,
+      `[submit-indexnow] done - HTTP ${result.status} (${result.reason ?? "ok"}), ${normalized.length} URL(s) accepted by IndexNow`,
     );
+    if (result.message) console.log(`[submit-indexnow] ${result.message}`);
     return;
   }
 
-  console.error(
-    `[submit-indexnow] failed - HTTP ${result.status}: ${result.error ?? "(no detail)"}`,
-  );
+  // Failure block prints the classified reason on its own line so the
+  // human reading the script output can scan for the bucket without
+  // parsing the full message. The raw HTTP status comes along too in
+  // case the reason ever needs to be cross-referenced against the spec.
+  console.error(`[submit-indexnow] FAILED`);
+  console.error(`  status:  HTTP ${result.status}`);
+  console.error(`  reason:  ${result.reason ?? "unknown_error"}`);
+  console.error(`  message: ${result.message ?? "(no detail)"}`);
   process.exitCode = 1;
 }
 
