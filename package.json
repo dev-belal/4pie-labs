@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "submit-indexnow": "npx tsx tools/submit-indexnow.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.88.0",
