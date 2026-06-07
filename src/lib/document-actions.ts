@@ -37,10 +37,12 @@ interface CreateInput {
   field_values: Record<string, string>;
 }
 
-type Result<T = void> =
-  | (T extends void
-      ? { ok: true }
-      : { ok: true } & { [K in keyof T]: T[K] })
+type CreateResult =
+  | { ok: true; id: string }
+  | { ok: false; error: string };
+
+type MutationResult =
+  | { ok: true }
   | { ok: false; error: string };
 
 /**
@@ -50,7 +52,7 @@ type Result<T = void> =
  */
 export async function createClientDocument(
   input: CreateInput,
-): Promise<Result<{ id: string }>> {
+): Promise<CreateResult> {
   if (!DOC_TYPES.includes(input.doc_type)) {
     return { ok: false, error: "Invalid doc type" };
   }
@@ -96,7 +98,7 @@ interface UpdateInput {
  */
 export async function updateClientDocument(
   input: UpdateInput,
-): Promise<Result> {
+): Promise<MutationResult> {
   if (!input.id) {
     return { ok: false, error: "Missing id" };
   }
@@ -127,7 +129,7 @@ export async function updateClientDocument(
  */
 export async function deleteClientDocument(
   id: string,
-): Promise<Result> {
+): Promise<MutationResult> {
   if (!id) return { ok: false, error: "Missing id" };
   try {
     const supabase = await requireAdmin();
