@@ -34,7 +34,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const ogImage = post.image;
 
   return {
-    title: post.title,
+    // `absolute` bypasses the root layout's "%s | 4Pie Labs" template
+    // (13 chars of overhead). Blog titles are already verbose - several
+    // are 60-75 chars on their own - and the template was pushing every
+    // one of them past Google's ~60-char SERP truncation.
+    title: { absolute: post.title },
     description: post.excerpt,
     alternates: { canonical: `/blog/${slug}` },
     authors: [{ name: post.author }],
@@ -336,12 +340,9 @@ export default async function BlogPostPage({ params }: Props) {
     // would not validate; datePublishedISO is the canonical form.
     datePublished: post.datePublishedISO ?? post.date,
     // Anchor every byline to the Person entity declared on /about so the
-    // article connects to the real founder (currently Syed Belal) in
-    // Google's Knowledge Graph instead of standing as an isolated Person
-    // record per post. All posts point at /about for now — when Syed
-    // Suqlain gets his own visible card and Person block there, we'll
-    // switch this to per-author anchors (e.g. /about#syed-belal vs
-    // /about#syed-suqlain).
+    // article connects to the real founder (Syed Belal) in Google's
+    // Knowledge Graph instead of standing as an isolated Person record
+    // per post. All current posts are authored by Syed Belal.
     author: {
       "@type": "Person",
       name: post.author,

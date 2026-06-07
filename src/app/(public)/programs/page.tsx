@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Plus } from "lucide-react";
 import { ProgramsCarousel } from "@/components/ProgramsCarousel";
+import { JsonLd } from "@/components/JsonLd";
+import { SITE } from "@/lib/site";
+
+const PROGRAMS_DESCRIPTION =
+  "Four programs from foundation to full-stack - Core, Pipeline, Operating System, Pulse. AEO is included in every tier. No pricing on the site - book a call.";
 
 export const metadata: Metadata = {
   // Keyword-bearing title - replaces the bland "Programs" so the page
@@ -9,9 +14,20 @@ export const metadata: Metadata = {
   title: {
     absolute: "Marketing Programs for Local Service Businesses | 4Pie Labs",
   },
-  description:
-    "Four programs from foundation to full-stack - Core, Pipeline, Operating System, Pulse. AEO is included in every tier. No pricing on the site - book a call.",
+  description: PROGRAMS_DESCRIPTION,
   alternates: { canonical: "/programs" },
+  openGraph: {
+    title: "Marketing Programs - 4Pie Labs",
+    description: PROGRAMS_DESCRIPTION,
+    url: "/programs",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Marketing Programs - 4Pie Labs",
+    description: PROGRAMS_DESCRIPTION,
+    images: ["/og-image.png"],
+  },
 };
 
 const FAQS = [
@@ -42,8 +58,34 @@ const FAQS = [
 ];
 
 export default function ProgramsPage() {
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQS.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE.url },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Programs",
+        item: `${SITE.url}/programs`,
+      },
+    ],
+  };
+
   return (
     <main className="px-4 pb-32">
+      <JsonLd data={faqSchema} />
+      <JsonLd data={breadcrumbSchema} />
       {/* Hero */}
       <section className="max-w-3xl mx-auto text-center pt-12 pb-12 md:pt-20 md:pb-14">
         <span className="inline-block text-xs font-medium text-primary tracking-widest uppercase mb-4">

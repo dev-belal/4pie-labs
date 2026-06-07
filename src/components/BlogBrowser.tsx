@@ -64,6 +64,12 @@ export function BlogBrowser({ posts }: { posts: BlogPost[] }) {
         ))}
       </div>
 
+      {/* Screen-reader-only H2 to close the H1 -> H3 heading-level
+          skip flagged in the SEO audit. A visible H2 would clash
+          here - the page H1 already says "Insights for local growth"
+          and the category pills above visually label the grid; an
+          extra visible heading would just repeat. */}
+      <h2 className="sr-only">All articles</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         <AnimatePresence mode="popLayout">
           {filteredPosts.length > 0 ? (

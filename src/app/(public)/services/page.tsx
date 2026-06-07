@@ -10,6 +10,8 @@ import {
   SERVICE_CATEGORY_SLUGS,
   services,
 } from "@/data/services";
+import { JsonLd } from "@/components/JsonLd";
+import { SITE } from "@/lib/site";
 
 const SERVICES_DESCRIPTION =
   "Explore 4Pie Labs marketing services: AI-first SEO and AEO, performance ads, and custom AI systems built for local service businesses.";
@@ -29,6 +31,12 @@ export const metadata: Metadata = {
     url: "/services",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Services - 4Pie Labs",
+    description: SERVICES_DESCRIPTION,
+    images: ["/og-image.png"],
+  },
 };
 
 /**
@@ -46,8 +54,65 @@ export const metadata: Metadata = {
  * indexable words to crawlers.
  */
 export default function ServicesPage() {
+  const pageUrl = `${SITE.url}/services`;
+
+  // Individual services don't have their own pages - they're listed
+  // on this catalog and re-listed inside the relevant
+  // /services/[category] landing page. So each ItemList entry's
+  // `url` points to the category section anchor on this page
+  // (`#aeo`, `#ads`, `#ai`), which is the closest real on-page
+  // location for each service.
+  const serviceListItems = services.map((s, i) => {
+    const categorySlug = SERVICE_CATEGORY_SLUGS[s.category];
+    return {
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Service",
+        name: s.title,
+        description: s.desc,
+        url: `${pageUrl}#${categorySlug}`,
+        category: s.category,
+        provider: {
+          "@type": "Organization",
+          "@id": `${SITE.url}#organization`,
+        },
+      },
+    };
+  });
+
+  const collectionPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    url: pageUrl,
+    name: "Local SEO, AEO & Performance Ads Services",
+    description: SERVICES_DESCRIPTION,
+    mainEntity: {
+      "@type": "ItemList",
+      name: "4Pie Labs services",
+      numberOfItems: services.length,
+      itemListElement: serviceListItems,
+    },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE.url },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Services",
+        item: pageUrl,
+      },
+    ],
+  };
+
   return (
     <main className="relative pt-12 md:pt-20 pb-24 px-4 overflow-hidden">
+      <JsonLd data={collectionPageSchema} />
+      <JsonLd data={breadcrumbSchema} />
       {/* Local depth blobs */}
       <span
         aria-hidden

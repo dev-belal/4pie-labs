@@ -33,6 +33,13 @@ export const metadata: Metadata = {
     url: "/about",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "About 4Pie Labs",
+    description:
+      "AI-first marketing for local service businesses. Meet the team behind 4Pie Labs.",
+    images: ["/og-image.png"],
+  },
 };
 
 // v2 pillars - realigned around local search + AEO + accountable growth.

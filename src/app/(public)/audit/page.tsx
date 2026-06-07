@@ -1,12 +1,28 @@
 import type { Metadata } from "next";
 import { CheckCircle2 } from "lucide-react";
 import { AuditForm } from "@/components/AuditForm";
+import { JsonLd } from "@/components/JsonLd";
+import { SITE } from "@/lib/site";
+
+const AUDIT_DESCRIPTION =
+  "12-point audit of your local visibility across Google, Maps, and AI answer engines. No pitch, no pressure - you leave with a plan.";
 
 export const metadata: Metadata = {
   title: "Free AI marketing audit",
-  description:
-    "12-point audit of your local visibility across Google, Maps, and AI answer engines. No pitch, no pressure - you leave with a plan.",
+  description: AUDIT_DESCRIPTION,
   alternates: { canonical: "/audit" },
+  openGraph: {
+    title: "Free AI marketing audit - 4Pie Labs",
+    description: AUDIT_DESCRIPTION,
+    url: "/audit",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free AI marketing audit - 4Pie Labs",
+    description: AUDIT_DESCRIPTION,
+    images: ["/og-image.png"],
+  },
 };
 
 const POINTS = [
@@ -25,8 +41,65 @@ const POINTS = [
 ];
 
 export default function AuditPage() {
+  const pageUrl = `${SITE.url}/audit`;
+  const serviceId = `${pageUrl}#service`;
+
+  // Service: the actual audit offering. provider references the
+  // Organization declared in layout.tsx by @id so we don't redeclare
+  // it. areaServed mirrors the /services/[category] convention
+  // (Country = US) because the same SITE.areaServed isn't defined
+  // anywhere yet - kept conservative + consistent with the rest of
+  // the site's structured data.
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": serviceId,
+    name: "Free AI Marketing Audit",
+    description: AUDIT_DESCRIPTION,
+    provider: {
+      "@type": "Organization",
+      "@id": `${SITE.url}#organization`,
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "United States",
+    },
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+    },
+  };
+
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    url: pageUrl,
+    name: "Free AI marketing audit",
+    description: AUDIT_DESCRIPTION,
+    mainEntity: { "@id": serviceId },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE.url },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Free Audit",
+        item: pageUrl,
+      },
+    ],
+  };
+
   return (
     <main className="px-4 pb-32">
+      <JsonLd data={serviceSchema} />
+      <JsonLd data={webPageSchema} />
+      <JsonLd data={breadcrumbSchema} />
       {/* Hero */}
       <section className="max-w-3xl mx-auto text-center pt-12 pb-10 md:pt-20 md:pb-12">
         <span className="inline-block text-xs font-medium text-primary tracking-widest uppercase mb-4">
