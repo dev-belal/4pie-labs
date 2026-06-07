@@ -97,7 +97,7 @@ export default async function Image({ params }: Props) {
         >
           <div>AI Automation · Design · Marketing</div>
           <div style={{ color: "#8b5cf6", fontWeight: 700 }}>
-            4pielabs.com
+            fourpielabs.com
           </div>
         </div>
       </div>
