@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { publishBlog, updateBlog } from "@/lib/admin-actions";
 import { publishInitial } from "@/lib/form-types";
+import { SITE } from "@/lib/site";
 import {
   BLOG_FORM_CATEGORIES,
   type BlogFAQ,
@@ -194,7 +195,7 @@ export function BlogEditor({ mode, initial, onDone, onCancel }: Props) {
               </div>
               {slug && (
                 <p className="text-xs text-[var(--muted)] ml-1 font-mono">
-                  fourpielabs.com/blog/{slug}
+                  {SITE.url.replace(/^https?:\/\//, "")}/blog/{slug}
                 </p>
               )}
               {state.errors?.slug && (

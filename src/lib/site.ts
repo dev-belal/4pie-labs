@@ -1,5 +1,9 @@
 export const SITE = {
-  url: "https://fourpielabs.com",
+  // Canonical host is the www form. Vercel 301s the apex + http variants
+  // to this URL, so every canonical/og/sitemap URL we emit must match
+  // exactly - otherwise crawlers see a self-referential redirect chain
+  // and split signal between the two forms.
+  url: "https://www.fourpielabs.com",
   name: "4Pie Labs",
   // Pivot-aligned. Used as the fallback for openGraph.description and
   // twitter.description in the root layout, so every page that does not
