@@ -27,6 +27,7 @@ import {
 } from "@/lib/realtime-client";
 import type {
   Appointment,
+  ClientDocumentRow,
   DashboardData,
   Notification,
   NotificationKind,
@@ -108,6 +109,7 @@ export function AdminShell({
   testimonials,
   notifications,
   unreadCounts,
+  clientDocuments,
   monthStartISO,
   userEmail,
 }: {
@@ -119,9 +121,19 @@ export function AdminShell({
   testimonials: TestimonialRow[];
   notifications: Notification[];
   unreadCounts: UnreadCounts;
+  // Phase 2 of the Client Documents feature. Wired into the
+  // Documents tab in commit 4 of this batch; held here in commit
+  // 2 just so the admin page's fetch + AdminShell signature line
+  // up.
+  clientDocuments: ClientDocumentRow[];
   monthStartISO: string;
   userEmail: string;
 }) {
+  // Held until commit 4 wires the Documents tab + DocumentsPanel.
+  // The fetch happens in this commit so the server prop chain lines
+  // up cleanly; the panel consumes it next.
+  void clientDocuments;
+
   const [tab, setTab] = useState<Tab>("overview");
   // Topbar search state lives at shell level. Each panel decides
   // whether to consume it via a `globalSearch?: string` prop. Currently

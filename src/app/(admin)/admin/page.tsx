@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { readAdminSession } from "@/lib/admin-session";
 import {
+  getAllClientDocuments,
   getAllOpportunities,
   getAllTestimonialsForAdmin,
   getAppointments,
@@ -46,6 +47,7 @@ export default async function AdminPage() {
     testimonials,
     notifications,
     unreadCounts,
+    clientDocuments,
   ] = await Promise.all([
     getDashboardData(),
     getPipelinesWithStages(),
@@ -66,6 +68,10 @@ export default async function AdminPage() {
     // partial index for cheap counting.
     getRecentNotifications(20),
     getUnreadCounts(),
+    // Client Documents (Phase 2). Same fetch posture: service-role
+    // bypasses RLS so the admin tab can list every saved
+    // Welcome Pack / Agreement regardless of who created it.
+    getAllClientDocuments(),
   ]);
 
   return (
@@ -78,6 +84,7 @@ export default async function AdminPage() {
       testimonials={testimonials}
       notifications={notifications}
       unreadCounts={unreadCounts}
+      clientDocuments={clientDocuments}
       monthStartISO={monthStart}
       userEmail={session.sub}
     />

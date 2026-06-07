@@ -1,5 +1,10 @@
 import { cache } from "react";
 import { createServiceClient } from "@/lib/supabase/service";
+import type {
+  ClientDocumentRow,
+  DocType,
+} from "@/lib/documents/types";
+export type { ClientDocumentRow };
 
 export interface BlogStat {
   id: string;
@@ -488,4 +493,73 @@ export async function getConversationMessages(
     .eq("conversation_id", conversationId)
     .order("created_at", { ascending: true });
   return (data ?? []) as ConversationMessage[];
+}
+
+/* ============================================================
+ * Client Documents (admin Documents tab).
+ *
+ * Generated Welcome Pack + Client Agreement DOCX files. Storage =
+ * form inputs only (field_values jsonb); the rendered .docx is
+ * regenerated on-demand from the templates in
+ * src/lib/documents/templates/.
+ *
+ * Admin-only table (migration 0012). RLS enabled with zero policies;
+ * service-role bypasses, anon/authenticated denied. Same posture as
+ * notifications + the CRM tables.
+ * ============================================================ */
+
+const CLIENT_DOCUMENT_COLUMNS =
+  "id, doc_type, client_name, field_values, created_at, updated_at";
+
+/**
+ * Every client document, newest-edited first. The list view is
+ * cheap (one table-scan with a btree on (doc_type, updated_at desc),
+ * see migration 0012) and there's no per-doc-type pagination yet -
+ * volumes are expected to stay in the tens for the foreseeable
+ * future. Filtering by doc_type happens client-side in the
+ * DocumentsPanel sub-tabs.
+ */
+export async function getAllClientDocuments(): Promise<ClientDocumentRow[]> {
+  const supabase = createServiceClient();
+  const { data } = await supabase
+    .from("client_documents")
+    .select(CLIENT_DOCUMENT_COLUMNS)
+    .order("updated_at", { ascending: false });
+  return (data ?? []) as ClientDocumentRow[];
+}
+
+/**
+ * Single row by id, used by the editor's "re-open saved doc" path
+ * and by the export route handler (commit 3) so the .docx render can
+ * see the doc_type even if the client passes only an id.
+ */
+export async function getClientDocumentById(
+  id: string,
+): Promise<ClientDocumentRow | null> {
+  const supabase = createServiceClient();
+  const { data } = await supabase
+    .from("client_documents")
+    .select(CLIENT_DOCUMENT_COLUMNS)
+    .eq("id", id)
+    .maybeSingle();
+  return (data ?? null) as ClientDocumentRow | null;
+}
+
+/**
+ * Convenience filter for surfaces that only render one doc_type at
+ * a time. Avoids loading the full list when only one sub-tab is
+ * active (not used today; the AdminShell fetches once and lets the
+ * client filter, but kept here so future per-tab data routes can
+ * use it without rewiring).
+ */
+export async function getClientDocumentsByType(
+  docType: DocType,
+): Promise<ClientDocumentRow[]> {
+  const supabase = createServiceClient();
+  const { data } = await supabase
+    .from("client_documents")
+    .select(CLIENT_DOCUMENT_COLUMNS)
+    .eq("doc_type", docType)
+    .order("updated_at", { ascending: false });
+  return (data ?? []) as ClientDocumentRow[];
 }
