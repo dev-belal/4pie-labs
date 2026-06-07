@@ -31,6 +31,12 @@ export const metadata: Metadata = {
     url: "/services",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Services - 4Pie Labs",
+    description: SERVICES_DESCRIPTION,
+    images: ["/og-image.png"],
+  },
 };
 
 /**

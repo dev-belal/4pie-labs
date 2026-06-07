@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     url: "/blog",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog - 4Pie Labs",
+    description:
+      "AEO, local SEO, and AI-first marketing playbooks for local service businesses.",
+    images: ["/og-image.png"],
+  },
 };
 
 export const revalidate = 3600;

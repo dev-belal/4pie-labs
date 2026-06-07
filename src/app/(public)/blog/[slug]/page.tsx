@@ -34,7 +34,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const ogImage = post.image;
 
   return {
-    title: post.title,
+    // `absolute` bypasses the root layout's "%s | 4Pie Labs" template
+    // (13 chars of overhead). Blog titles are already verbose - several
+    // are 60-75 chars on their own - and the template was pushing every
+    // one of them past Google's ~60-char SERP truncation.
+    title: { absolute: post.title },
     description: post.excerpt,
     alternates: { canonical: `/blog/${slug}` },
     authors: [{ name: post.author }],

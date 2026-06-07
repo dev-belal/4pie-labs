@@ -11,6 +11,18 @@ export const metadata: Metadata = {
   title: "Free AI marketing audit",
   description: AUDIT_DESCRIPTION,
   alternates: { canonical: "/audit" },
+  openGraph: {
+    title: "Free AI marketing audit - 4Pie Labs",
+    description: AUDIT_DESCRIPTION,
+    url: "/audit",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free AI marketing audit - 4Pie Labs",
+    description: AUDIT_DESCRIPTION,
+    images: ["/og-image.png"],
+  },
 };
 
 const POINTS = [

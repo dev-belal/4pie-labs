@@ -459,7 +459,7 @@ If you want to understand what an updated strategy looks like for your specific 
     image:
       "https://cdn.pixabay.com/photo/2015/07/17/22/43/student-849826_1280.jpg",
     excerpt:
-      "If ChatGPT and Perplexity never mention your business, it's usually because your site isn't structured for AI to read, trust, and cite. Here's what to fix first.",
+      "ChatGPT and Perplexity skip businesses they can't read, trust, or cite. Here's how to structure your site so AI starts recommending you.",
     content: `
 ## The short answer
 
@@ -526,7 +526,7 @@ Be your own customer. Open ChatGPT, Perplexity, and Google's AI results and ask 
     image:
       "https://cdn.pixabay.com/photo/2016/07/23/19/36/painter-1537421_1280.jpg",
     excerpt:
-      "For painting contractors, most online leads come from three places: the Google Maps pack, a complete Google Business Profile, and pages that answer what homeowners actually search. Here's how to win all three.",
+      "Most painting-contractor leads come from the Google Maps pack, Business Profile, and pages that answer what homeowners search. Win all three.",
     content: `
 ## The short answer
 
@@ -589,7 +589,7 @@ Track three numbers monthly: your position in the Maps pack for your top three s
     image:
       "https://cdn.pixabay.com/photo/2021/02/26/10/47/freelance-6051356_1280.jpg",
     excerpt:
-      "SEO gets you into Google's list of results. AEO gets you cited as the single answer in ChatGPT, Perplexity, and Google AI Overviews. Local businesses need both, and they share the same foundation.",
+      "SEO ranks you on Google. AEO gets you cited as the answer in ChatGPT, Perplexity, and Google AI Overviews. Local businesses need both, on one foundation.",
     content: `
 ## The short answer
 

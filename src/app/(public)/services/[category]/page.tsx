@@ -182,6 +182,12 @@ export async function generateMetadata({
       url: `/services/${slug}`,
       type: "website",
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `${meta.eyebrow} - 4Pie Labs`,
+      description: meta.metaDescription,
+      images: ["/og-image.png"],
+    },
   };
 }
 

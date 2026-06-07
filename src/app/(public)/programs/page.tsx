@@ -5,15 +5,29 @@ import { ProgramsCarousel } from "@/components/ProgramsCarousel";
 import { JsonLd } from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
 
+const PROGRAMS_DESCRIPTION =
+  "Four programs from foundation to full-stack - Core, Pipeline, Operating System, Pulse. AEO is included in every tier. No pricing on the site - book a call.";
+
 export const metadata: Metadata = {
   // Keyword-bearing title - replaces the bland "Programs" so the page
   // ranks for the buyer query, not a category label.
   title: {
     absolute: "Marketing Programs for Local Service Businesses | 4Pie Labs",
   },
-  description:
-    "Four programs from foundation to full-stack - Core, Pipeline, Operating System, Pulse. AEO is included in every tier. No pricing on the site - book a call.",
+  description: PROGRAMS_DESCRIPTION,
   alternates: { canonical: "/programs" },
+  openGraph: {
+    title: "Marketing Programs - 4Pie Labs",
+    description: PROGRAMS_DESCRIPTION,
+    url: "/programs",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Marketing Programs - 4Pie Labs",
+    description: PROGRAMS_DESCRIPTION,
+    images: ["/og-image.png"],
+  },
 };
 
 const FAQS = [
