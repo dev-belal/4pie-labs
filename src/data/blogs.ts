@@ -238,7 +238,7 @@ If you want to see where your tour business stands before you spend anything, a 
     title:
       "What the Best Google Ads Management Looks Like for Local Service Businesses",
     category: "Performance Ads",
-    author: "Syed Suqlain",
+    author: "Syed Belal",
     date: "June 3, 2026",
     datePublishedISO: "2026-06-03",
     readTime: "8 min read",
@@ -349,7 +349,7 @@ Budget matters less than what you do with it. The businesses that win are the on
     title:
       "Is SEO Still Important in 2026? Here's What the Data Really Says",
     category: "SEO",
-    author: "Syed Suqlain",
+    author: "Syed Belal",
     date: "June 1, 2026",
     datePublishedISO: "2026-06-01",
     readTime: "9 min read",
