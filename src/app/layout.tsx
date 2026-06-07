@@ -90,6 +90,12 @@ export default function RootLayout({
   const organization = {
     "@context": "https://schema.org",
     "@type": "Organization",
+    // Stable identifier so page-level schema (Service.provider,
+    // WebPage.publisher, Blog.publisher, etc.) can reference the
+    // Organization by @id instead of inline-redeclaring it on every
+    // page. The fragment is arbitrary - what matters is that it's
+    // unique and stable across the site.
+    "@id": `${SITE.url}#organization`,
     name: SITE.name,
     legalName: "4Pie Labs AI Automation Agency",
     url: SITE.url,
@@ -114,6 +120,7 @@ export default function RootLayout({
   const website = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${SITE.url}#website`,
     name: SITE.name,
     url: SITE.url,
     description: SITE.description,
