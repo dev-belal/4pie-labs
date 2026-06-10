@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CalendarDays,
+  FileText,
   GitBranch,
   Inbox,
   LayoutDashboard,
@@ -27,6 +28,7 @@ import {
 } from "@/lib/realtime-client";
 import type {
   Appointment,
+  ClientDocumentRow,
   DashboardData,
   Notification,
   NotificationKind,
@@ -43,6 +45,7 @@ import { LeadsPanel } from "./LeadsPanel";
 import { ConversationsPanel } from "./ConversationsPanel";
 import { PipelinesPanel } from "./PipelinesPanel";
 import { CalendarPanel } from "./CalendarPanel";
+import { DocumentsPanel } from "./DocumentsPanel";
 import { NotificationsBell } from "./NotificationsBell";
 
 type Tab =
@@ -52,7 +55,8 @@ type Tab =
   | "calendar"
   | "conversations"
   | "testimonials"
-  | "blogs";
+  | "blogs"
+  | "documents";
 
 const NAV: Array<{
   id: Tab;
@@ -66,6 +70,7 @@ const NAV: Array<{
   { id: "conversations", label: "Conversations", icon: MessageCircle },
   { id: "testimonials", label: "Testimonials", icon: MessageSquarePlus },
   { id: "blogs", label: "Blogs", icon: PenTool },
+  { id: "documents", label: "Documents", icon: FileText },
 ];
 
 const HEADINGS: Record<Tab, { title: string; sub: string }> = {
@@ -97,6 +102,10 @@ const HEADINGS: Record<Tab, { title: string; sub: string }> = {
     title: "Blogs",
     sub: "Publish to the live site",
   },
+  documents: {
+    title: "Documents",
+    sub: "Welcome Packs and Client Agreements",
+  },
 };
 
 export function AdminShell({
@@ -108,6 +117,7 @@ export function AdminShell({
   testimonials,
   notifications,
   unreadCounts,
+  clientDocuments,
   monthStartISO,
   userEmail,
 }: {
@@ -119,6 +129,11 @@ export function AdminShell({
   testimonials: TestimonialRow[];
   notifications: Notification[];
   unreadCounts: UnreadCounts;
+  // Phase 2 of the Client Documents feature. Wired into the
+  // Documents tab in commit 4 of this batch; held here in commit
+  // 2 just so the admin page's fetch + AdminShell signature line
+  // up.
+  clientDocuments: ClientDocumentRow[];
   monthStartISO: string;
   userEmail: string;
 }) {
@@ -134,6 +149,7 @@ export function AdminShell({
     "leads",
     "blogs",
     "testimonials",
+    "documents",
   ]);
   const searchActive = SEARCH_CONSUMERS.has(tab);
 
@@ -372,7 +388,9 @@ export function AdminShell({
                     ? "Search leads…"
                     : tab === "blogs"
                       ? "Search blogs…"
-                      : "Search testimonials…"
+                      : tab === "testimonials"
+                        ? "Search testimonials…"
+                        : "Search documents…"
                   : "Search…"
               }
               className="bg-transparent outline-none text-sm flex-1 min-w-0 placeholder:text-[var(--muted)] disabled:cursor-not-allowed"
@@ -543,6 +561,20 @@ export function AdminShell({
                 transition={{ duration: 0.15 }}
               >
                 <BlogsListPanel blogs={blogs} globalSearch={globalSearch} />
+              </motion.div>
+            )}
+            {tab === "documents" && (
+              <motion.div
+                key="documents"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.15 }}
+              >
+                <DocumentsPanel
+                  documents={clientDocuments}
+                  globalSearch={globalSearch}
+                />
               </motion.div>
             )}
           </AnimatePresence>

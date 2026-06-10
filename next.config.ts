@@ -14,6 +14,17 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "cdn.pixabay.com" },
     ],
   },
+  // Ship the Welcome Pack + Client Agreement .docx templates with the
+  // serverless function bundle. Next.js's automatic file tracing finds
+  // statically imported files, but our templates are read at runtime
+  // via `fs.readFile(path.join(process.cwd(), ...))` - those reads are
+  // invisible to the tracer. Without this include, Vercel would
+  // deploy the function without the .docx files and the document
+  // generation server action would 500 with ENOENT.
+  outputFileTracingIncludes: {
+    "/admin/**": ["src/lib/documents/templates/*.docx"],
+    "/api/**":   ["src/lib/documents/templates/*.docx"],
+  },
 };
 
 export default nextConfig;
