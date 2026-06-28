@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import { Inter, Instrument_Serif } from "next/font/google";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { JsonLd } from "@/components/JsonLd";
 import { SITE } from "@/lib/site";
 import "./globals.css";
+
+// Google Analytics 4 measurement ID. Sourced from the SEO setup;
+// site-wide tag. One ID per site - the loader + config calls below
+// MUST stay in sync.
+const GA_MEASUREMENT_ID = "G-X7T05YVJ4W";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -137,6 +143,23 @@ export default function RootLayout({
         {/* Set data-theme="dark|light" before paint to avoid the FOUC on
             navigation. Reads the same localStorage key the toggle writes. */}
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+        {/* Google Analytics 4 (gtag.js). Site-wide tag - the root
+            layout is the single injection point, so it appears
+            exactly once on every page per Google's "do not add
+            more than one Google tag per page" guidance. Uses
+            next/script with the canonical `afterInteractive`
+            strategy so the loader doesn't block first paint
+            while still firing before user interactions. */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_MEASUREMENT_ID}');`}
+        </Script>
       </head>
       <body className="min-h-full flex flex-col">
         <JsonLd data={organization} />
