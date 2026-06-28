@@ -1,33 +1,54 @@
 # 4Pie Labs
 
-> AI Automation & Digital Marketing Agency
+> AI-first marketing for local service businesses — built to get found first on Google, Maps, and AI answer engines.
 
-4Pie Labs is a premier AI Automation and Digital Marketing Agency headquartered in Pakistan. We design and build custom AI Operating Systems, autonomous AI agents, and high-conversion digital marketing strategies for agencies and modern brands.
+4Pie Labs helps painting contractors, tour operators, and local service businesses dominate the moment someone searches for them. Three pillars run on one accountable funnel: AI-first SEO + AEO (so ChatGPT, Perplexity, Gemini, and Google AI Overviews cite the business directly), Performance Ads (Google + Meta + Maps, every dollar tied to booked jobs), and Custom AI Systems (lead scoring, agents, dashboards). Headquartered remotely, serving US-based local service businesses.
 
-## What We Do
+## What we do
 
-- **AI Operating Systems**: End-to-end autonomous systems that run your business operations — from CRM automation to intelligent document processing.
-- **AI Agents & Chatbots**: Custom conversational AI for lead qualification, customer support, and internal workflows.
-- **SEO & Content Automation**: Automated content pipelines that generate, optimize, and publish SEO-driven blog posts at scale.
-- **Workflow Automation**: n8n and Make.com integrations that connect your tools, eliminate manual tasks, and save thousands of hours.
-- **Digital Marketing**: Performance marketing, social media management, and brand strategy with measurable ROI.
-- **Web Development**: Premium, high-performance websites built with React, Next.js, and modern web technologies.
+- **AI-First SEO + AEO** — local-pack ranking, Google Business Profile, schema-first site engineering, content built to get cited by AI answer engines.
+- **Performance Ads** — Google Search + Maps, Meta + Instagram, YouTube, with conversion tracking wired end-to-end so every campaign reports cost-per-lead and cost-per-acquisition, not impressions.
+- **Custom AI Systems** — bespoke AI agents, workflow automation, attribution dashboards, and AI operating systems that connect a service business's existing tools into one accountable funnel.
 
-## Key Results
+## Who we serve
 
-- 50+ successful client deployments
-- 83% average reduction in processing time
-- 115,000+ hours automated for clients
-- $2.4M+ in cost savings delivered
+- Painting contractors (residential + commercial)
+- Tour operators, charters, and activity businesses
+- Other US local service businesses: roofing, landscaping, professional services, wellness, home services
 
-## Pages
+## Core pages
 
-- [Home](https://www.fourpielabs.com/)
-- [About Us](https://www.fourpielabs.com/about)
-- [Services](https://www.fourpielabs.com/services)
-- [Blog / Insights](https://www.fourpielabs.com/blog)
+- [Home](https://www.fourpielabs.com/): AI-first marketing for local service businesses. Audit, programs, and free strategy call entry points.
+- [About 4Pie Labs](https://www.fourpielabs.com/about): Founder background, pillars, and how the agency is built around local search.
+- [Services catalog](https://www.fourpielabs.com/services): All 18 services across the three pillars with deliverables.
+- [AI-First SEO + AEO](https://www.fourpielabs.com/services/aeo): The pillar that gets you cited by ChatGPT, Perplexity, Gemini, and Google AI Overviews.
+- [Performance Ads](https://www.fourpielabs.com/services/ads): Google + Meta + Maps performance campaigns with revenue attribution.
+- [Custom AI Systems](https://www.fourpielabs.com/services/ai): Bespoke AI agents, automation, and dashboards.
+- [Programs](https://www.fourpielabs.com/programs): Four engagement tiers (Core, Pipeline, Operating System, Pulse). AEO included in every tier.
+- [Free AI marketing audit](https://www.fourpielabs.com/audit): 12-point audit of local visibility across Google, Maps, AI engines, and conversion path. No pitch, no card required.
+- [Blog / Insights](https://www.fourpielabs.com/blog): AEO and local-marketing playbooks for service businesses.
+
+## Blog posts
+
+- [How a Coastal Tour Operator Tripled Direct Bookings](https://www.fourpielabs.com/blog/tour-operator-reviews-google-ads-case-study): 120-day case study modeled on real engagements — review engine + Google Ads playbook lifted direct bookings 3.4x and shifted channel mix from 30% to 58% direct.
+- [Why Tour Businesses Are Losing Customers to AI Search (And How to Fix It)](https://www.fourpielabs.com/blog/tour-businesses-losing-customers-ai-search): How travelers now ask ChatGPT and Perplexity before Google, and what tour operators do to get cited in those answers.
+- [How to Find the Best Marketing Agency for Your Tour Business](https://www.fourpielabs.com/blog/best-marketing-agency-tour-operators): What to look for in a tours-and-activities marketing partner, how to tell tracking from theatre, and the questions to ask before signing.
+- [What the Best Google Ads Management Looks Like for Local Service Businesses](https://www.fourpielabs.com/blog/best-google-ads-management-local-service-businesses): The baseline a serious local Google Ads engagement should meet — conversion tracking, intent-led keywords, negative-keyword discipline, revenue-tied reporting.
+- [Is SEO Still Important in 2026? Here's What the Data Really Says](https://www.fourpielabs.com/blog/is-seo-still-important-2026): Why AI Mode didn't kill SEO, and what to do differently after Google's I/O announcement.
+- [Why Your Local Business Isn't Showing Up in ChatGPT (And How to Fix It)](https://www.fourpielabs.com/blog/local-business-chatgpt-visibility): The structural reasons answer engines skip a business, and the fixes — schema, FAQ, NAP consistency, freshness — that get you cited.
+- [How Painting Contractors Get More Leads From Google in 2026](https://www.fourpielabs.com/blog/painting-contractor-google-leads): The three places leads come from for painters (Maps pack, GBP, question-answering pages) and the playbook to win all three.
+- [AEO vs SEO: What Local Service Businesses Need to Know](https://www.fourpielabs.com/blog/aeo-vs-seo-local-business): The differences and the shared foundation, plus why AEO is often more winnable than broad SEO for a small local business.
+
+## Brand facts
+
+- Canonical site: https://www.fourpielabs.com
+- Sitemap: https://www.fourpielabs.com/sitemap.xml
+- Robots: https://www.fourpielabs.com/robots.txt
+- LinkedIn: https://www.linkedin.com/company/4-pie-labs/
+- Founder: Syed Belal (LinkedIn: https://www.linkedin.com/in/syedbilalraza)
 
 ## Contact
 
-- Website: https://www.fourpielabs.com
-- Booking: Available via the website's "Book a Call" feature
+- Free audit: https://www.fourpielabs.com/audit (no card, plan delivered within 48 hours)
+- Strategy call (booking flow on site)
+- Team email: team@fourpielabs.com
