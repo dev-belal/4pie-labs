@@ -12,7 +12,7 @@ import {
   roiSchema,
 } from "@/lib/schemas";
 import { createPublicClient } from "@/lib/supabase/public-client";
-import { sendLeadAlert, sendLeadConfirmation } from "@/lib/email";
+import { sendLeadConfirmation } from "@/lib/email";
 import type { FormState } from "@/lib/form-types";
 
 function clientIp(headers: Headers): string {
@@ -357,13 +357,6 @@ export async function submitBudgetLead(
   // catches internally and logs; Promise.allSettled isolates rejections.
   after(async () => {
     await Promise.allSettled([
-      sendLeadAlert({
-        type: "budget",
-        name: parsed.data.name,
-        email: parsed.data.email,
-        source: "Marketing Budget Calculator",
-        payload: budgetPayload,
-      }),
       sendLeadConfirmation({
         type: "budget",
         name: parsed.data.name,
@@ -460,13 +453,6 @@ export async function submitAuditLead(
         email: parsed.data.email,
         name: parsed.data.name,
         businessName: parsed.data.businessName,
-      }),
-      sendLeadAlert({
-        type: "audit",
-        name: parsed.data.name,
-        email: parsed.data.email,
-        source: "Free AI audit",
-        payload: auditPayload,
       }),
       sendLeadConfirmation({
         type: "audit",
