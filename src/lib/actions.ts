@@ -100,6 +100,59 @@ async function dispatchN8nAuditWebhook(input: {
   }
 }
 
+/**
+ * Fire-and-forget POST to the n8n Get Started workflow. Same pattern as
+ * dispatchN8nAuditWebhook (10s timeout, errors logged + swallowed, never
+ * throws) so a downstream automation outage can't take down the form
+ * submission. Scheduled via `after()` from submitContact AFTER the
+ * Supabase row insert has already succeeded - the lead in the DB is the
+ * source of truth; the webhook is an additive automation hand-off.
+ *
+ * The payload is the full form field set so the n8n workflow has
+ * everything it needs without a follow-up Supabase fetch.
+ */
+async function dispatchN8nGetStartedWebhook(input: {
+  name: string;
+  email: string;
+  phone: string;
+  serviceType: string;
+  description: string;
+}): Promise<void> {
+  const webhookUrl = process.env.N8N_GET_STARTED_WEBHOOK_URL;
+  if (!webhookUrl) {
+    console.warn(
+      "[n8n] N8N_GET_STARTED_WEBHOOK_URL not set, skipping get-started webhook",
+    );
+    return;
+  }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10_000);
+  try {
+    const res = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        name: input.name,
+        email: input.email,
+        phone: input.phone,
+        serviceType: input.serviceType,
+        description: input.description,
+        source: "4Pie Labs Get Started form",
+      }),
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      console.error(
+        `[n8n] get-started webhook returned non-2xx: ${res.status} ${res.statusText}`,
+      );
+    }
+  } catch (err) {
+    console.error("[n8n] get-started webhook dispatch failed:", err);
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function insertLead(input: InsertLeadInput): Promise<boolean> {
   try {
     const supabase = createPublicClient();
@@ -181,6 +234,23 @@ export async function submitContact(
       message: "We couldn't submit right now - please try again shortly.",
     };
   }
+
+  // Schedule the n8n hand-off to run AFTER the response is sent. Same
+  // Vercel-`after()` rationale as the audit + budget actions: keeps the
+  // serverless invocation alive past the response so the outbound POST
+  // actually completes instead of being aborted the moment the function
+  // would otherwise freeze. The Supabase row insert above is already
+  // awaited synchronously and gates the FormState; the webhook is
+  // additive automation and never affects the user-facing response.
+  after(async () => {
+    await dispatchN8nGetStartedWebhook({
+      name: parsed.data.name,
+      email: parsed.data.email,
+      phone: parsed.data.phone,
+      serviceType: parsed.data.serviceType,
+      description: parsed.data.description,
+    });
+  });
 
   return { status: "success", message: "Request sent - we'll be in touch." };
 }
