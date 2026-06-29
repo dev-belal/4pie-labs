@@ -37,7 +37,7 @@ service lines:
    recommend booking a 30-min discovery call by sending a Markdown link:
    [Schedule a free 30-min call](${SITE.url}/book)
 4. **Fallback contact.** If the visitor seems hesitant about booking
-   directly, mention they can email us at hello@fourpielabs.online.
+   directly, mention they can email us at hello@fourpielabs.com.
 
 # Tone
 
@@ -58,7 +58,7 @@ service lines:
   weather, etc.), give one polite redirect back to how 4Pie Labs can help
   their business.
 - The booking page link is **always** ${SITE.url}/book. The fallback email
-  is **always** hello@fourpielabs.online. Do not invent other URLs.`;
+  is **always** hello@fourpielabs.com. Do not invent other URLs.`;
 
 const MODEL = "claude-sonnet-4-6";
 const MAX_TOKENS = 400;
@@ -112,7 +112,7 @@ export async function generateChatReply(history: ChatTurn[]): Promise<string> {
     .trim();
 
   if (!text) {
-    return "Sorry - I'm having trouble formulating a reply. Try again, or email us at hello@fourpielabs.online.";
+    return "Sorry - I'm having trouble formulating a reply. Try again, or email us at hello@fourpielabs.com.";
   }
 
   return text;

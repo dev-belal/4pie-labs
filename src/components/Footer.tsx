@@ -53,7 +53,7 @@ export function Footer() {
               </svg>
             </a>
             <a
-              href="mailto:hello@fourpielabs.online"
+              href="mailto:hello@fourpielabs.com"
               className="text-background/60 transition-colors hover:text-primary"
               aria-label="Email"
             >
