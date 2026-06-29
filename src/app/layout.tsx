@@ -117,7 +117,7 @@ export default function RootLayout({
     sameAs: ["https://www.linkedin.com/company/4-pie-labs/"],
     contactPoint: {
       "@type": "ContactPoint",
-      email: "team@fourpielabs.com",
+      email: "hello@fourpielabs.online",
       contactType: "customer support",
       availableLanguage: ["English"],
     },
