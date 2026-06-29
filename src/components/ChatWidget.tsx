@@ -157,7 +157,7 @@ export function ChatWidget() {
       const data = (await response.json()) as { reply?: string };
       const botText =
         data.reply?.trim() ||
-        "I'm having a bit of trouble right now - you can also email us at hello@fourpielabs.online.";
+        "I'm having a bit of trouble right now - you can also email us at hello@fourpielabs.com.";
 
       const botMsg: Message = {
         id: (Date.now() + 1).toString(),
@@ -170,7 +170,7 @@ export function ChatWidget() {
       console.error("Chatbot error:", error);
       const errorMsg: Message = {
         id: (Date.now() + 1).toString(),
-        text: "I'm having a bit of trouble connecting right now. Please feel free to [book a discovery call](/book) or email us at hello@fourpielabs.online.",
+        text: "I'm having a bit of trouble connecting right now. Please feel free to [book a discovery call](/book) or email us at hello@fourpielabs.com.",
         sender: "bot",
         timestamp: new Date(),
       };

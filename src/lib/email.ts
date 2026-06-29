@@ -31,7 +31,7 @@ function fromAddress(): string {
 }
 
 function replyToAddress(): string {
-  return process.env.EMAIL_REPLY_TO ?? "hello@fourpielabs.online";
+  return process.env.EMAIL_REPLY_TO ?? "hello@fourpielabs.com";
 }
 
 // Escape user-provided values before embedding in HTML.
