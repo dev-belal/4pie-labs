@@ -34,22 +34,6 @@ function replyToAddress(): string {
   return process.env.EMAIL_REPLY_TO ?? "hello@fourpielabs.online";
 }
 
-/**
- * Internal recipients for the "new lead" alert email. `LEAD_ALERT_TO` is
- * read as a comma-separated list, then trimmed + de-empty'd. A single
- * address still works (yields a one-element array). Unset / all-empty
- * yields [] and the caller skips the send with a warning instead of
- * defaulting silently to one address.
- */
-function alertRecipients(): string[] {
-  const raw = process.env.LEAD_ALERT_TO;
-  if (!raw) return [];
-  return raw
-    .split(",")
-    .map((s) => s.trim())
-    .filter((s) => s.length > 0);
-}
-
 // Escape user-provided values before embedding in HTML.
 function esc(s: unknown): string {
   return String(s ?? "")
@@ -61,99 +45,13 @@ function esc(s: unknown): string {
 }
 
 // =============================================================================
-// Internal alert (team-facing) - fired on every new lead.
-// =============================================================================
-
-export interface LeadAlertInput {
-  type: string; // "audit", "budget", "contact", etc. - used in the subject.
-  name?: string | null;
-  email?: string | null;
-  source: string;
-  payload: Record<string, unknown>;
-}
-
-export async function sendLeadAlert(
-  input: LeadAlertInput,
-): Promise<SendResult> {
-  try {
-    const c = client();
-    if (!c) {
-      console.error(
-        "[email] RESEND_API_KEY not set, skipping lead alert",
-      );
-      return { ok: false, reason: "no_key" };
-    }
-
-    const recipients = alertRecipients();
-    if (recipients.length === 0) {
-      console.warn(
-        "[email] LEAD_ALERT_TO is unset or empty, skipping lead alert",
-      );
-      return { ok: false, reason: "no_recipients" };
-    }
-
-    const subjectName = input.name ? `: ${input.name}` : "";
-    const subject = `New ${input.type} lead${subjectName}`;
-
-    // Log the recipient set so it's easy to confirm in dev / Vercel logs
-    // that the comma-split produced the addresses we expected. Internal
-    // addresses, not customer data, so safe to log.
-    console.info(
-      `[email] lead alert: ${input.type} -> ${recipients.length} recipient(s): ${recipients.join(", ")}`,
-    );
-
-    // Render every payload field as a row so the team sees the full submission
-    // without us having to keep the template in sync with each form schema.
-    const payloadRows = Object.entries(input.payload)
-      .map(
-        ([k, v]) =>
-          `<tr><td style="padding:6px 12px 6px 0;vertical-align:top;color:#6b665e;font-weight:500;white-space:nowrap;">${esc(k)}</td><td style="padding:6px 0;vertical-align:top;color:#1a1a1a;">${esc(v)}</td></tr>`,
-      )
-      .join("");
-
-    const html = `
-<!doctype html>
-<html>
-  <body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#faf7f2;color:#1a1a1a;margin:0;padding:24px;">
-    <div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #ede3cb;border-radius:12px;padding:24px;">
-      <p style="margin:0 0 4px 0;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#d97706;font-weight:600;">New ${esc(input.type)} lead</p>
-      <h1 style="margin:0 0 16px 0;font-size:20px;font-weight:600;letter-spacing:-0.01em;">${esc(input.name ?? "Unnamed lead")}</h1>
-      <table style="width:100%;font-size:14px;border-collapse:collapse;margin-bottom:8px;">
-        <tr><td style="padding:6px 12px 6px 0;color:#6b665e;font-weight:500;">type</td><td style="padding:6px 0;color:#1a1a1a;">${esc(input.type)}</td></tr>
-        <tr><td style="padding:6px 12px 6px 0;color:#6b665e;font-weight:500;">name</td><td style="padding:6px 0;color:#1a1a1a;">${esc(input.name ?? "")}</td></tr>
-        <tr><td style="padding:6px 12px 6px 0;color:#6b665e;font-weight:500;">email</td><td style="padding:6px 0;color:#1a1a1a;"><a href="mailto:${esc(input.email ?? "")}" style="color:#d97706;text-decoration:none;">${esc(input.email ?? "")}</a></td></tr>
-        <tr><td style="padding:6px 12px 6px 0;color:#6b665e;font-weight:500;">source</td><td style="padding:6px 0;color:#1a1a1a;">${esc(input.source)}</td></tr>
-      </table>
-      <hr style="border:none;border-top:1px solid #ede3cb;margin:16px 0;" />
-      <p style="margin:0 0 8px 0;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#6b665e;font-weight:600;">Payload</p>
-      <table style="width:100%;font-size:14px;border-collapse:collapse;">${payloadRows}</table>
-    </div>
-    <p style="max-width:640px;margin:16px auto 0 auto;font-size:11px;color:#8a8a8a;text-align:center;">Sent by 4Pie Labs forms.</p>
-  </body>
-</html>`.trim();
-
-    const { data, error } = await c.emails.send({
-      from: fromAddress(),
-      to: recipients,
-      replyTo: replyToAddress(),
-      subject,
-      html,
-    });
-
-    if (error) {
-      console.error("[email] lead alert send failed:", error);
-      return { ok: false, reason: error.name ?? "send_error" };
-    }
-
-    return { ok: true, id: data?.id };
-  } catch (err) {
-    console.error("[email] lead alert threw:", err);
-    return { ok: false, reason: "exception" };
-  }
-}
-
-// =============================================================================
 // Customer confirmation - sent to the visitor who submitted the form.
+//
+// The previous "internal team alert" function that lived above this block
+// has been removed - new-lead notifications now live in the admin panel
+// (NotificationsBell + Leads tab) driven by the Postgres trigger on
+// the leads table, not by Resend. The Supabase row insert is still the
+// source of truth and is unaffected by this change.
 // =============================================================================
 
 export type LeadConfirmationType = "audit" | "budget";
