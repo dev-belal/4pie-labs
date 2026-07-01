@@ -25,8 +25,18 @@ const STATS = [
  * Phase 3 hero - copy on the left, a floating "Live · AEO citations rising"
  * card on the right (desktop); single column on mobile. The Instrument Serif
  * italic accent on "first." is the visual hook. Local depth blobs add
- * atmosphere; the R3F 3D scene lands in a later commit and will sit behind
- * the right column.
+ * atmosphere; the R3F 3D scene sits behind the right column.
+ *
+ * IMPORTANT LCP note: the six above-the-fold elements below (eyebrow, H1,
+ * subhead, CTA row, trust strip, right column) render as plain HTML with
+ * NO framer-motion entrance animation. The previous motion.* wrappers
+ * had `initial={{ opacity: 0, ... }}` which made the LCP element (the
+ * H1) invisible in the SSR paint - the browser could not count LCP
+ * until React hydrated + framer-motion loaded + the animation
+ * completed, producing an 11.5s mobile LCP. Keeping these as static
+ * elements means they paint in the first frame of the SSR HTML. The
+ * stats bar below (`whileInView`) still animates because it lives
+ * below the fold and its scroll-trigger doesn't hide the LCP element.
  */
 export function Hero() {
   return (
@@ -53,46 +63,26 @@ export function Hero() {
         <div className="grid md:grid-cols-[1fr_360px] lg:grid-cols-[1fr_420px] gap-12 lg:gap-16 items-center">
           {/* Copy column */}
           <div>
-            <motion.span
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-block text-xs font-medium text-primary tracking-widest uppercase mb-5"
-            >
+            <span className="inline-block text-xs font-medium text-primary tracking-widest uppercase mb-5">
               AI-first marketing · for local service businesses
-            </motion.span>
+            </span>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 28 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.05 }}
-              className="text-[clamp(40px,6vw,64px)] font-semibold leading-[1.05] tracking-tight text-foreground [text-wrap:balance]"
-            >
+            <h1 className="text-[clamp(40px,6vw,64px)] font-semibold leading-[1.05] tracking-tight text-foreground [text-wrap:balance]">
               Become the business everyone in your area finds{" "}
               <span className="font-semibold text-primary">
                 first.
               </span>
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.15 }}
-              className="text-lg text-muted-foreground mt-6 max-w-xl leading-relaxed"
-            >
+            <p className="text-lg text-muted-foreground mt-6 max-w-xl leading-relaxed">
               4Pie Labs helps painting contractors, tour operators, and local
               service businesses dominate Google, Maps, and AI answer engines -
               so the next customer in your market calls{" "}
               <em className="text-primary not-italic font-medium">you</em>, not
               your competitor.
-            </motion.p>
+            </p>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.25 }}
-              className="flex flex-col sm:flex-row items-start gap-3 mt-8"
-            >
+            <div className="flex flex-col sm:flex-row items-start gap-3 mt-8">
               <Link
                 href="/book"
                 className="group inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-on-primary px-7 py-3.5 rounded-lg text-base font-semibold transition-all hover:shadow-[var(--shadow-cta-strong)] shadow-[var(--shadow-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -106,27 +96,19 @@ export function Hero() {
               >
                 Get a free AI audit
               </Link>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.35 }}
-              className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-5 text-sm text-muted-foreground"
-            >
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-5 text-sm text-muted-foreground">
               <span>30-min call</span>
               <span className="w-1 h-1 rounded-full bg-border" />
               <span>No pitch deck</span>
               <span className="w-1 h-1 rounded-full bg-border" />
               <span>Leave with a plan, free</span>
-            </motion.div>
+            </div>
           </div>
 
           {/* 3D scene + Live AEO card overlay (desktop only) */}
-          <motion.div
-            initial={{ opacity: 0, y: 24, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+          <div
             className="hidden md:block relative min-h-[460px] lg:min-h-[520px]"
             aria-hidden
           >
@@ -164,7 +146,7 @@ export function Hero() {
                 View →
               </Link>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
