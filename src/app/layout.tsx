@@ -44,13 +44,7 @@ const instrumentSerif = Instrument_Serif({
 //    scroll-on-navigation separately, so this only affects the
 //    initial / refresh load - not in-app navigation, which still
 //    auto-scrolls to top.
-// scrollTo(0,0) forces a synchronous layout. Running it directly in
-// DOMContentLoaded lands inside Lighthouse's TBT window and shows up
-// in the "forced reflow" audit. Wrapping the call in a
-// requestAnimationFrame defers it to the next paint tick so it happens
-// AFTER the browser has finished the initial layout - same UX (fresh
-// reload lands at the top), no forced-reflow warning.
-const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:theme:v3');if(t==='light')document.documentElement.setAttribute('data-theme','light');if('scrollRestoration' in history)history.scrollRestoration='manual';window.addEventListener('DOMContentLoaded',function(){requestAnimationFrame(function(){window.scrollTo(0,0);});});}catch(e){}})();`;
+const themeBootScript = `(function(){try{var t=localStorage.getItem('4pielabs:theme:v3');if(t==='light')document.documentElement.setAttribute('data-theme','light');if('scrollRestoration' in history)history.scrollRestoration='manual';window.addEventListener('DOMContentLoaded',function(){window.scrollTo(0,0);});}catch(e){}})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),

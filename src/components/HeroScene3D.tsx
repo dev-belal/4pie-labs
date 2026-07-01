@@ -29,13 +29,6 @@ function Scene() {
   const particleMatRef = useRef<THREE.PointsMaterial>(null);
   const mouseRef = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
   const reducedRef = useRef(false);
-  // Tracks whether the canvas parent is in the viewport. useFrame
-  // short-circuits when this is false, so the scene stops animating +
-  // stops issuing WebGL draw calls the moment the hero scrolls out of
-  // view. Kept as a ref (not state) because useFrame reads it every
-  // RAF tick - no need for a re-render each time the intersection
-  // flips.
-  const inViewRef = useRef(true);
   const { camera, gl } = useThree();
 
   // Theme-aware tinting. Re-runs whenever <html data-theme> changes.
@@ -88,27 +81,6 @@ function Scene() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // Pause animation + WebGL draw calls when the canvas parent scrolls
-  // out of view. The observer watches the container that Hero.tsx
-  // wraps around <HeroScene3D />; when it leaves the viewport, useFrame
-  // and the R3F render callback both short-circuit and gl draws stop.
-  // Real users get back scroll/CPU headroom on lower-end laptops as
-  // they read the page; when the hero re-enters the viewport (rare
-  // for the homepage but common on same-page hash navigation), the
-  // scene resumes exactly where it left off.
-  useEffect(() => {
-    const el = gl.domElement.parentElement;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        inViewRef.current = entry?.isIntersecting ?? true;
-      },
-      { threshold: 0 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [gl.domElement]);
-
   // Mouse parallax - track pointer relative to the canvas.
   useEffect(() => {
     const el = gl.domElement;
@@ -149,12 +121,7 @@ function Scene() {
   }, []);
 
   useFrame((state) => {
-    // Skip both animation updates AND the implicit render when the
-    // canvas is off-screen. useFrame still ticks at RAF cadence but
-    // early-returning here is cheap (a couple of ref reads) and stops
-    // the mesh rotations + camera lookAt + WebGL draw calls from
-    // firing on every tick.
-    if (!inViewRef.current || reducedRef.current) return;
+    if (reducedRef.current) return;
     const t = state.clock.getElapsedTime();
     const m = mouseRef.current;
     m.x += (m.tx - m.x) * 0.06;
@@ -186,17 +153,16 @@ function Scene() {
 
   return (
     <>
-      {/* Two directional + one ambient. The third directional (peach
-          backlight at intensity 0.6) was dropped as a shader-cost
-          trim - each light multiplies the material's lighting loop,
-          and at that intensity its contribution to the visual read
-          is subtle. The remaining white key + amber fill preserve
-          the brand-amber character. */}
       <directionalLight position={[2, 3, 4]} intensity={1.6} />
       <directionalLight
         position={[-3, -2, 2]}
         color={0xfbbf24}
         intensity={0.8}
+      />
+      <directionalLight
+        position={[-2, 4, -3]}
+        color={0xe89b7c}
+        intensity={0.6}
       />
       <ambientLight intensity={0.4} />
 
@@ -221,12 +187,7 @@ function Scene() {
       </mesh>
 
       <mesh ref={innerRef}>
-        {/* Inner sphere - radius 0.55. Widths/heights of 32,32 =
-            2048 faces was overkill for a decorative element that
-            small on-screen. Halved to 16,16 = 512 faces; visually
-            indistinguishable at this scale, quarter the vertex
-            work. */}
-        <sphereGeometry args={[0.55, 16, 16]} />
+        <sphereGeometry args={[0.55, 32, 32]} />
         <meshBasicMaterial
           ref={innerMatRef}
           color={0xd97706}
@@ -237,10 +198,7 @@ function Scene() {
 
       {/* Orbit ring 1 - theme-aware amber core ring. */}
       <mesh ref={ring1Ref} rotation={[Math.PI / 3, 0, 0]}>
-        {/* Tubular segments halved from 80 -> 40; rings are thin
-            (0.012 radius) and slowly rotating, so the segment
-            count drop is not perceptible. */}
-        <torusGeometry args={[2.0, 0.012, 8, 40]} />
+        <torusGeometry args={[2.0, 0.012, 8, 80]} />
         <meshBasicMaterial
           ref={ring1MatRef}
           color={0xd97706}
@@ -254,7 +212,7 @@ function Scene() {
         ref={ring2Ref}
         rotation={[Math.PI / 4, 0, Math.PI / 3]}
       >
-        <torusGeometry args={[2.4, 0.008, 8, 40]} />
+        <torusGeometry args={[2.4, 0.008, 8, 80]} />
         <meshBasicMaterial color={0xe89b7c} transparent opacity={0.35} />
       </mesh>
 
