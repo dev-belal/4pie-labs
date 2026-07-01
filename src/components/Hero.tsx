@@ -107,34 +107,42 @@ export function Hero() {
             </div>
           </div>
 
-          {/* 3D scene + Live AEO card overlay (desktop only) */}
-          <div
-            className="hidden md:block relative min-h-[460px] lg:min-h-[520px]"
-            aria-hidden
-          >
-            {/* Static "amber sphere" poster — paints instantly from the
-                SSR HTML so desktop LCP registers without waiting on the
-                three.js chunk to download + WebGL to initialise. The
-                Canvas below uses alpha:true and mounts on top of this
-                div; where the icosahedron/sphere renders opaquely, it
-                covers the poster; where it's transparent, the poster
-                shows through as an intentional amber glow. Single
-                amber-400 value works against both cream (light) and
-                off-black (dark) surface backgrounds; deliberately not
-                theme-branched to keep the SSR HTML identical between
-                themes (avoids a hydration mismatch on the theme boot
-                script's first-tick attribute set). No opacity gating,
-                no JS reveal — this is the LCP anchor. */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(circle at 50% 45%, #fbbf24 0%, rgba(251,191,36,0.45) 22%, rgba(251,191,36,0.12) 45%, transparent 65%)",
-              }}
+          {/* 3D scene + Live AEO card overlay (desktop only).
+              NOTE the outer wrapper is NOT aria-hidden - it contains
+              real overlays (the "Live · AEO citations rising" pill
+              and the "+18 citations this week" card whose "View →"
+              link is keyboard-focusable). Only the truly decorative
+              children below (poster img + Canvas) carry
+              aria-hidden="true". Lighthouse's aria-hidden-focus rule
+              triggers when a focusable element sits inside an
+              aria-hidden subtree; keeping aria-hidden off the parent
+              and pushing it down to just the decorative bits
+              resolves it while still hiding the visual chrome from
+              AT. */}
+          <div className="hidden md:block relative min-h-[460px] lg:min-h-[520px]">
+            {/* Static "amber sphere" poster — an <img> (not a CSS
+                gradient div) so it's a valid LCP candidate under
+                Chrome's LCP algorithm. Rendered as an inline SVG
+                data-URI so there's zero network cost and the whole
+                poster lives in the SSR HTML for first-paint. The
+                Canvas below uses alpha:true and mounts on top; where
+                the icosahedron renders opaquely it covers this poster,
+                where it's transparent the amber glow shows through as
+                intended. Once Lighthouse registers this <img> as the
+                LCP element at first paint, the later-mounting Canvas
+                (same size, same container) doesn't reset the LCP
+                timestamp - which is the whole point of anchoring on
+                an <img> instead of a gradient <div>. */}
+            {/* eslint-disable-next-line @next/next/no-img-element -- inline SVG data-URI, no external asset to route through next/image */}
+            <img
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover"
+              src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'><defs><radialGradient id='g' cx='50%' cy='45%'><stop offset='0%' stop-color='%23fbbf24'/><stop offset='22%' stop-color='%23fbbf24' stop-opacity='0.45'/><stop offset='45%' stop-color='%23fbbf24' stop-opacity='0.12'/><stop offset='65%' stop-color='%23fbbf24' stop-opacity='0'/></radialGradient></defs><rect width='400' height='500' fill='url(%23g)'/></svg>"
             />
 
             {/* R3F icosahedron + violet sphere + orbit rings + particles */}
-            <div className="absolute inset-0">
+            <div className="absolute inset-0" aria-hidden="true">
               <HeroScene3D />
             </div>
 
