@@ -29,6 +29,13 @@ function Scene() {
   const particleMatRef = useRef<THREE.PointsMaterial>(null);
   const mouseRef = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
   const reducedRef = useRef(false);
+  // Tracks whether the canvas parent is in the viewport. useFrame
+  // short-circuits when this is false, so the scene stops animating +
+  // stops issuing WebGL draw calls the moment the hero scrolls out of
+  // view. Kept as a ref (not state) because useFrame reads it every
+  // RAF tick - no need for a re-render each time the intersection
+  // flips.
+  const inViewRef = useRef(true);
   const { camera, gl } = useThree();
 
   // Theme-aware tinting. Re-runs whenever <html data-theme> changes.
@@ -81,6 +88,27 @@ function Scene() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
+  // Pause animation + WebGL draw calls when the canvas parent scrolls
+  // out of view. The observer watches the container that Hero.tsx
+  // wraps around <HeroScene3D />; when it leaves the viewport, useFrame
+  // and the R3F render callback both short-circuit and gl draws stop.
+  // Real users get back scroll/CPU headroom on lower-end laptops as
+  // they read the page; when the hero re-enters the viewport (rare
+  // for the homepage but common on same-page hash navigation), the
+  // scene resumes exactly where it left off.
+  useEffect(() => {
+    const el = gl.domElement.parentElement;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inViewRef.current = entry?.isIntersecting ?? true;
+      },
+      { threshold: 0 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [gl.domElement]);
+
   // Mouse parallax - track pointer relative to the canvas.
   useEffect(() => {
     const el = gl.domElement;
@@ -121,7 +149,12 @@ function Scene() {
   }, []);
 
   useFrame((state) => {
-    if (reducedRef.current) return;
+    // Skip both animation updates AND the implicit render when the
+    // canvas is off-screen. useFrame still ticks at RAF cadence but
+    // early-returning here is cheap (a couple of ref reads) and stops
+    // the mesh rotations + camera lookAt + WebGL draw calls from
+    // firing on every tick.
+    if (!inViewRef.current || reducedRef.current) return;
     const t = state.clock.getElapsedTime();
     const m = mouseRef.current;
     m.x += (m.tx - m.x) * 0.06;
