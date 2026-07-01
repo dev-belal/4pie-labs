@@ -186,16 +186,17 @@ function Scene() {
 
   return (
     <>
+      {/* Two directional + one ambient. The third directional (peach
+          backlight at intensity 0.6) was dropped as a shader-cost
+          trim - each light multiplies the material's lighting loop,
+          and at that intensity its contribution to the visual read
+          is subtle. The remaining white key + amber fill preserve
+          the brand-amber character. */}
       <directionalLight position={[2, 3, 4]} intensity={1.6} />
       <directionalLight
         position={[-3, -2, 2]}
         color={0xfbbf24}
         intensity={0.8}
-      />
-      <directionalLight
-        position={[-2, 4, -3]}
-        color={0xe89b7c}
-        intensity={0.6}
       />
       <ambientLight intensity={0.4} />
 
@@ -220,7 +221,12 @@ function Scene() {
       </mesh>
 
       <mesh ref={innerRef}>
-        <sphereGeometry args={[0.55, 32, 32]} />
+        {/* Inner sphere - radius 0.55. Widths/heights of 32,32 =
+            2048 faces was overkill for a decorative element that
+            small on-screen. Halved to 16,16 = 512 faces; visually
+            indistinguishable at this scale, quarter the vertex
+            work. */}
+        <sphereGeometry args={[0.55, 16, 16]} />
         <meshBasicMaterial
           ref={innerMatRef}
           color={0xd97706}
@@ -231,7 +237,10 @@ function Scene() {
 
       {/* Orbit ring 1 - theme-aware amber core ring. */}
       <mesh ref={ring1Ref} rotation={[Math.PI / 3, 0, 0]}>
-        <torusGeometry args={[2.0, 0.012, 8, 80]} />
+        {/* Tubular segments halved from 80 -> 40; rings are thin
+            (0.012 radius) and slowly rotating, so the segment
+            count drop is not perceptible. */}
+        <torusGeometry args={[2.0, 0.012, 8, 40]} />
         <meshBasicMaterial
           ref={ring1MatRef}
           color={0xd97706}
@@ -245,7 +254,7 @@ function Scene() {
         ref={ring2Ref}
         rotation={[Math.PI / 4, 0, Math.PI / 3]}
       >
-        <torusGeometry args={[2.4, 0.008, 8, 80]} />
+        <torusGeometry args={[2.4, 0.008, 8, 40]} />
         <meshBasicMaterial color={0xe89b7c} transparent opacity={0.35} />
       </mesh>
 
