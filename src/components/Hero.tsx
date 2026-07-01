@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -40,44 +39,6 @@ const STATS = [
  * below the fold and its scroll-trigger doesn't hide the LCP element.
  */
 export function Hero() {
-  // Two-part 3D-scene bring-up:
-  //
-  // 1. PRELOAD the chunk as soon as the client-side Hero mounts. The
-  //    plain `import("./HeroScene3D")` call kicks off the network
-  //    fetch + parse of the three.js bundle in parallel with
-  //    hydration + first paint. Module loader dedupes against
-  //    next/dynamic's own import above, so the chunk downloads
-  //    exactly once and both imports see the same module.
-  //
-  // 2. MOUNT after the first paint commits, via double
-  //    requestAnimationFrame. First rAF fires before next paint;
-  //    second fires after that paint lands - so the <img> poster
-  //    (LCP anchor) + all above-the-fold text are already on-screen
-  //    before we flip mount3D. Since the chunk is already
-  //    downloading from step 1, React's dynamic() import in the
-  //    render tree resolves instantly (cache hit) and the scene
-  //    fades in the moment WebGL init finishes.
-  //
-  // Previous version (5b8d4b1) only did step 2, so mount3D flipped
-  // fast but the chunk download only started THEN - user saw a
-  // multi-second gap while three.js was fetched over the network.
-  const [mount3D, setMount3D] = useState(false);
-  useEffect(() => {
-    // Fire-and-forget preload. Cache hit for the render-time import.
-    // If the component unmounts before the promise resolves the
-    // module stays in the loader cache; nothing to clean up.
-    void import("./HeroScene3D");
-
-    let secondRafId: number | null = null;
-    const firstRafId = window.requestAnimationFrame(() => {
-      secondRafId = window.requestAnimationFrame(() => setMount3D(true));
-    });
-    return () => {
-      window.cancelAnimationFrame(firstRafId);
-      if (secondRafId != null) window.cancelAnimationFrame(secondRafId);
-    };
-  }, []);
-
   return (
     <section className="relative pt-12 md:pt-20 pb-24 md:pb-28 px-4 overflow-hidden">
       {/* Local hero depth blobs */}
@@ -180,20 +141,9 @@ export function Hero() {
               src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'><defs><radialGradient id='g' cx='50%' cy='45%'><stop offset='0%' stop-color='%23fbbf24'/><stop offset='22%' stop-color='%23fbbf24' stop-opacity='0.45'/><stop offset='45%' stop-color='%23fbbf24' stop-opacity='0.12'/><stop offset='65%' stop-color='%23fbbf24' stop-opacity='0'/></radialGradient></defs><rect width='400' height='500' fill='url(%23g)'/></svg>"
             />
 
-            {/* R3F icosahedron + violet sphere + orbit rings + particles.
-                Wrapper is always present so layout is stable; the actual
-                HeroScene3D render is gated behind `mount3D` so the
-                three.js chunk parse + WebGL setup happens after the
-                browser has been idle. `transition-opacity` gives the
-                scene a soft fade-in when it finally mounts, so the swap
-                from poster-only to poster+canvas isn't abrupt. */}
-            <div
-              className={`absolute inset-0 transition-opacity duration-[350ms] ${
-                mount3D ? "opacity-100" : "opacity-0"
-              }`}
-              aria-hidden="true"
-            >
-              {mount3D ? <HeroScene3D /> : null}
+            {/* R3F icosahedron + violet sphere + orbit rings + particles */}
+            <div className="absolute inset-0" aria-hidden="true">
+              <HeroScene3D />
             </div>
 
             {/* Top-right "Live · AEO citations rising" pill */}

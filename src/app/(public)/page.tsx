@@ -57,26 +57,19 @@ export default function HomePage() {
   };
 
   return (
-    // <main> landmark that every other public route already has - was
-    // missing here, which is what Lighthouse's a11y audit flagged as
-    // "Document doesn't have a main landmark." The homepage's public
-    // content sits inside it; the JsonLd script tag stays outside a
-    // visual landmark because it's not user-facing content.
     <>
       <JsonLd data={faqSchema} />
-      <main>
-        <Hero />
-        <AEOCallout />
-        <Services />
-        <IndustryGrid />
-        <ProgramsGridHome />
-        <ROICalculator />
-        <Timeline />
-        <Testimonials />
-        <BookingCTA />
-        <FAQ />
-        <BlogSection />
-      </main>
+      <Hero />
+      <AEOCallout />
+      <Services />
+      <IndustryGrid />
+      <ProgramsGridHome />
+      <ROICalculator />
+      <Timeline />
+      <Testimonials />
+      <BookingCTA />
+      <FAQ />
+      <BlogSection />
     </>
   );
 }
