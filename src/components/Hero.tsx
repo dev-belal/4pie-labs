@@ -112,6 +112,27 @@ export function Hero() {
             className="hidden md:block relative min-h-[460px] lg:min-h-[520px]"
             aria-hidden
           >
+            {/* Static "amber sphere" poster — paints instantly from the
+                SSR HTML so desktop LCP registers without waiting on the
+                three.js chunk to download + WebGL to initialise. The
+                Canvas below uses alpha:true and mounts on top of this
+                div; where the icosahedron/sphere renders opaquely, it
+                covers the poster; where it's transparent, the poster
+                shows through as an intentional amber glow. Single
+                amber-400 value works against both cream (light) and
+                off-black (dark) surface backgrounds; deliberately not
+                theme-branched to keep the SSR HTML identical between
+                themes (avoids a hydration mismatch on the theme boot
+                script's first-tick attribute set). No opacity gating,
+                no JS reveal — this is the LCP anchor. */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(circle at 50% 45%, #fbbf24 0%, rgba(251,191,36,0.45) 22%, rgba(251,191,36,0.12) 45%, transparent 65%)",
+              }}
+            />
+
             {/* R3F icosahedron + violet sphere + orbit rings + particles */}
             <div className="absolute inset-0">
               <HeroScene3D />
