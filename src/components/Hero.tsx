@@ -40,19 +40,34 @@ const STATS = [
  * below the fold and its scroll-trigger doesn't hide the LCP element.
  */
 export function Hero() {
-  // Mount the 3D scene ONE FRAME after the initial paint commits. The
-  // first rAF fires before the next paint; the second fires after that
-  // paint has landed - meaning the browser has already painted the
-  // <img> poster (LCP anchor) and text before we flip mount3D and
-  // pull in the three.js chunk. Feels near-instant to a real user (a
-  // barely-perceptible gap before the scene fades in) while still
-  // guaranteeing the LCP-critical paint isn't sharing the frame with
-  // the three.js import boot cost. Trade-off vs the previous
-  // requestIdleCallback approach: some TBT re-enters Lighthouse's
-  // measurement window (worse Perf score), but the visible gap goes
-  // from ~2s down to a couple frames - a much better user experience.
+  // Two-part 3D-scene bring-up:
+  //
+  // 1. PRELOAD the chunk as soon as the client-side Hero mounts. The
+  //    plain `import("./HeroScene3D")` call kicks off the network
+  //    fetch + parse of the three.js bundle in parallel with
+  //    hydration + first paint. Module loader dedupes against
+  //    next/dynamic's own import above, so the chunk downloads
+  //    exactly once and both imports see the same module.
+  //
+  // 2. MOUNT after the first paint commits, via double
+  //    requestAnimationFrame. First rAF fires before next paint;
+  //    second fires after that paint lands - so the <img> poster
+  //    (LCP anchor) + all above-the-fold text are already on-screen
+  //    before we flip mount3D. Since the chunk is already
+  //    downloading from step 1, React's dynamic() import in the
+  //    render tree resolves instantly (cache hit) and the scene
+  //    fades in the moment WebGL init finishes.
+  //
+  // Previous version (5b8d4b1) only did step 2, so mount3D flipped
+  // fast but the chunk download only started THEN - user saw a
+  // multi-second gap while three.js was fetched over the network.
   const [mount3D, setMount3D] = useState(false);
   useEffect(() => {
+    // Fire-and-forget preload. Cache hit for the render-time import.
+    // If the component unmounts before the promise resolves the
+    // module stays in the loader cache; nothing to clean up.
+    void import("./HeroScene3D");
+
     let secondRafId: number | null = null;
     const firstRafId = window.requestAnimationFrame(() => {
       secondRafId = window.requestAnimationFrame(() => setMount3D(true));
