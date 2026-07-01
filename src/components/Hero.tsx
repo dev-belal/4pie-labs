@@ -39,44 +39,27 @@ const STATS = [
  * stats bar below (`whileInView`) still animates because it lives
  * below the fold and its scroll-trigger doesn't hide the LCP element.
  */
-// requestIdleCallback typings live in lib.dom.d.ts but the global window
-// type doesn't include them in the current lib target. Small local
-// narrowing so we can feature-detect without an ambient global.
-type IdleWindow = Window & {
-  requestIdleCallback?: (
-    cb: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void,
-    opts?: { timeout?: number },
-  ) => number;
-  cancelIdleCallback?: (handle: number) => void;
-};
-
 export function Hero() {
-  // Gate the HeroScene3D mount until the browser has been idle at least
-  // once after hydration. The <img> poster below carries the visible
-  // frame + the LCP anchor, so nothing on-screen changes until this
-  // flips - all it does is push three.js's chunk parse + WebGL init +
-  // shader compile OUT of Lighthouse's TBT measurement window. Real
-  // users see the amber sphere ~2s after the page is interactive; the
-  // Lighthouse audit sees a page that hits "quiet" much sooner.
+  // Mount the 3D scene ONE FRAME after the initial paint commits. The
+  // first rAF fires before the next paint; the second fires after that
+  // paint has landed - meaning the browser has already painted the
+  // <img> poster (LCP anchor) and text before we flip mount3D and
+  // pull in the three.js chunk. Feels near-instant to a real user (a
+  // barely-perceptible gap before the scene fades in) while still
+  // guaranteeing the LCP-critical paint isn't sharing the frame with
+  // the three.js import boot cost. Trade-off vs the previous
+  // requestIdleCallback approach: some TBT re-enters Lighthouse's
+  // measurement window (worse Perf score), but the visible gap goes
+  // from ~2s down to a couple frames - a much better user experience.
   const [mount3D, setMount3D] = useState(false);
   useEffect(() => {
-    const w = window as IdleWindow;
-    let handle: number | null = null;
-    let timer: number | null = null;
-    const fire = () => setMount3D(true);
-    if (typeof w.requestIdleCallback === "function") {
-      handle = w.requestIdleCallback(fire, { timeout: 3000 });
-    } else {
-      // Safari-ish path: no rIC, so fall back to a fixed post-hydration
-      // delay. 2000ms is enough that the initial hydrate + first paint
-      // are already past on any reasonable device.
-      timer = window.setTimeout(fire, 2000);
-    }
+    let secondRafId: number | null = null;
+    const firstRafId = window.requestAnimationFrame(() => {
+      secondRafId = window.requestAnimationFrame(() => setMount3D(true));
+    });
     return () => {
-      if (handle != null && typeof w.cancelIdleCallback === "function") {
-        w.cancelIdleCallback(handle);
-      }
-      if (timer != null) window.clearTimeout(timer);
+      window.cancelAnimationFrame(firstRafId);
+      if (secondRafId != null) window.cancelAnimationFrame(secondRafId);
     };
   }, []);
 
@@ -190,7 +173,7 @@ export function Hero() {
                 scene a soft fade-in when it finally mounts, so the swap
                 from poster-only to poster+canvas isn't abrupt. */}
             <div
-              className={`absolute inset-0 transition-opacity duration-700 ${
+              className={`absolute inset-0 transition-opacity duration-[350ms] ${
                 mount3D ? "opacity-100" : "opacity-0"
               }`}
               aria-hidden="true"
